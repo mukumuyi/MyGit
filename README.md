@@ -1,2 +1,1 @@
-# HelloWorld
-Make this for leraning hoe to use git
+# 色んなものを後で見れるように残します。
