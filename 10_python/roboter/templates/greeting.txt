@@ -1,5 +1,0 @@
-私のオススメのレストランは、$restaurantです。
-I recommend $restaurant restaurant.
-
-このレストランは好きですか？ [Yes/No]
-Do you like it? [y/n]

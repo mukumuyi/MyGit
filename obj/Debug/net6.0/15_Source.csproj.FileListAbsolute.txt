@@ -1,5 +1,0 @@
-C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\obj\Debug\net6.0\15_Source.csproj.AssemblyReference.cache
-C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\obj\Debug\net6.0\15_Source.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\obj\Debug\net6.0\15_Source.AssemblyInfoInputs.cache
-C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\obj\Debug\net6.0\15_Source.AssemblyInfo.cs
-C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\obj\Debug\net6.0\15_Source.csproj.CoreCompileInputs.cache
