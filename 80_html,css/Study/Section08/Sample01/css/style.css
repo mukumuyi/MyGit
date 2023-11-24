@@ -1,0 +1,27 @@
+header {
+    margin-bottom: 100px;
+}
+
+body {
+    font-family: Arial;
+    text-align: center;
+}
+
+hr {
+    border-width: 3px;
+    border-color: #2e99a9;
+    margin: 30px 0;
+}
+
+h1 {
+    background-color: black;
+    color: #fff;
+    margin: 0;
+    padding: 10px;
+    font-size: 18px;
+}
+.date {
+    font-size: 300%;
+    font-family: 'Times New Roman', Times, serif;
+
+}

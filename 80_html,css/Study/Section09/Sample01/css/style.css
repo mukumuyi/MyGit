@@ -1,0 +1,47 @@
+header {
+    margin-bottom: 100px;
+}
+
+body {
+    font-family: Arial;
+    text-align: center;
+}
+
+hr {
+    border-width: 3px;
+    border-color: #2e99a9;
+    margin: 30px 0;
+}
+
+h1 {
+    background-color: black;
+    color: #fff;
+    margin: 0;
+    padding: 10px;
+    font-size: 18px;
+}
+.date {
+    font-size: 300%;
+    font-family: 'Times New Roman', Times, serif;
+
+}
+.container {
+    text-align: center;
+    margin: 30px auto;
+
+}
+
+#timer {
+    font-size: 36px;
+    border: 1px solid #ccc;
+    margin: 30px auto;
+    padding: 50px;
+    background-color: black;
+    color: #fff;
+    border-radius: 3px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,.5);
+}
+
+.btn {
+    width: 100%;
+}

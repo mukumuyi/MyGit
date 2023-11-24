@@ -1,0 +1,15 @@
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\p21\bin\Debug\net6.0\p21.exe
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\p21\bin\Debug\net6.0\p21.deps.json
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\p21\bin\Debug\net6.0\p21.runtimeconfig.json
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\p21\bin\Debug\net6.0\p21.dll
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\p21\bin\Debug\net6.0\p21.pdb
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\p21\obj\Debug\net6.0\p21.csproj.AssemblyReference.cache
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\p21\obj\Debug\net6.0\p21.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\p21\obj\Debug\net6.0\p21.AssemblyInfoInputs.cache
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\p21\obj\Debug\net6.0\p21.AssemblyInfo.cs
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\p21\obj\Debug\net6.0\p21.csproj.CoreCompileInputs.cache
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\p21\obj\Debug\net6.0\p21.dll
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\p21\obj\Debug\net6.0\refint\p21.dll
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\p21\obj\Debug\net6.0\p21.pdb
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\p21\obj\Debug\net6.0\p21.genruntimeconfig.cache
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\p21\obj\Debug\net6.0\ref\p21.dll

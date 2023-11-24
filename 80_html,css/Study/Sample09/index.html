@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+
+    <title>ご利用アンケート</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="row">
+                <div class="col-sm-6">
+                    <h1>ご利用アンケート</h1>
+                </div>
+                <div class="col-sm-6" style="text-align: right;">
+                    <a href="/"> Back To Home</a>
+                </div>
+            </div>
+        </header>
+    </div>
+
+        <hr>
+        <div class="container">
+            <form action="" method="post" class="row">
+                <div class="col-sm-8 offset-sm-2">
+                    <p>Thank You For Purchasing This Book. Please Enter Below Box.</p>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Ex. Yutaka">
+                    </div> 
+                    <div class="form-group">
+                        <label for="job">Job</label>
+                        <select id="job" name="job" class="form-control">
+                            <option value="">Please Select</option>
+                            <option value="Employee">Employee</option>
+                            <option value="Student">Student</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label >what you want know (you can select multiply)</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="html" id="defaultcheck1">
+                            <label class="form-check-label" for="defaultcheck1">
+                                html
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="css" id="defaultcheck2">
+                            <label class="form-check-label" for="defaultcheck2">
+                                css
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="JavaScript" id="defaultcheck3">
+                            <label class="form-check-label" for="defaultcheck3">
+                                JavaScript
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="d-block">How do you understand</label>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" class="form-check-input" name="q2" id="q2_1" value="1">
+                            <label for="q2_1" class="form-check-label">I can't understand.</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" class="form-check-input" name="q2" id="q2_2" value="1">
+                            <label for="q2_2" class="form-check-label">I can hardly understand.</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" class="form-check-input" name="q2" id="q2_3" value="1">
+                            <label for="q2_3" class="form-check-label">I can almost understand.</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" class="form-check-input" name="q2" id="q2_4" value="1">
+                            <label for="q2_4" class="form-check-label">I can understand.</label>
+                        </div>
+                    </div>
+                </div>                              
+            </form>
+        </div>
+        <hr>
+
+    <div class="container">
+        <footer>
+            <p>&copy; ともすた</p>
+        </footer>
+    </div>
+</body>
+</html>

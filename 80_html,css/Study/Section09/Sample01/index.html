@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Timer</h1>
+    </header>
+
+    <div class="container">
+        <p id="timer">00:00:00</p>
+
+        <div>
+            <button id="start_stop" class="btn btn-lg btn-primary">START</button>
+        </div>
+    </div>
+
+<script>
+    var start;
+    var timer_id
+
+    document.getElementById('start_stop').addEventListener('click',function () {
+
+
+        if (this.innerHTML === 'START') {
+            start = new Date();
+
+            timer_id = window.setInterval(goTimer,10);
+            // Make Stop Buttom
+            this.innerHTML = 'STOP';
+            this.classList.remove('btn-primary');
+            this.classList.add('btn-danger');
+        } else {
+            clearInterval(timer_id)
+            // Make START Buttom
+            this.innerHTML = 'START';
+            this.classList.remove('btn-danger');
+            this.classList.add('btn-primary');
+        }
+    });
+
+    var addZero = function(value) {
+        if (value < 10) {
+            value = '0' + value
+        }
+
+        return value;
+    }
+
+    var goTimer = function() {
+        var now = new Date();
+        var milli = now.getTime() - start.getTime();
+        var seconds = Math.floor(milli / 1000);
+        var minutes = Math.floor(seconds /60);
+        var hours = Math.floor(minutes /60);
+        seconds = seconds % 60;
+        minutes = minutes % 60;
+        seconds = addZero(seconds);
+        minutes = addZero(minutes);
+        hours = addZero(hours);
+        
+        document.getElementById('timer').innerHTML = hours + ':' + minutes + ':'  + seconds;
+    }
+
+</script>
+</body>
+</html>

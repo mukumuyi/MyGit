@@ -1,0 +1,10 @@
+https://teratail.com/questions/217007
+
+--Add Propaty to Project File
+
+    <PublishSingleFile>true</PublishSingleFile>
+    <PublishTrimmed>true</PublishTrimmed>
+
+
+--Do in Terminal 
+dotnet publish -c Release -r win-x64 -o output

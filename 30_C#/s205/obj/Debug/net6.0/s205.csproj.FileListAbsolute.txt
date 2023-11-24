@@ -1,0 +1,15 @@
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\s205\bin\Debug\net6.0\s205.exe
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\s205\bin\Debug\net6.0\s205.deps.json
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\s205\bin\Debug\net6.0\s205.runtimeconfig.json
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\s205\bin\Debug\net6.0\s205.dll
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\s205\bin\Debug\net6.0\s205.pdb
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\s205\obj\Debug\net6.0\s205.csproj.AssemblyReference.cache
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\s205\obj\Debug\net6.0\s205.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\s205\obj\Debug\net6.0\s205.AssemblyInfoInputs.cache
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\s205\obj\Debug\net6.0\s205.AssemblyInfo.cs
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\s205\obj\Debug\net6.0\s205.csproj.CoreCompileInputs.cache
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\s205\obj\Debug\net6.0\s205.dll
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\s205\obj\Debug\net6.0\refint\s205.dll
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\s205\obj\Debug\net6.0\s205.pdb
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\s205\obj\Debug\net6.0\s205.genruntimeconfig.cache
+C:\Users\nishi\OneDrive\ドキュメント\10.LIFE\15_Source\30_C#\s205\obj\Debug\net6.0\ref\s205.dll

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Python2年生</title>
+	</head>
+	<body>
+		<h2>第1章 Pythonでデータをダウンロード</h2>
+		<ol>
+			<li>スクレイピングってなに？</li>
+			<li>Pythonをインストールしてみよう</li>
+			<li>requestsでアクセスしてみよう</li>
+		</ol>
+	</body>
+</html>
