@@ -1,0 +1,56 @@
+﻿body {
+    margin: 0; /* 余白を 0 に */
+    padding: 0; /* 要素内余白を 0 に */
+    background-color: rgba(26, 55, 229, 0.06); /* 背景色を薄水色に */
+}
+
+.container {
+    max-width: 600px; /* 最大幅を 600px に */
+    margin: 0 auto; /* 左右を中央揃えに */
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, .3); /* ドロップシャドウをかける */
+}
+
+img {
+    width: 100%; /* 画像の幅を画面幅一杯に */
+    margin: 0; /* 余白を0 に */
+    vertical-align: top; /* 画像間に余白が出るバグを補正 */
+}
+
+header {
+    background-color: #007acc; /* 背景色を濃い青に */
+    color: #fff; /* 文字色を白に */
+    position: fixed; /* ヘッダーを画面内固定に */
+    top: 0; /* 位置を一番上に */
+    width: 100%; /* 幅を画面幅一杯に */
+    z-index: 100; /* 重なったときの優先度を上に */
+}
+
+header h1 {
+    margin: 0; /* 余白をなくす */
+    font-size: 25px; /* 文字の大きさを 25px に */
+    padding: 5px; /* 要素内余白を 5px に */
+    text-align: center; /* テキストを中央揃えに */
+    font-family: 'Open Sans Condensed', sans-serif; /* フォントを Web フォントに */
+}
+
+.photo {
+    position: relative; /* 画像の上にキャプションが重ねられるように */
+}
+
+.photo .inner {
+    position: absolute; /* キャプションを画像の上に重ねる */
+    bottom: 0; /* 位置を画像の最下部に */
+    width: 100%; /* 幅は一杯に */
+    background-color: rgba(0, 0, 0, .5); /* 背景色を半透明の黒に */
+    font-size: 10px; /* 文字の大きさを 10px に */
+    color: #fff; /* 文字色を白に */
+    margin: 0; /* 余白を 0 に */
+}
+
+.inner p {
+    padding: 20px; /* 要素内余白を 20px に */
+}
+.inner span {
+    font-color: #666; /* 文字色をグレーに */
+    margin-left: 10px; /* 左に 10px の余白 */
+}

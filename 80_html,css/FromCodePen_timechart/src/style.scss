@@ -1,0 +1,30 @@
+body {
+  padding: 10px;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: black;
+  shape-rendering: crispEdges;
+}
+
+.axis .tick line {
+  fill: none;
+  stroke: #ccc;
+}
+.axis text {
+  font-family: sans-serif;
+  font-size: 9px;
+}
+
+.y-axis-label {
+  font-family: sans-serif;
+  font-size: 9px;
+  word-wrap: break-word;
+  text-align: center;  
+}
+
+.y-axis path {
+  stroke: none;
+}

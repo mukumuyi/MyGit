@@ -1,0 +1,20 @@
+﻿.container {
+    text-align: center; /* 全体を中央揃えに */
+    max-width: 600px; /* 最大幅を 600px に */
+    margin: 30px auto; /* 上下に 30px の余白を付け、中央揃えに */
+}
+
+#timer {
+    font-size: 36px; /* 文字サイズを 36px に */
+    border: 1px solid #ccc; /* グレーの枠線を引く */
+    margin: 30px auto; /* 上下に 30px の余白を付け、中央揃えに */
+    padding: 50px; /* 要素内余白を 50px に */
+    background-color: #000; /* 背景色を黒に */
+    color: #fff; /* 文字色を白に */
+    border-radius: 3px; /* 枠線を角丸に */
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, .5); /* ドロップシャドーをつける */
+}
+
+.btn {
+    width: 100%; /* 幅を 100% に */
+}

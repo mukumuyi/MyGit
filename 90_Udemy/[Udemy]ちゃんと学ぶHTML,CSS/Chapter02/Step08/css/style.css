@@ -1,0 +1,90 @@
+@import url(sanitize.css);
+
+body {
+    background-color: #f0f0f0;
+    padding: 10px;
+    font-size: 14px;
+    color: #666;
+}
+
+.container {
+    width: 800px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .3);
+    margin: 0 auto;
+}
+
+header {
+    background-color: #422814;
+    padding: 10px;
+    color: #fff;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: normal;
+    text-align: center;
+}
+
+.description {
+    clear: left;
+}
+
+.description img {
+    float: left;
+    margin: 0 10px 10px 0;
+}
+
+.information h1 {
+    font-size: 18px;
+    margin: 0 10px 10px 0;
+    float: left;
+}
+
+.information .type {
+    display: inline;
+    background-color: #E35A4D;
+    padding: 3px 5px;
+    font-size: 80%;
+    color: #fff;
+}
+
+.content {
+    background-color: #fff;
+    padding: 20px;
+}
+
+.songs {
+    margin: 0 0 20px;
+}
+
+.songs h2 {
+    clear: left;
+    font-size: 100%;
+    font-weight: normal;
+    margin: 0;
+    background-color: #E6E4DD;
+    padding: 5px 10px;
+}
+
+.songs ol {
+    padding: 0;
+    margin: 0;
+    list-style: decimal inside;
+}
+.songs li {
+    border-bottom: 1px solid #ccc;
+    width: 50%;
+    float: left;
+    padding: 5px 10px;
+}
+
+.clearfix:after {
+    content: " ";
+    display: table;
+    clear: both;
+}
+
+a {
+    color: #666;
+}
