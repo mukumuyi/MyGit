@@ -1,0 +1,64 @@
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: black;
+      shape-rendering: crispEdges;
+    }
+    .axis text {
+      font-family: sans-serif;
+      font-size: 10px;
+    }
+    .timeline-label {
+      font-family: sans-serif;
+      font-size: 12px;
+    }
+    #timeline2 .axis {
+      transform: translate(0px,40px);
+      -ms-transform: translate(0px,40px); /* IE 9 */
+      -webkit-transform: translate(0px,40px); /* Safari and Chrome */
+      -o-transform: translate(0px,40px); /* Opera */
+      -moz-transform: translate(0px,40px); /* Firefox */
+    }
+    .explanetary > * {
+      display: inline;
+    }
+    #explanetary1{
+      background-color: blue;
+      color: white;
+    }
+    #explanetary2{
+      background-color: yellow;
+      color: black;
+    }
+    #explanetary3{
+      background-color: greenyellow;
+      color: black;
+    }
+    #explanetary4{
+      background-color: grey;
+      color: white;
+    }
+
+
+    .coloredDiv {
+      height:20px; width:20px; float:left;
+    }
+
+    .tooltip {
+      position: absolute;
+      text-align: left;
+      width: auto;
+      height: auto;
+      padding: 5px;
+      font: 12px;
+      background: white;
+      -webkit-box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
+      -moz-box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
+      visibility: hidden;
+    }
+   
+    .bar:hover {
+      fill: Brown;
+    }
+
