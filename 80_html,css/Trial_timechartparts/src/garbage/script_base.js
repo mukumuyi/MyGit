@@ -12,8 +12,8 @@
       navigateLeft = function () {},
       navigateRight = function () {},
       orient = "bottom",
-      width = 1000,
-      height = 500,
+      width = null,
+      height = null,
       rowSeparatorsColor = null, // "black",
       backgroundColor = null,
       colorCycle = d3.schemeCategory10,
@@ -26,7 +26,7 @@
       frametimespan = 21600000,
       stacked = false,
       timeIsRelative = false,
-      fullLengthBackgrounds = true,
+      fullLengthBackgrounds = false,
       itemHeight = 20,
       itemMargin = 5,
       navMargin = 60,
@@ -37,7 +37,7 @@
         color: colorCycle,
       },
       showTimeAxis = true,
-      showAxisTop = true,
+      showAxisTop = false,
       showTodayLine = false,
       showBorderLine = false,
       showBorderFormat = {
@@ -46,7 +46,7 @@
         width: 1,
         color: colorCycle,
       },
-      showAxisHeaderBackground = true,
+      showAxisHeaderBackground = false,
       showAxisNav = false,
       showAxisCalendarYear = false,
       axisBgColor = "white",
@@ -306,11 +306,6 @@
         .tickFormat(tickformatDT)
         .tickSize(tickFormat.tickSize);
 
-      var yScale = d3.scale
-        .linear()
-        .domain([0, 1000]) // データの範囲を指定
-        .range([gParentSize.height, 0]);
-
       if (tickFormat.tickValues != null) {
         xAxis.tickValues(tickFormat.tickValues);
       } else {
@@ -371,22 +366,10 @@
               }
               return colorCycle(index);
             })
-            .attr("class", function (d, i) {
-              return datum.class
-                ? "timelineSeries_" + datum.class
-                : "timelineSeries_" + index;
-            })
-            .attr("id", function (d, i) {
-              // use deprecated id field
-              if (datum.id && !d.id) {
-                return "timelineItem_" + datum.id;
-              }
-              return d.id ? d.id : "timelineItem_" + index + "_" + i;
-            })
             // tooltipを表示内容の制御。for tooltip002
             .on("mouseover", function (d, i) {
-              starting_time = new Date(datum.times[i].starting_time);
-              ending_time = new Date(datum.times[i].ending_time);
+              starting_time = new Date(datum.starting_time);
+              ending_time = new Date(datum.ending_time);
               tooltip
                 .style("visibility", "visible")
                 .html(
@@ -400,14 +383,12 @@
                     ending_time.toLocaleDateString() +
                     " " +
                     ending_time.toLocaleTimeString("it-IT") +
-                    "<br>group : " +
-                    datum.times[i].group +
-                    "<br>lane : " +
-                    datum.times[i].lane +
+                    "<br>axis : " +
+                    yAxisMapping[index] +
                     "<br>description : " +
-                    datum.times[i].name +
+                    maxlane +
                     "<br>description2 : " +
-                    datum.times[i].name
+                    tempname
                 );
             })
             .on("mousemove", function (d) {
@@ -418,8 +399,30 @@
             .on("mouseout", function (d) {
               tooltip.style("visibility", "hidden");
             })
+            // .on("mousemove", function (d, i) {
+            //   hover(d, index, datum);
+            // })
+            // .on("mouseover", function (d, i) {
+            //   mouseover(d, i, datum);
+            // })
+            // .on("mouseout", function (d, i) {
+            //   mouseout(d, i, datum);
+            // })
             .on("click", function (d, i) {
               click(d, index, datum);
+            })
+            .attr("class", function (d, i) {
+              return datum.class
+                ? "timelineSeries_" + datum.class
+                : "timelineSeries_" + index;
+            })
+            .attr("id", function (d, i) {
+              // use deprecated id field
+              if (datum.id && !d.id) {
+                return "timelineItem_" + datum.id;
+              }
+
+              return d.id ? d.id : "timelineItem_" + index + "_" + i;
             });
 
           g.selectAll("svg")
@@ -453,6 +456,24 @@
             appendLabel(gParent, yAxisMapping, index, hasLabel, datum, d, i);
           }
 
+          if (typeof datum.icon !== "undefined") {
+            gParent
+              .append("image")
+              .attr("class", "timeline-label")
+              .attr(
+                "transform",
+                "translate(" +
+                  0 +
+                  "," +
+                  (margin.top +
+                    (itemHeight + itemMargin) * yAxisMapping[index]) +
+                  ")"
+              )
+              .attr("xlink:href", datum.icon)
+              .attr("width", margin.left)
+              .attr("height", itemHeight);
+          }
+
           function getStackPosition(d, i) {
             if (stacked) {
               return (
@@ -460,6 +481,7 @@
                 itemHeight * datum.times[i].lane +
                 itemMargin * datum.times[i].group
               ); // Add By muku
+              // return margin.top + (itemHeight + itemMargin) * yAxisMapping[index];
             }
             return margin.top;
           }
@@ -471,17 +493,18 @@
                 itemMargin * datum.times[i].group +
                 itemHeight * 0.75
               ); // Add By muku
+              // return margin.top + (itemHeight + itemMargin) * yAxisMapping[index] + itemHeight * 0.75;
             }
             return margin.top + itemHeight * 0.75;
           }
         });
       });
 
+      // var belowLastItem = (margin.top + (itemHeight + itemMargin) * maxStack);
       var belowLastItem =
         margin.top + itemHeight * maxlane + itemMargin * maxgroup;
       var aboveFirstItem = margin.top;
       var timeAxisYPosition = showAxisTop ? aboveFirstItem : belowLastItem;
-
       if (showTimeAxis) {
         appendTimeAxis(g, xAxis, timeAxisYPosition);
       }
@@ -489,37 +512,20 @@
         appendTimeAxisTick(g, xAxis, maxStack);
       }
 
-      var gSize = g[0][0].getBoundingClientRect();
-      setHeight();
-
-      height = gSize.height + gSize.top - gParentSize.top;
-
-      if (width > gParentSize.width || height > gParentSize.height) {
-        var axisG = gParent.append("g");
-
+      if (width > gParentSize.width) {
         var move = function () {
           var x = Math.min(
             0,
             Math.max(gParentSize.width - width, d3.event.translate[0])
           );
-          var y = Math.min(
-            0,
-            Math.max(gParentSize.height - height, d3.event.translate[1])
-          );
-
-          zoom.translate([x, y]);
-          g.attr("transform", "translate(" + x + "," + y + ")");
-
-          // axisG.call(axis);
-
-          scroll(x * scaleFactor, y * scaleFactor, xScale, yScale);
+          zoom.translate([x, 0]);
+          g.attr("transform", "translate(" + x + ",0)");
+          scroll(x * scaleFactor, xScale);
         };
 
-        var zoom = d3.behavior.zoom().x(xScale).y(yScale).on("zoom", move);
+        var zoom = d3.behavior.zoom().x(xScale).on("zoom", move);
 
         gParent.attr("class", "scrollable").call(zoom);
-
-        // axisG.call(axis);
       }
 
       if (rotateTicks) {
@@ -536,8 +542,8 @@
         });
       }
 
-      // var gSize = g[0][0].getBoundingClientRect();
-      // setHeight();
+      var gSize = g[0][0].getBoundingClientRect();
+      setHeight();
 
       if (showBorderLine) {
         g.each(function (d, i) {
@@ -919,7 +925,6 @@ var trialdata = [
 
 // グラフ領域の広さ
 var width = 1000;
-var height = 500;
 
 // RadioBottomの値で表示期間を変える。
 function timeline(frametimespan) {
@@ -951,7 +956,6 @@ function timeline(frametimespan) {
         .select("#timeline1")
         .append("svg")
         .attr("width", width)
-        .attr("height", height)
         .datum(result)
         .call(chart);
     })
@@ -982,6 +986,7 @@ function timeline(frametimespan) {
   // 外部JSONファイルを使う時
 }
 
+
 // Csvを取り込んでJSON形式のデータを作る関数
 async function processCSVData(requestURL) {
   try {
@@ -1004,8 +1009,8 @@ async function processCSVData(requestURL) {
       var timeData = {
         name: row[2],
         color: row[3],
-        group: parseInt(row[4]),
-        lane: parseInt(row[5]),
+        group: row[4],
+        lane: row[5],
         starting_time: parseInt(row[6]),
         ending_time: parseInt(row[7]),
       };

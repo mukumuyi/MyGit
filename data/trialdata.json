@@ -35,7 +35,7 @@
             "class": "b",
             "times": [
                 {
-                    "name": "test3",
+                    "name": "test30",
                     "color": "red",
                     "group": 2,
                     "lane": 3,
@@ -43,7 +43,7 @@
                     "ending_time": 1355761900000
                 },
                 {
-                    "name": "test3",
+                    "name": "test31",
                     "color": "red",
                     "group": 2,
                     "lane": 4,
@@ -51,7 +51,7 @@
                     "ending_time": 1355761900000
                 },
                 {
-                    "name": "test3",
+                    "name": "test32",
                     "color": "green",
                     "group": 2,
                     "lane": 4,
@@ -65,7 +65,7 @@
             "class": "b",
             "times": [
                 {
-                    "name": "test3",
+                    "name": "test33",
                     "color": "green",
                     "group": 3,
                     "lane": 5,
@@ -87,7 +87,7 @@
                     "ending_time": 1355763910000
                 },
                 {
-                    "name": "test4",
+                    "name": "test41",
                     "color": "red",
                     "group": 4,
                     "lane": 7,
@@ -95,7 +95,7 @@
                     "ending_time": 1355763910000
                 },
                 {
-                    "name": "test4",
+                    "name": "test42",
                     "color": "red",
                     "group": 4,
                     "lane": 8,
@@ -103,7 +103,7 @@
                     "ending_time": 1355763910000
                 },
                 {
-                    "name": "test4",
+                    "name": "test43",
                     "color": "red",
                     "group": 4,
                     "lane": 9,
@@ -111,7 +111,7 @@
                     "ending_time": 1355763910000
                 },
                 {
-                    "name": "test4",
+                    "name": "test44",
                     "color": "red",
                     "group": 4,
                     "lane": 10,
@@ -119,7 +119,7 @@
                     "ending_time": 1355763910000
                 },
                 {
-                    "name": "test4",
+                    "name": "test45",
                     "color": "red",
                     "group": 4,
                     "lane": 11,
@@ -127,7 +127,7 @@
                     "ending_time": 1355763910000
                 },
                 {
-                    "name": "test4",
+                    "name": "test46",
                     "color": "red",
                     "group": 4,
                     "lane": 12,
@@ -135,7 +135,7 @@
                     "ending_time": 1355763910000
                 },
                 {
-                    "name": "test4",
+                    "name": "test47",
                     "color": "red",
                     "group": 4,
                     "lane": 13,
@@ -143,7 +143,7 @@
                     "ending_time": 1355763910000
                 },
                 {
-                    "name": "test4",
+                    "name": "test48",
                     "color": "red",
                     "group": 4,
                     "lane": 14,

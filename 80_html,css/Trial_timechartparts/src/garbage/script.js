@@ -12,8 +12,8 @@
       navigateLeft = function () {},
       navigateRight = function () {},
       orient = "bottom",
-      width = 1000,
-      height = 500,
+      width = null,
+      height = null,
       rowSeparatorsColor = null, // "black",
       backgroundColor = null,
       colorCycle = d3.schemeCategory10,
@@ -26,7 +26,7 @@
       frametimespan = 21600000,
       stacked = false,
       timeIsRelative = false,
-      fullLengthBackgrounds = true,
+      fullLengthBackgrounds = false,
       itemHeight = 20,
       itemMargin = 5,
       navMargin = 60,
@@ -37,7 +37,7 @@
         color: colorCycle,
       },
       showTimeAxis = true,
-      showAxisTop = true,
+      showAxisTop = false,
       showTodayLine = false,
       showBorderLine = false,
       showBorderFormat = {
@@ -46,7 +46,7 @@
         width: 1,
         color: colorCycle,
       },
-      showAxisHeaderBackground = true,
+      showAxisHeaderBackground = false,
       showAxisNav = false,
       showAxisCalendarYear = false,
       axisBgColor = "white",
@@ -192,22 +192,13 @@
         );
     };
 
-    var appendLabel = function (
-      gParent,
-      yAxisMapping,
-      index,
-      hasLabel,
-      datum,
-      d,
-      i
-    ) {
+    var appendLabel = function (gParent, index, hasLabel, datum, d, i) {
       var fullItemHeight = itemHeight + itemMargin;
-      // var rowsDown          = margin.top + (fullItemHeight/2) + fullItemHeight * (yAxisMapping[index] || 1);
       var rowsDown =
         margin.top +
         fullItemHeight / 2 +
-        itemHeight * datum.times[i].lane +
-        itemMargin * datum.times[i].group;
+        itemHeight * datum.lane +
+        itemMargin * datum.group;
       gParent
         .append("text")
         .attr("class", "timeline-label")
@@ -220,6 +211,7 @@
 
     function timeline(gParent) {
       var g = gParent.append("g");
+
       var gParentSize = gParent[0][0].getBoundingClientRect();
       var gParentItem = d3.select(gParent[0][0]);
 
@@ -251,6 +243,9 @@
         });
       }
 
+      // console.log(g)
+      // console.log(g[0][0].__data__[0])
+
       // check how many stacks we're gonna need
       // do this here so that we can draw the axis before the graph
       if (stacked || ending === 0 || beginning === 0) {
@@ -263,19 +258,19 @@
             }
 
             // figure out beginning and ending times if they are unspecified
-            datum.times.forEach(function (time, i) {
-              maxgroup = datum.times[i].group + 1;
-              maxlane = datum.times[i].lane + 1;
-              tempname = datum.times[i].name;
-              if (beginning === 0)
-                if (
-                  time.starting_time < minTime ||
-                  (minTime === 0 && timeIsRelative === false)
-                )
-                  minTime = time.starting_time;
-              if (ending === 0)
-                if (time.ending_time > maxTime) maxTime = time.ending_time;
-            });
+            //   datum.times.forEach(function (time, i) {
+            maxgroup = datum.group + 1;
+            maxlane = datum.lane + 1;
+            tempname = datum.name;
+            if (beginning === 0)
+              if (
+                datum.starting_time < minTime ||
+                (minTime === 0 && timeIsRelative === false)
+              )
+                minTime = datum.starting_time;
+            if (ending === 0)
+              if (datum.ending_time > maxTime) maxTime = datum.ending_time;
+            //   });
           });
         });
 
@@ -296,7 +291,6 @@
       var xScale = d3.time
         .scale()
         .domain([beginning, ending])
-        // .domain([beginning, beginning+defaultspan])
         .range([margin.left, width - margin.right]);
 
       var xAxis = d3.svg
@@ -305,11 +299,6 @@
         .orient(orient)
         .tickFormat(tickformatDT)
         .tickSize(tickFormat.tickSize);
-
-      var yScale = d3.scale
-        .linear()
-        .domain([0, 1000]) // データの範囲を指定
-        .range([gParentSize.height, 0]);
 
       if (tickFormat.tickValues != null) {
         xAxis.tickValues(tickFormat.tickValues);
@@ -324,7 +313,7 @@
       g.each(function (d, i) {
         chartData = d;
         d.forEach(function (datum, index) {
-          var data = datum.times;
+          var data = datum;
           var hasLabel = typeof datum.label != "undefined";
 
           // issue warning about using id per data set. Ids should be individual to data elements
@@ -338,15 +327,30 @@
             appendBackgroundBar(yAxisMapping, index, g, data, datum);
           }
 
-          g.selectAll("svg")
+          // console.log(getXPos(data))
+          // console.log(getStackPosition(data))
+          // console.log((data.ending_time - data.starting_time) * scaleFactor)
+          // console.log(getStackPosition(data) + itemHeight/2)
+          // console.log(getXPos(data))
+          // console.log(itemHeight / 2)
+          // console.log(itemHeight)
+          // console.log(data.color)
+          // console.log(data.class ? "timelineSeries_"+data.class : "timelineSeries_"+index)
+          // console.log(data.id ? data.id : "timelineItem_"+ index +"_"+index)
+          // console.log("display" in data? data.display:display)
+          // console.log(data)
+          // console.log(datum)
+
+          // console.log(g)
+
+          // g.selectAll("svg").data(data).enter()
+
+          console.log(data);
+
+          g.select("svg")
             .data(data)
             .enter()
-            .append(function (d, i) {
-              return document.createElementNS(
-                d3.ns.prefix.svg,
-                "display" in d ? d.display : display
-              );
-            })
+            .append("rect")
             .attr("x", getXPos)
             .attr("y", getStackPosition)
             .attr("width", function (d, i) {
@@ -358,19 +362,6 @@
             .attr("cx", getXPos)
             .attr("r", itemHeight / 2)
             .attr("height", itemHeight)
-            .style("fill", function (d, i) {
-              var dColorPropName;
-              if (d.color) return d.color;
-              if (colorPropertyName) {
-                dColorPropName = d[colorPropertyName];
-                if (dColorPropName) {
-                  return colorCycle(dColorPropName);
-                } else {
-                  return colorCycle(datum[colorPropertyName]);
-                }
-              }
-              return colorCycle(index);
-            })
             .attr("class", function (d, i) {
               return datum.class
                 ? "timelineSeries_" + datum.class
@@ -381,7 +372,21 @@
               if (datum.id && !d.id) {
                 return "timelineItem_" + datum.id;
               }
+
               return d.id ? d.id : "timelineItem_" + index + "_" + i;
+            })
+            .style("fill", function (d, i) {
+              var dColorPropName;
+              if (d.color) return d.color;
+              if (colorPropertyName) {
+                dColorPropName = d[colorPropertyName];
+                if (dColorPropName) {
+                  return colorCycle(dColorPropName);
+                } else {
+                  return colorCycle(d[colorPropertyName]);
+                }
+              }
+              return colorCycle(index);
             })
             // tooltipを表示内容の制御。for tooltip002
             .on("mouseover", function (d, i) {
@@ -400,14 +405,12 @@
                     ending_time.toLocaleDateString() +
                     " " +
                     ending_time.toLocaleTimeString("it-IT") +
-                    "<br>group : " +
-                    datum.times[i].group +
-                    "<br>lane : " +
-                    datum.times[i].lane +
+                    "<br>axis : " +
+                    yAxisMapping[index] +
                     "<br>description : " +
-                    datum.times[i].name +
+                    maxlane +
                     "<br>description2 : " +
-                    datum.times[i].name
+                    tempname
                 );
             })
             .on("mousemove", function (d) {
@@ -450,15 +453,31 @@
           }
 
           if (hasLabel) {
-            appendLabel(gParent, yAxisMapping, index, hasLabel, datum, d, i);
+            appendLabel(gParent, index, hasLabel, datum, d, i);
+          }
+
+          if (typeof datum.icon !== "undefined") {
+            gParent
+              .append("image")
+              .attr("class", "timeline-label")
+              .attr(
+                "transform",
+                "translate(" +
+                  0 +
+                  "," +
+                  (margin.top +
+                    (itemHeight + itemMargin) * yAxisMapping[index]) +
+                  ")"
+              )
+              .attr("xlink:href", datum.icon)
+              .attr("width", margin.left)
+              .attr("height", itemHeight);
           }
 
           function getStackPosition(d, i) {
             if (stacked) {
               return (
-                margin.top +
-                itemHeight * datum.times[i].lane +
-                itemMargin * datum.times[i].group
+                margin.top + itemHeight * datum.lane + itemMargin * datum.group
               ); // Add By muku
             }
             return margin.top;
@@ -477,11 +496,11 @@
         });
       });
 
+      // var belowLastItem = (margin.top + (itemHeight + itemMargin) * maxStack);
       var belowLastItem =
         margin.top + itemHeight * maxlane + itemMargin * maxgroup;
       var aboveFirstItem = margin.top;
       var timeAxisYPosition = showAxisTop ? aboveFirstItem : belowLastItem;
-
       if (showTimeAxis) {
         appendTimeAxis(g, xAxis, timeAxisYPosition);
       }
@@ -489,37 +508,20 @@
         appendTimeAxisTick(g, xAxis, maxStack);
       }
 
-      var gSize = g[0][0].getBoundingClientRect();
-      setHeight();
-
-      height = gSize.height + gSize.top - gParentSize.top;
-
-      if (width > gParentSize.width || height > gParentSize.height) {
-        var axisG = gParent.append("g");
-
+      if (width > gParentSize.width) {
         var move = function () {
           var x = Math.min(
             0,
             Math.max(gParentSize.width - width, d3.event.translate[0])
           );
-          var y = Math.min(
-            0,
-            Math.max(gParentSize.height - height, d3.event.translate[1])
-          );
-
-          zoom.translate([x, y]);
-          g.attr("transform", "translate(" + x + "," + y + ")");
-
-          // axisG.call(axis);
-
-          scroll(x * scaleFactor, y * scaleFactor, xScale, yScale);
+          zoom.translate([x, 0]);
+          g.attr("transform", "translate(" + x + ",0)");
+          scroll(x * scaleFactor, xScale);
         };
 
-        var zoom = d3.behavior.zoom().x(xScale).y(yScale).on("zoom", move);
+        var zoom = d3.behavior.zoom().x(xScale).on("zoom", move);
 
         gParent.attr("class", "scrollable").call(zoom);
-
-        // axisG.call(axis);
       }
 
       if (rotateTicks) {
@@ -536,8 +538,8 @@
         });
       }
 
-      // var gSize = g[0][0].getBoundingClientRect();
-      // setHeight();
+      var gSize = g[0][0].getBoundingClientRect();
+      setHeight();
 
       if (showBorderLine) {
         g.each(function (d, i) {
@@ -919,7 +921,6 @@ var trialdata = [
 
 // グラフ領域の広さ
 var width = 1000;
-var height = 500;
 
 // RadioBottomの値で表示期間を変える。
 function timeline(frametimespan) {
@@ -942,86 +943,72 @@ function timeline(frametimespan) {
       });
   }
 
-  // 外部CSVファイルを使う時。
-  var requestURL = "http://127.0.0.1:5500/data/trialdata.csv";
-  processCSVData(requestURL)
-    .then((result) => {
-      console.log(result);
-      var svg = d3
-        .select("#timeline1")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .datum(result)
-        .call(chart);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  // 外部CSVファイルを使う時。
+  csvArray = loadCSVData();
+  console.log(csvArray)
 
-  // // 外部JSONファイルを使う時
-  // requestURL = "http://127.0.0.1:5500/data/trialdata.json";
-  // let request = new XMLHttpRequest();
-  // request.open("GET", requestURL);
-  // request.responseType = "json";
+  // JSONデータを読み込む関数
+  let requestURL = "http://127.0.0.1:5500/data/trialdata.json";
+  let request = new XMLHttpRequest();
+  request.open("GET", requestURL);
+  request.responseType = "json";
 
-  // request.send();
+  request.send();
 
-  // request.onload = function () {
-  //   let listJSON = request.response.data;
-  //   listJSON = JSON.parse(JSON.stringify(listJSON));
+  request.onload = function () {
+    let listJSON = request.response.data;
+    listJSON = JSON.parse(JSON.stringify(listJSON));
 
-  //   var svg = d3
-  //     .select("#timeline1")
-  //     .append("svg")
-  //     .attr("width", width)
-  //     .datum(trialdata)
-  //     .call(chart);
-  // };
-  // 外部JSONファイルを使う時
+    var svg = d3
+      .select("#timeline1")
+      .append("svg")
+      .attr("width", width)
+      // .datum(listJSON).call(chart);
+      .datum(csvArray)
+      .call(chart);
+  };
 }
 
-// Csvを取り込んでJSON形式のデータを作る関数
-async function processCSVData(requestURL) {
-  try {
-    const response = await fetch(requestURL);
-    const csvText = await response.text();
+// function loadCSVData() {
+//   // CSVファイルを取得
+//   let csv = new XMLHttpRequest();
+//   let requestURL = "http://127.0.0.1:5500/data/trialdata.csv";
 
-    var rows = csvText.split("\n").map((row) => row.split(","));
-    var groupedData = {};
+//   // CSVファイルへのパス
+//   csv.open("GET", requestURL, false);
 
-    rows.slice(1).forEach((row) => {
-      var labelClassKey = row[0] + "," + row[1];
-      if (!groupedData[labelClassKey]) {
-        groupedData[labelClassKey] = {
-          label: row[0],
-          class: row[1],
-          times: [],
-        };
-      }
+//   // csvファイル読み込み失敗時のエラー対応
+//   try {
+//     csv.send(null);
+//   } catch (err) {
+//     console.log(err);
+//   }
 
-      var timeData = {
-        name: row[2],
-        color: row[3],
-        group: parseInt(row[4]),
-        lane: parseInt(row[5]),
-        starting_time: parseInt(row[6]),
-        ending_time: parseInt(row[7]),
-      };
+//   // 配列を定義
+//   let csvArray = [];
 
-      groupedData[labelClassKey].times.push(timeData);
-    });
+//   // 改行ごとに配列化
+//   let lines = csv.responseText.split(/\r\n|\n/);
 
-    var result = Object.values(groupedData);
-    return result;
-  } catch (error) {
-    console.error("Error loading CSV data:", error);
-    throw error;
-  }
-}
+//   // 先頭行をヘッダとして格納
+//   let header = lines[0].split(",");
 
-// RadioBottomの値で表示期間を変える関数
+//   // 先頭行の削除
+//   lines.shift();
+
+//   csvArray = lines.map((item) => {
+//     let datas = item.split(",");
+//     let result = {};
+//     for (const index in datas) {
+//       let key = header[index];
+//       result[key] = datas[index];
+//     }
+//     return result;
+//   });
+
+//   return csvArray;
+// }
+
+// RadioBottomの値で表示期間を変える。
 function getSelectedValue() {
   var form = document.getElementById("ChangeTimeSpan");
   var selectedTimeSpan = null;
@@ -1054,3 +1041,169 @@ function getSelectedValue() {
 }
 
 timeline();
+
+let requestURL = "http://127.0.0.1:5500/data/trialdata.csv";
+var parseDate = d3.time.format("%Y-%b-%d %H:%M:%S").parse;
+
+// d3.csv(requestURL, function (data) {
+//   console.log("XX1");
+//   console.log(data);
+//   console.log("XX2");
+//   //this will do the grouping
+//   var k = d3
+//     .nest()
+//     .key(function (d) {
+//       return d.label;
+//     })
+//     .entries(data);
+//   console.log(k);
+//   console.log("XX3");
+  
+//   var b = [];
+//   //this will make it in the format expected by d3 time line
+//   k.forEach(function (d) {
+//     var ob = {};
+//     ob.label = d.key;
+//     ob.times = {};
+//     b.push(ob);
+//     d.values.forEach(function (v) {
+//       // ob.times.push(v.name); //collecting all the times
+//       ob.times.name =v.name
+      
+//     });
+//     ob.times = [].concat.apply([], ob.times);
+//     // console.log(ob);
+//   });
+//   console.log(b)
+//   console.log("XX4");
+//   console.log(trialdata);
+// });
+
+
+// var csv = [
+//   "name,birthday/day,birthday/month,birthday/year,house/type,house/address/street,house/address/city,house/address/state,house/occupants",
+//   "Lily Haywood,27,3,1995,Igloo,768 Pocket Walk,Honolulu,HI,7",
+//   "Stan Marsh,19,10,1987,Treehouse,2001 Bonanza Street,South Park,CO,2"
+// ];
+
+
+// console.log(csv);
+
+// var attrs = csv.splice(0,1);
+
+// var result = csv.map(function(row) {
+//   var obj = {};
+//   var rowData = row.split(',');
+//   attrs[0].split(',').forEach(function(val, idx) {
+//     obj = constructObj(val, obj, rowData[idx]);
+//   });
+//   return obj;
+// })
+
+
+// function constructObj(str, parentObj, data) {
+//   if(str.split('/').length === 1) {
+//     parentObj[str] = data;
+//     return parentObj;
+//   }
+
+//   var curKey = str.split('/')[0];
+//   if(!parentObj[curKey])
+//     parentObj[curKey] = {};
+//   parentObj[curKey] = constructObj(str.split('/').slice(1).join('/'), parentObj[curKey], data);
+//   return parentObj;
+// }
+
+// console.log(result);
+
+
+// 新しい requestURL
+
+// // Fetch APIを使用してCSVデータを取得
+// fetch(requestURL)
+//   .then(response => response.text())
+//   .then(csvText => {
+//     // CSVデータを改行ごとに分割して配列に変換
+//     var csv = csvText.split('\r\n');
+
+//     // 先頭行を抽出して属性として使用
+//     var attrs = csv.splice(0, 1);
+
+//     // 各行のデータをオブジェクトに変換
+//     var result = csv.map(function(row) {
+//       var obj = {};
+//       var rowData = row.split(',');
+//       attrs[0].split(',').forEach(function(val, idx) {
+//         obj = constructObj(val, obj, rowData[idx]);
+//       });
+//       return obj;
+//     });
+
+//     // 結果をコンソールに表示
+//     console.log(result);
+//   })
+//   .catch(error => {
+//     console.error('Error loading CSV data:', error);
+//   });
+
+// function constructObj(str, parentObj, data) {
+//   if(str.split('/').length === 1) {
+//     parentObj[str] = data;
+//     return parentObj;
+//   }
+
+//   var curKey = str.split('/')[0];
+//   if(!parentObj[curKey])
+//     parentObj[curKey] = {};
+//   parentObj[curKey] = constructObj(str.split('/').slice(1).join('/'), parentObj[curKey], data);
+//   return parentObj;
+// }
+
+function loadCSVData() {
+  let requestURL = "http://127.0.0.1:5500/data/trialdata.csv";
+
+  fetch(requestURL)
+    .then(response => response.text())
+    .then(csvText => {
+      // CSVデータを改行ごとに分割して配列に変換
+      var rows = csvText.split('\n').map(row => row.split(','));
+
+      // グループ化した結果を格納するオブジェクト
+      var groupedData = {};
+
+      // 各行のデータをグループ化
+      rows.slice(1).forEach(row => {
+        var labelClassKey = row[0] + ',' + row[1];
+        if (!groupedData[labelClassKey]) {
+          groupedData[labelClassKey] = {
+            label: row[0],
+            class: row[1],
+            times: []
+          };
+        }
+
+        var timeData = {
+          name: row[2],
+          color: row[3],
+          group: row[4],
+          lane: row[5],
+          starting_time: parseInt(row[6]),
+          ending_time: parseInt(row[7])
+        };
+
+        groupedData[labelClassKey].times.push(timeData);
+      });
+
+      // グループ化されたデータを配列に変換
+      var result = Object.values(groupedData);
+
+      // 結果をコンソールに表示
+      console.log(result);
+      return result
+    })
+    .catch(error => {
+      console.error('Error loading CSV data:', error);
+    });
+  }
+
+  // console.log(trialdata);

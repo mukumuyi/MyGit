@@ -39,11 +39,6 @@
       color: white;
     }
 
-
-    .coloredDiv {
-      height:20px; width:20px; float:left;
-    }
-
     .tooltip {
       position: absolute;
       text-align: left;
