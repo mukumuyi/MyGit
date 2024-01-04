@@ -1,0 +1,109 @@
+<svg width="600" height="400">
+    <g id="xAxis-group" transform="translate(200,0)" fill='white'>
+        <defs>
+            <clipPath id="xAxis-clip">
+                <rect x="0" y="0" width="400" height="100"></rect>
+            </clipPath>
+        </defs>
+        <g class="clipped-group" clip-path="url(#xAxis-clip)">
+            <rect x="0" y="0" width="400" height= "100" style="fill: grey;"></rect>
+            <text class="xAxis marker-label right" x="15" y="20">xAxis: [0,0]</text>
+            <text class="xAxis marker-label left"  x="175" y="30">xAxis: [200,50]</text>
+            <text class="xAxis marker-label left" x="375" y="80">xAxis: [400,100]</text>
+        </g>
+        <rect class="xAxis drag-handler" x="0" y="0" width="400" height="100"
+            style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect>
+    </g>
+    <g id="yAxis-group" transform="translate(0,100)" fill='white'>
+        <defs>
+            <clipPath id="yAxis-clip">
+                <rect x="0" y="0" width="200" height="300"></rect>
+            </clipPath>
+        </defs>
+        <g class="clipped-group" clip-path="url(#yAxis-clip)">
+            <rect x="0" y="0" width="200" height= "300" style="fill: grey;"></rect>
+            <circle class="yAxis marker-circle" cx="0" cy="-30" r="20"></circle>
+            <circle class="yAxis marker-circle" cx="100" cy="120" r="20"></circle>
+            <circle class="yAxis marker-circle" cx="200" cy="270" r="20"></circle>
+            <line class="yAxis marker-x-axis" x1="-20" y1="-30" x2="20" y2="-30"></line>
+            <line class="yAxis marker-x-axis" x1="80" y1="120" x2="120" y2="120"></line>
+            <line class="yAxis marker-x-axis" x1="180" y1="270" x2="220" y2="270"></line>
+            <line class="yAxis marker-y-axis" x1="0" y1="-50" x2="0" y2="-10"></line>
+            <line class="yAxis marker-y-axis" x1="100" y1="100" x2="100" y2="140"></line>
+            <line class="yAxis marker-y-axis" x1="200" y1="250" x2="200" y2="290"></line>
+            <line class="yAxis marker-arrow" x1="0" y1="-30" x2="20" y2="-10"></line>
+            <line class="yAxis marker-arrow" x1="100" y1="120" x2="120" y2="100"></line>
+            <line class="yAxis marker-arrow" x1="200" y1="270" x2="180" y2="250"></line>
+            <text class="yAxis marker-label right" x="20" y="-10">yAxis: [0,0]</text>
+            <text class="yAxis marker-label right" x="120" y="100">yAxis: [100,150]</text>
+            <text class="yAxis marker-label left" x="180" y="250">yAxis: [200,300]</text>
+        </g>
+        <rect class="yAxis drag-handler" x="0" y="0" width="200" height="300"
+            style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect>
+    </g>
+    <g id="plotArea-group" transform="translate(200,100)" fill='white'>
+        <defs>
+            <clipPath id="plotArea-clip">
+                <rect x="0" y="0" width="400" height="300"></rect>
+            </clipPath>
+        </defs>
+        <g class="clipped-group" clip-path="url(#plotArea-clip)">
+            <rect x="0" y="0" width="400" height= "300" style="fill: grey;"></rect>
+            <circle class="plotArea marker-circle" cx="-5" cy="-30" r="20"></circle>
+            <circle class="plotArea marker-circle" cx="-5" cy="270" r="20"></circle>
+            <circle class="plotArea marker-circle" cx="395" cy="-30" r="20"></circle>
+            <circle class="plotArea marker-circle" cx="195" cy="120" r="20"></circle>
+            <circle class="plotArea marker-circle" cx="395" cy="270" r="20"></circle>
+            <line class="plotArea marker-x-axis" x1="-25" y1="-30" x2="15" y2="-30"></line>
+            <line class="plotArea marker-x-axis" x1="-25" y1="270" x2="15" y2="270"></line>
+            <line class="plotArea marker-x-axis" x1="375" y1="-30" x2="415" y2="-30"></line>
+            <line class="plotArea marker-x-axis" x1="175" y1="120" x2="215" y2="120"></line>
+            <line class="plotArea marker-x-axis" x1="375" y1="270" x2="415" y2="270"></line>
+            <line class="plotArea marker-y-axis" x1="-5" y1="-50" x2="-5" y2="-10"></line>
+            <line class="plotArea marker-y-axis" x1="-5" y1="250" x2="-5" y2="290"></line>
+            <line class="plotArea marker-y-axis" x1="395" y1="-50" x2="395" y2="-10"></line>
+            <line class="plotArea marker-y-axis" x1="195" y1="100" x2="195" y2="140"></line>
+            <line class="plotArea marker-y-axis" x1="395" y1="250" x2="395" y2="290"></line>
+            <line class="plotArea marker-arrow" x1="-5" y1="-30" x2="15" y2="-10"></line>
+            <line class="plotArea marker-arrow" x1="-5" y1="270" x2="15" y2="250"></line>
+            <line class="plotArea marker-arrow" x1="395" y1="-30" x2="375" y2="-10"></line>
+            <line class="plotArea marker-arrow" x1="195" y1="120" x2="175" y2="100"></line>
+            <line class="plotArea marker-arrow" x1="395" y1="270" x2="375" y2="250"></line><text
+                class="plotArea marker-label right" x="15" y="-10">plotArea: [0,0]</text><text
+                class="plotArea marker-label right" x="15" y="250">plotArea: [0,300]</text><text
+                class="plotArea marker-label left" x="375" y="-10">plotArea: [400,0]</text><text
+                class="plotArea marker-label left" x="175" y="100">plotArea: [200,150]</text><text
+                class="plotArea marker-label left" x="375" y="250">plotArea: [400,300]</text>
+        </g>
+        <rect class="plotArea drag-handler" x="0" y="0" width="400" height="300"
+            style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect>
+    </g>
+    <circle class="svg marker-circle" cx="0" cy="0" r="40"></circle>
+    <circle class="svg marker-circle" cx="0" cy="400" r="40"></circle>
+    <circle class="svg marker-circle" cx="600" cy="0" r="40"></circle>
+    <circle class="svg marker-circle" cx="600" cy="400" r="40"></circle>
+    <circle class="svg marker-circle" cx="200" cy="100" r="40"></circle>
+    <line class="svg marker-x-axis" x1="-40" y1="0" x2="40" y2="0"></line>
+    <line class="svg marker-x-axis" x1="-40" y1="400" x2="40" y2="400"></line>
+    <line class="svg marker-x-axis" x1="560" y1="0" x2="640" y2="0"></line>
+    <line class="svg marker-x-axis" x1="560" y1="400" x2="640" y2="400"></line>
+    <line class="svg marker-x-axis" x1="160" y1="100" x2="240" y2="100"></line>
+    <line class="svg marker-y-axis" x1="0" y1="-40" x2="0" y2="40"></line>
+    <line class="svg marker-y-axis" x1="0" y1="360" x2="0" y2="440"></line>
+    <line class="svg marker-y-axis" x1="600" y1="-40" x2="600" y2="40"></line>
+    <line class="svg marker-y-axis" x1="600" y1="360" x2="600" y2="440"></line>
+    <line class="svg marker-y-axis" x1="200" y1="60" x2="200" y2="140"></line>
+    <line class="svg marker-arrow" x1="0" y1="0" x2="40" y2="40"></line>
+    <line class="svg marker-arrow" x1="0" y1="400" x2="40" y2="360"></line>
+    <line class="svg marker-arrow" x1="600" y1="0" x2="560" y2="40"></line>
+    <line class="svg marker-arrow" x1="600" y1="400" x2="560" y2="360"></line>
+    <line class="svg marker-arrow" x1="200" y1="100" x2="240" y2="140"></line>
+    <text class="svg marker-label right"
+        x="40" y="40">svg: [0,0]</text>
+    <text class="svg marker-label right" x="40" y="360">svg: [0,400]</text>
+    <text
+        class="svg marker-label left" x="560" y="40">svg: [600,0]</text>
+    <text class="svg marker-label left" x="560"
+        y="360">svg: [600,400]</text>
+    <text class="svg marker-label right" x="240" y="140">svg: [200,100]</text>
+</svg>

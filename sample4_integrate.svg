@@ -1,0 +1,58 @@
+<svg width="600" height="400">
+    <g id="xAxis-group" transform="translate(100,0)" fill='#bddfeb'>
+        <defs>
+            <clipPath id="xAxis-clip">
+                <rect x="0" y="0" width="500" height="50"></rect>
+            </clipPath>
+        </defs>
+        <g class="clipped-group" clip-path="url(#xAxis-clip)">
+            <rect x="0" y="0" width="500" height= "50"></rect>
+            <text class="xAxis marker-label left" y="3em" x="0" style="text-anchor: left;" fill="black">08:00</text>
+            <text class="xAxis marker-label left" y="3em" x="114" style="text-anchor: left;" fill="black">09:00</text>
+            <text class="xAxis marker-label left" y="3em" x="228" style="text-anchor: left;" fill="black">10:00</text>
+            <text class="xAxis marker-label left" y="3em" x="342" style="text-anchor: left;" fill="black">11:00</text>
+            <text class="xAxis marker-label left" y="3em" x="456" style="text-anchor: left;" fill="black">12:00</text>
+            <text class="xAxis marker-label left" y="3em" x="570" style="text-anchor: left;" fill="black">13:00</text>
+        </g>
+        <rect class="xAxis drag-handler" x="0" y="0" width="500" height="50"
+            style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); fill:none"></rect>
+    </g>
+    <g id="yAxis-group" transform="translate(0,50)" fill='#bddfeb'>
+        <defs>
+            <clipPath id="yAxis-clip">
+                <rect x="0" y="0" width="100" height="350"></rect>
+            </clipPath>
+        </defs>
+        <g class="clipped-group" clip-path="url(#yAxis-clip)">
+            <rect x="0" y="0" width="100" height= "350"></rect>
+        </g>
+        <g class="tick" transform="translate(0,15)" style="opacity: 1;">
+            <text y="0" x="0" style="text-anchor: left;" fill="black">person_a</text>
+        </g>
+        <g class="tick" transform="translate(0,85)" style="opacity: 1;">
+            <text y="0" x="0" style="text-anchor: left;" fill="black">person_b</text>
+        </g>
+        <g class="tick" transform="translate(0,115)" style="opacity: 1;">
+            <text y="0" x="0" style="text-anchor: left;" fill="black">person_c</text>
+        </g>
+        <rect class="yAxis drag-handler" x="0" y="0" width="100" height="350"
+            style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);fill:none"></rect>
+    </g>
+    <g id="plotArea-group" transform="translate(100,50)" fill='#d0e3ed'>
+        <defs>
+            <clipPath id="plotArea-clip">
+                <rect x="0" y="0" width="500" height="350"></rect>
+            </clipPath>
+        </defs>
+        <g class="clipped-group" clip-path="url(#plotArea-clip)">
+            <rect x="0" y="0" width="500" height= "350"></rect>
+        </g>
+        <rect x="70" y="5" width="88.97140077706655" height="20" style="fill: yellow;"></rect>
+        <rect x="100" y="25" width="88.97140077706655" height="20" style="fill: yellow;"></rect>
+        <rect x="120" y="45" width="88.97140077706655" height="20" style="fill: yellow;"></rect>
+        <rect x="130" y="75" width="88.97140077706655" height="20" style="fill: yellow;"></rect>
+        <rect x="150" y="105" width="88.97140077706655" height="20" style="fill: yellow;"></rect>
+        <rect class="plotArea drag-handler" x="0" y="0" width="500" height="350"
+            style="touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);fill:none"></rect>
+    </g>
+</svg>

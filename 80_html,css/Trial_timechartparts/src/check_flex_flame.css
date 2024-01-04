@@ -1,0 +1,38 @@
+Result Skip Results Iframe
+EDIT ON
+$svg-color: blue;
+svg {
+  margin: 20pt;
+}
+rect.drag-handler {
+  pointer-events: all;
+  fill-opacity: 0.1;
+  &.xAxis {
+    fill: lightblue;
+  }
+  &.yAxis {
+    fill: lightgreen;
+  }
+  &.plotArea {
+    fill: yellow;
+  }
+}
+line {
+  stroke-width: 1px;
+  stroke: #111;
+  &.svg {
+    stroke: $svg-color;
+  }
+}
+text {
+  font-size: 10pt;
+  &.right {
+    text-anchor: end;
+  }
+  &.left {
+    text-anchor: start
+  }
+  &.svg {
+    stroke: $svg-color;
+  }
+}

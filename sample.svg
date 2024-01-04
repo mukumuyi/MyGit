@@ -90,7 +90,8 @@
         <text x="921.922117190393" y="870"></text>
         <text x="947.8037635487018" y="890"></text>
         <text x="970.0368224179583" y="910"></text>
-        <rect class="row-green-bar" x="0" width="2917.1296296296296" y="0" height="20" fill="white"></rect>
+        <rect class="row-green-bar" x="0" width="2917.1296296296296" y="0" height="20" fill="yellow"></rect>
+        <rect class="row-green-bar" x="0" width="70" y="0" height="915" fill="green"></rect>
         <g class="axis" transform="translate(0,0)">
             <g class="tick" transform="translate(114.70924662164148,0)" style="opacity: 1;">
                 <line y2="6" x2="0"></line>
