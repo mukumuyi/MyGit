@@ -1,4 +1,4 @@
-label,class,name,color,group,lane,starting_time,ending_time
+label,class,times/name,times/color,times/group,times/lane,times/starting_time,times/ending_time
 person_a,a,test1,green,1,1,1703808000000,1703814500000
 person_a,a,test2,blue,1,1,1703850510000,1703870010000
 person_a,a,test5,red,1,2,1703809000000,1703819900000
