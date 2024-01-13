@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="./timeline.css">
+        <h1>Timeline Chart</h1>
+    </head>
+    <body>
+      <form id="ChangeTimeSpan">表示期間
+        <label for = "Span1h">
+          <input type="radio" name="TimeSpan" value="3600000" id="Span1h"> 1時間
+        </label>
+        <label for = "Span6h">
+          <input type="radio" name="TimeSpan" value="21600000" id="Span6h" checked> 6時間
+        </label>
+        <label for = "Span12h">
+          <input type="radio" name="TimeSpan" value="43200000" id="Span12h"> 12時間
+        </label>
+        <label for = "Span1d">
+          <input type="radio" name="TimeSpan" value="86400000" id="Span1d"> 1日
+        </label>
+        <button type="button" onclick="getSelectedValue()">切替</button>
+      </form>
+      <form id="ChangeBarWidth">バーの幅
+        <label for = "BarThick">
+          <input type="radio" name="BarWidth" value="40" id="BarThick"> 太
+        </label>
+        <label for = "BarRgular">
+          <input type="radio" name="BarWidth" value="20" id="BarRgular" checked> 標準
+        </label>
+        <label for = "BarThin">
+          <input type="radio" name="BarWidth" value="12" id="BarThin"> 細
+        </label>
+        <label for = "BarThinest">
+          <input type="radio" name="BarWidth" value="8" id="BarThinest"> 極細
+        </label>
+      </form>
+      <div id="mainbody">
+        <div id="timeline1"></div>
+        <div id="hoverRes">
+          <div id="graph"></div>
+        </div>
+      </div>
+      <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.14.2/d3.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+      <script src="./timeline.js"></script>
+  </body>
+</html>

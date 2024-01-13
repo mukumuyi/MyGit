@@ -178,7 +178,59 @@ function timeline(frameTimespan,g_height) {
     return resultArray;
   }
 
-  csvArray = loadCSVData();
+  // csvArray = loadCSVData();  // Comment Out For Offline *******
+  csvArray = [
+    {
+        "label": "person_a",
+        "class": "a",
+        "name": "test1",
+        "color": "green",
+        "group": "1",
+        "lane": "1",
+        "starting_time": "1703808000000",
+        "ending_time": "1703814500000"
+    },
+    {
+        "label": "person_a",
+        "class": "a",
+        "name": "test2",
+        "color": "blue",
+        "group": "1",
+        "lane": "1",
+        "starting_time": "1703850510000",
+        "ending_time": "1703870010000"
+    },
+    {
+        "label": "person_a",
+        "class": "a",
+        "name": "test5",
+        "color": "red",
+        "group": "1",
+        "lane": "2",
+        "starting_time": "1703809000000",
+        "ending_time": "1703819900000"
+    },
+    {
+        "label": "person_b",
+        "class": "b",
+        "name": "test3",
+        "color": "pink",
+        "group": "2",
+        "lane": "3",
+        "starting_time": "1703807000000",
+        "ending_time": "1703808990000"
+    },
+    {
+        "label": "person_c",
+        "class": "c",
+        "name": "test4",
+        "color": "yellow",
+        "group": "3",
+        "lane": "4",
+        "starting_time": "1703808000000",
+        "ending_time": "1703810000000"
+    }
+]
   var minTimeStamp =
     Math.floor(
       Math.min(
