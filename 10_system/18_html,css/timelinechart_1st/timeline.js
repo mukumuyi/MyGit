@@ -178,11 +178,11 @@ function timeline(frameTimespan,g_height) {
     return resultArray;
   }
 
-  // csvArray = loadCSVData();  // Comment Out For Offline *******
   csvArray = [
     {
         "label": "person_a",
         "class": "a",
+        "status": "Run",
         "name": "test1",
         "color": "green",
         "group": "1",
@@ -193,6 +193,7 @@ function timeline(frameTimespan,g_height) {
     {
         "label": "person_a",
         "class": "a",
+        "status": "Wait",
         "name": "test2",
         "color": "blue",
         "group": "1",
@@ -203,6 +204,7 @@ function timeline(frameTimespan,g_height) {
     {
         "label": "person_a",
         "class": "a",
+        "status": "Fix",
         "name": "test5",
         "color": "red",
         "group": "1",
@@ -213,6 +215,7 @@ function timeline(frameTimespan,g_height) {
     {
         "label": "person_b",
         "class": "b",
+        "status": "Run",
         "name": "test3",
         "color": "pink",
         "group": "2",
@@ -223,6 +226,7 @@ function timeline(frameTimespan,g_height) {
     {
         "label": "person_c",
         "class": "c",
+        "status": "Run",
         "name": "test4",
         "color": "yellow",
         "group": "3",
@@ -231,6 +235,9 @@ function timeline(frameTimespan,g_height) {
         "ending_time": "1703810000000"
     }
 ]
+
+  csvArray = loadCSVData();  // Comment Out For Offline *******
+
   var minTimeStamp =
     Math.floor(
       Math.min(
@@ -261,7 +268,7 @@ function timeline(frameTimespan,g_height) {
     barY: function () {
       return this.cy;
     },
-    barColor: item.color,
+    barColor: document.getElementById(item[document.getElementById('ColorColumn').value]).value,
     labelX: function () {
       return this.cx;
     },
@@ -369,7 +376,9 @@ function timeline(frameTimespan,g_height) {
                 " " +
                 ending_time.toLocaleTimeString("it-IT") +
                 "<br>name : " +
-                d.name 
+                d.name +
+                "<br>status : " +
+                d.status 
             );
         })
         .on("mousemove", function (d) {
@@ -432,5 +441,8 @@ function getSelectedValue() {
     alert("Please select a radio bottom");
   }
 }
+
+var TempToday = new Date();
+console.log(TempToday.toLocaleTimeString("it-IT"))
 
 timeline();

@@ -1,0 +1,6 @@
+label,class,name,color,group,lane,starting_time,ending_time
+person_a,a,test1,green,1,1,1703808000000,1703814500000
+person_a,a,test2,blue,1,1,1703850510000,1703870010000
+person_a,a,test5,red,1,2,1703809000000,1703819900000
+person_b,b,test3,pink,2,3,1703807000000,1703808990000
+person_c,c,test4,yellow,3,4,1703808000000,1703810000000

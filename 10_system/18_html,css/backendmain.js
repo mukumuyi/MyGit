@@ -14,6 +14,10 @@ app.get("/",(req,res)=>{
     res.sendFile(__dirname + "/timelinechart_1st/timeline.html");
 });
 
+app.get("/data",(req,res)=>{
+  res.sendFile(__dirname + "/data/trialdata.csv");
+});
+
 app.listen(port,() =>{
   console.log(`Server is running on port ${port}`);
 });
