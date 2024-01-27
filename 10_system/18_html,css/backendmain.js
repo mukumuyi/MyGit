@@ -8,10 +8,10 @@ const app = express();
 const port = 3000;
 
 
-app.use(express.static(__dirname+ "/timelinechart_1st/"));
+app.use(express.static(__dirname+ "/timelinechart/"));
 
 app.get("/",(req,res)=>{
-    res.sendFile(__dirname + "/timelinechart_1st/timeline.html");
+    res.sendFile(__dirname + "/timelinechart/timeline.html");
 });
 
 app.get("/data",(req,res)=>{
