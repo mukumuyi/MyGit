@@ -5,41 +5,24 @@ function timeline(frameTimespan,g_height) {
   const height0 = 500;
   const px0 = 100;
   const py0 = 50;
+
   // part-group parameters
   const width1 = width0 - px0;
   const height1 = height0 - py0;
   const graphData = [
     {
-      area: "xAxis",
-      px: px0,
-      py: 0,
-      clipPath: {
-        x: 0,
-        y: 0,
-        width: width1,
-        height: py0,
+      area: "xAxis",px: px0,py: 0,clipPath: {
+        x: 0,y: 0,width: width1,height: py0,
       },
     },
     {
-      area: "yAxis",
-      px: 0,
-      py: py0,
-      clipPath: {
-        x: 0,
-        y: 0,
-        width: px0,
-        height: height1,
+      area: "yAxis",px: 0,py: py0,clipPath: {
+        x: 0,y: 0,width: px0,height: height1,
       },
     },
     {
-      area: "plotArea",
-      px: px0,
-      py: py0,
-      clipPath: {
-        x: 0,
-        y: 0,
-        width: width1,
-        height: height1,
+      area: "plotArea",px: px0,py: py0,clipPath: {
+        x: 0,y: 0,width: width1,height: height1,
       },
     },
   ];
@@ -113,14 +96,16 @@ function timeline(frameTimespan,g_height) {
   function loadCSVData() {
     // CSVファイルを取得
     let csv = new XMLHttpRequest();
+    let csvArray = []; // 配列を定義
+    
     csv.open("GET", requestURL, false); // CSVファイルへのパス
-    try {
-      // csvファイル読み込み失敗時のエラー対応
+    
+    try {      // csvファイル読み込み失敗時のエラー対応
       csv.send(null);
-    } catch (err) {
+    } catch (err) {     
       console.log(err);
     }
-    let csvArray = []; // 配列を定義
+    
     let lines = csv.responseText.split(/\r\n|\n/); // 改行ごとに配列化
     let header = lines[0].split(","); // 先頭行をヘッダとして格納
     lines.shift(); // 先頭行の削除
@@ -181,6 +166,10 @@ function timeline(frameTimespan,g_height) {
     return resultArray;
   }
 
+
+  //  Main Proc Start
+  //  Input 
+
   csvArray = [
     {
         "label": "person_a",
@@ -238,10 +227,11 @@ function timeline(frameTimespan,g_height) {
         "ending_time": "1703810000000"
     }
 ]
-
   csvArray = loadCSVData();  // Comment Out For Offline *******
 
-  var minTimeStamp =
+  //  Make Parameter From Input
+
+  const minTimeStamp =
     Math.floor(
       Math.min(
         ...csvArray
@@ -249,7 +239,8 @@ function timeline(frameTimespan,g_height) {
           .filter((value) => !isNaN(value))
       ) / 3600000
     ) * 3600000;
-  var maxTimeStamp =
+    
+  const maxTimeStamp =
     Math.ceil(
       Math.max(
         ...csvArray
