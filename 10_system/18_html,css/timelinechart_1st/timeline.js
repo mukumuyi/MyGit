@@ -2,7 +2,7 @@ function timeline(frameTimespan,g_height) {
 
   // basic parameters
   const width0 = 1300;
-  const height0 = 600;
+  const height0 = 500;
   const px0 = 100;
   const py0 = 50;
   // part-group parameters
@@ -44,8 +44,9 @@ function timeline(frameTimespan,g_height) {
     },
   ];
 
-  // data parameter
-  const requestURL = "https://mukumuyi.github.io/MyGit/data/trialdata.csv";
+  // File parameter
+  const requestURL = document.getElementById('FileDirectory').value;
+  console.log(requestURL)
   // Local
   // const requestURL = "http://127.0.0.1:5500/data/trialdata.csv";
 

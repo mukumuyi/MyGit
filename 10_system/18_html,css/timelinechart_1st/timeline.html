@@ -2,9 +2,9 @@
 <html>
     <head>
         <link rel="stylesheet" href="./timeline.css">
-        <h1>Timeline Chart</h1>
     </head>
     <body>
+      <h3>Timeline Chart</h3>
       <div class="container">
         <div class="container2" id ="ZoomControl">
           <details open>            
@@ -19,7 +19,9 @@
                   <option value="oracle">oracle</option>
                 </select>
               </form> 
+              <input type="text" id="FileDirectory" onchange="getSelectedValue()" value="https://mukumuyi.github.io/MyGit/data/trialdata.csv">
           </details>
+        </div>
           <details open>            
             <summary>
               <span class="open">表示サイズ（展開可）</span>
@@ -54,7 +56,6 @@
              </label>
            </form>
           </details>
-        </div>
         <div>
           <details open>            
             <summary>
@@ -62,7 +63,7 @@
               <span class="close">色分類（折畳可）</span>
            </summary>
            <form id="ColorColumnSelector"> 分類列  
-             <select name="ColorColumn" id="ColorColumn">
+             <select name="ColorColumn" id="ColorColumn" onchange="getSelectedValue()" >
                <option>status</option>
                <option>class</option>
              </select>
