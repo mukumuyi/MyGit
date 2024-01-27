@@ -5,35 +5,109 @@
         <h1>Timeline Chart</h1>
     </head>
     <body>
-      <form id="ChangeTimeSpan">表示期間
-        <label for = "Span1h">
-          <input type="radio" name="TimeSpan" value="3600000" id="Span1h"> 1時間
-        </label>
-        <label for = "Span6h">
-          <input type="radio" name="TimeSpan" value="21600000" id="Span6h" checked> 6時間
-        </label>
-        <label for = "Span12h">
-          <input type="radio" name="TimeSpan" value="43200000" id="Span12h"> 12時間
-        </label>
-        <label for = "Span1d">
-          <input type="radio" name="TimeSpan" value="86400000" id="Span1d"> 1日
-        </label>
-        <button type="button" onclick="getSelectedValue()">切替</button>
-      </form>
-      <form id="ChangeBarWidth">バーの幅
-        <label for = "BarThick">
-          <input type="radio" name="BarWidth" value="40" id="BarThick"> 太
-        </label>
-        <label for = "BarRgular">
-          <input type="radio" name="BarWidth" value="20" id="BarRgular" checked> 標準
-        </label>
-        <label for = "BarThin">
-          <input type="radio" name="BarWidth" value="12" id="BarThin"> 細
-        </label>
-        <label for = "BarThinest">
-          <input type="radio" name="BarWidth" value="8" id="BarThinest"> 極細
-        </label>
-      </form>
+      <div class="container">
+        <div class="container2" id ="ZoomControl">
+          <details>            
+            <summary>
+              <span class="open">入力ファイル（展開可）</span>
+              <span class="close">入力ファイル（折畳可）</span>
+           </summary>
+              <form id="ColorColumnSelector">   
+                <select name="ColorColumn" id="ColorColumn">
+                  <option value="csv">csv</option>
+                  <option value="json">json</option>
+                  <option value="oracle">oracle</option>
+                </select>
+              </form> 
+          </details>
+          <details>            
+            <summary>
+              <span class="open">表示サイズ（展開可）</span>
+              <span class="close">表示サイズ（折畳可）</span>
+           </summary>
+           <form id="ChangeTimeSpan">表示期間
+             <label for = "Span1h">
+               <input type="radio" name="TimeSpan" value="3600000" id="Span1h"> 1時間
+             </label>
+             <label for = "Span6h">
+               <input type="radio" name="TimeSpan" value="21600000" id="Span6h" checked> 6時間
+             </label>
+             <label for = "Span12h">
+               <input type="radio" name="TimeSpan" value="43200000" id="Span12h"> 12時間
+             </label>
+             <label for = "Span1d">
+               <input type="radio" name="TimeSpan" value="86400000" id="Span1d"> 1日
+             </label>
+             <button type="button" onclick="getSelectedValue()">切替</button>
+           </form>
+           <form id="ChangeBarWidth">バーの幅
+             <label for = "BarThick">
+               <input type="radio" name="BarWidth" value="40" id="BarThick"> 太
+             </label>
+             <label for = "BarRgular">
+               <input type="radio" name="BarWidth" value="20" id="BarRgular" checked> 標準
+             </label>
+             <label for = "BarThin">
+               <input type="radio" name="BarWidth" value="12" id="BarThin"> 細
+             </label>
+             <label for = "BarThinest">
+               <input type="radio" name="BarWidth" value="8" id="BarThinest"> 極細
+             </label>
+           </form>
+          </details>
+        </div>
+        <div>
+          <details>            
+            <summary>
+              <span class="open">色分類（展開可）</span>
+              <span class="close">色分類（折畳可）</span>
+           </summary>
+           <form id="ColorColumnSelector"> 分類列  
+             <select name="ColorColumn" id="ColorColumn">
+               <option value="a">aaa</option>
+               <option value="b">bbb</option>
+               <option value="c">ccc</option>
+             </select>
+           </form>
+         <div class="container3" id=" ColorSelectTable">
+           <div>
+             <input type="color" id="color01" value="#e66465" />
+             <label for="color01">Head</label>
+           </div>
+           <div>
+             <input type="color" id="color02" value="#e66465" />
+             <label for="color02">Head</label>
+           </div>
+           <div>
+             <input type="color" id="color03" value="#e66465" />
+             <label for="color03">Head</label>
+           </div>
+           <div>
+             <input type="color" id="color04" value="#e66465" />
+             <label for="color04">Head</label>
+           </div>
+         </div>
+         <div class="container3" id=" ColorSelectTable">
+           <div>
+             <input type="color" id="color01" value="#e66465" />
+             <label for="color01">Head</label>
+           </div>
+           <div>
+             <input type="color" id="color02" value="#e66465" />
+             <label for="color02">Head</label>
+           </div>
+           <div>
+             <input type="color" id="color03" value="#e66465" />
+             <label for="color03">Head</label>
+           </div>
+           <div>
+             <input type="color" id="color04" value="#e66465" />
+             <label for="color04">Head</label>
+           </div>
+         </div>
+          </details>
+      </div>
+      </div>
       <div id="mainbody">
         <div id="timeline1"></div>
         <div id="hoverRes">

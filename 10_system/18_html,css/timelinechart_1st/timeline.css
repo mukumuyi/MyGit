@@ -1,4 +1,31 @@
 
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+
+.container2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr ;
+}
+
+.container3 {
+  display: grid;
+  margin: 5px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+
+details[open] .open {
+  display: none ;
+}
+
+details:not([open]) .close {
+  display: none ;
+}
+
 svg {
   margin: 20pt;
 }
