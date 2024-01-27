@@ -1,5 +1,78 @@
 function timeline(frameTimespan,g_height) {
 
+  function loadCSVData() {
+    // CSVファイルを取得
+    let csv = new XMLHttpRequest();
+    let csvArray = []; // 配列を定義
+    
+    csv.open("GET", requestURL, false); // CSVファイルへのパス
+    
+    try {      // csvファイル読み込み失敗時のエラー対応
+      csv.send(null);
+    } catch (err) {     
+      console.log(err);
+    }
+    
+    let lines = csv.responseText.split(/\r\n|\n/); // 改行ごとに配列化
+    let header = lines[0].split(","); // 先頭行をヘッダとして格納
+    lines.shift(); // 先頭行の削除
+
+    csvArray = lines.map((item) => {
+      let datas = item.split(",");
+      let result = {};
+      for (const index in datas) {
+        let key = header[index];
+        result[key] = datas[index];
+      }
+      return result;
+    });
+    return csvArray;
+  }
+
+  function makexAxisArray(startingTime, endingTime, span, scale) {
+    const recordsArray = [];
+    var currentTime = startingTime;
+    while (currentTime <= endingTime) {// 時間と分を取得
+      const currentTimeD = new Date(currentTime)
+      const hours = currentTimeD.getHours();
+      const minutes = currentTimeD.getMinutes();
+      // スパンごとにループ
+      var record = {
+        // レコードを作成
+        coord: "xAxis",
+        cx: (currentTime - startingTime) * scale,
+        cy: 50,
+        r: 10,        
+        label: formattedTime = `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`
+      };
+      recordsArray.push(record); // レコードを配列に追加
+      currentTime += span; // 次のスパンへ進める
+    }
+    return recordsArray;
+  }
+
+  function makeyAxisArray(inputArray) {
+    const result = {};
+
+    for (const item of inputArray) {
+      // 配列をループ
+      const group = parseInt(item.group);
+      const lane = parseInt(item.lane);
+      const label = item.label;
+
+      if (!result[group] || lane < result[group].lane) {
+        // Groupごとに最小のkeyの値を更新
+        result[group] = {
+          group: group,
+          lane: lane,
+          label: label,
+        };
+      }
+    }
+    const resultArray = Object.values(result); // 結果を配列に変換
+    return resultArray;
+  }
+
   // basic parameters
   const width0 = 1300;
   const height0 = 500;
@@ -93,79 +166,6 @@ function timeline(frameTimespan,g_height) {
     plotArea: () => dragAllMarker(d3.event.dx, d3.event.dy),
   };
 
-  function loadCSVData() {
-    // CSVファイルを取得
-    let csv = new XMLHttpRequest();
-    let csvArray = []; // 配列を定義
-    
-    csv.open("GET", requestURL, false); // CSVファイルへのパス
-    
-    try {      // csvファイル読み込み失敗時のエラー対応
-      csv.send(null);
-    } catch (err) {     
-      console.log(err);
-    }
-    
-    let lines = csv.responseText.split(/\r\n|\n/); // 改行ごとに配列化
-    let header = lines[0].split(","); // 先頭行をヘッダとして格納
-    lines.shift(); // 先頭行の削除
-
-    csvArray = lines.map((item) => {
-      let datas = item.split(",");
-      let result = {};
-      for (const index in datas) {
-        let key = header[index];
-        result[key] = datas[index];
-      }
-      return result;
-    });
-    return csvArray;
-  }
-
-  function makexAxisArray(startingTime, endingTime, span, scale) {
-    const recordsArray = [];
-    var currentTime = startingTime;
-    while (currentTime <= endingTime) {// 時間と分を取得
-      const currentTimeD = new Date(currentTime)
-      const hours = currentTimeD.getHours();
-      const minutes = currentTimeD.getMinutes();
-      // スパンごとにループ
-      var record = {
-        // レコードを作成
-        coord: "xAxis",
-        cx: (currentTime - startingTime) * scale,
-        cy: 50,
-        r: 10,        
-        label: formattedTime = `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`
-      };
-      recordsArray.push(record); // レコードを配列に追加
-      currentTime += span; // 次のスパンへ進める
-    }
-    return recordsArray;
-  }
-
-  function makeyAxisArray(inputArray) {
-    const result = {};
-
-    for (const item of inputArray) {
-      // 配列をループ
-      const group = parseInt(item.group);
-      const lane = parseInt(item.lane);
-      const label = item.label;
-
-      if (!result[group] || lane < result[group].lane) {
-        // Groupごとに最小のkeyの値を更新
-        result[group] = {
-          group: group,
-          lane: lane,
-          label: label,
-        };
-      }
-    }
-    const resultArray = Object.values(result); // 結果を配列に変換
-    return resultArray;
-  }
-
 
   //  Main Proc Start
   //  Input 
@@ -229,6 +229,7 @@ function timeline(frameTimespan,g_height) {
 ]
   csvArray = loadCSVData();  // Comment Out For Offline *******
 
+  csvArray = converData(csvArray);
   //  Make Parameter From Input
 
   const minTimeStamp =
