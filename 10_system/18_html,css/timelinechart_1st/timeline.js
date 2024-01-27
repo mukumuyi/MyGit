@@ -1,34 +1,5 @@
 function timeline(frameTimespan,g_height) {
 
-  function loadCSVData() {
-    // CSVファイルを取得
-    let csv = new XMLHttpRequest();
-    let csvArray = []; // 配列を定義
-    
-    csv.open("GET", requestURL, false); // CSVファイルへのパス
-    
-    try {      // csvファイル読み込み失敗時のエラー対応
-      csv.send(null);
-    } catch (err) {     
-      console.log(err);
-    }
-    
-    let lines = csv.responseText.split(/\r\n|\n/); // 改行ごとに配列化
-    let header = lines[0].split(","); // 先頭行をヘッダとして格納
-    lines.shift(); // 先頭行の削除
-
-    csvArray = lines.map((item) => {
-      let datas = item.split(",");
-      let result = {};
-      for (const index in datas) {
-        let key = header[index];
-        result[key] = datas[index];
-      }
-      return result;
-    });
-    return csvArray;
-  }
-
   function makexAxisArray(startingTime, endingTime, span, scale) {
     const recordsArray = [];
     var currentTime = startingTime;
@@ -58,7 +29,7 @@ function timeline(frameTimespan,g_height) {
       // 配列をループ
       const group = parseInt(item.group);
       const lane = parseInt(item.lane);
-      const label = item.label;
+      const label = item[document.getElementById('GroupColumn').value];
 
       if (!result[group] || lane < result[group].lane) {
         // Groupごとに最小のkeyの値を更新
@@ -170,65 +141,7 @@ function timeline(frameTimespan,g_height) {
   //  Main Proc Start
   //  Input 
 
-  csvArray = [
-    {
-        "label": "person_a",
-        "class": "a",
-        "status": "Run",
-        "name": "test1",
-        "color": "green",
-        "group": "1",
-        "lane": "1",
-        "starting_time": "1703808000000",
-        "ending_time": "1703814500000"
-    },
-    {
-        "label": "person_a",
-        "class": "a",
-        "status": "Wait",
-        "name": "test2",
-        "color": "blue",
-        "group": "1",
-        "lane": "1",
-        "starting_time": "1703850510000",
-        "ending_time": "1703870010000"
-    },
-    {
-        "label": "person_a",
-        "class": "a",
-        "status": "Fix",
-        "name": "test5",
-        "color": "red",
-        "group": "1",
-        "lane": "2",
-        "starting_time": "1703809000000",
-        "ending_time": "1703819900000"
-    },
-    {
-        "label": "person_b",
-        "class": "b",
-        "status": "Run",
-        "name": "test3",
-        "color": "pink",
-        "group": "2",
-        "lane": "3",
-        "starting_time": "1703807000000",
-        "ending_time": "1703808990000"
-    },
-    {
-        "label": "person_c",
-        "class": "c",
-        "status": "Run",
-        "name": "test4",
-        "color": "yellow",
-        "group": "3",
-        "lane": "4",
-        "starting_time": "1703808000000",
-        "ending_time": "1703810000000"
-    }
-]
   csvArray = loadCSVData();  // Comment Out For Offline *******
-
   csvArray = converData(csvArray);
   //  Make Parameter From Input
 
@@ -355,6 +268,7 @@ function timeline(frameTimespan,g_height) {
         .attr("height", g_height)
         .attr("width", (d) => d.length)
         .attr("fill", (d) => d.barColor)
+        .attr("stroke",rectStroke)
         // tooltipを表示内容の制御。for tooltip002
         .on("mouseover", function (d) {
           starting_time = new Date(parseInt(d.starting_time));
@@ -437,7 +351,9 @@ function getSelectedValue() {
   }
 }
 
-var TempToday = new Date();
+const rectStroke  = document.getElementById("RectStroke").value;
+const groupColumn = document.getElementById('GroupColumn').value;
+let TempToday = new Date();
 console.log(TempToday.toLocaleTimeString("it-IT"))
 
 timeline();

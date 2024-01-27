@@ -20,10 +20,20 @@
                 </select>
               </form> 
               <input type="text" id="FileDirectory" onchange="getSelectedValue()" value="https://mukumuyi.github.io/MyGit/data/trialdata.csv">
-              <form id="GroupColumnSelector"> グループ分類  
+              <form id="GroupColumnSelector"> グルーピング項目  
                 <select name="GroupColumn" id="GroupColumn" onchange="getSelectedValue()" >
                   <option>label</option>
                   <option>class</option>
+                </select>
+              </form>
+              <form id="StartColumnSelector"> 開始時刻項目  
+                <select name="StartColumn" id="StartColumn" onchange="getSelectedValue()" >
+                  <option>starting_time</option>
+                </select>
+              </form>
+              <form id="EndColumnSelector"> 終了時刻項目  
+                <select name="EndColumn" id="EndColumn" onchange="getSelectedValue()" >
+                  <option>ending_time</option>
                 </select>
               </form>
           </details>
@@ -65,10 +75,10 @@
         <div>
           <details open>            
             <summary>
-              <span class="open">色分類（展開可）</span>
-              <span class="close">色分類（折畳可）</span>
+              <span class="open">色設定（展開可）</span>
+              <span class="close">色設定（折畳可）</span>
            </summary>
-           <form id="ColorColumnSelector"> 分類列  
+           <form id="ColorColumnSelector"> 分類項目  
              <select name="ColorColumn" id="ColorColumn" onchange="getSelectedValue()" >
                <option>status</option>
                <option>class</option>
@@ -108,6 +118,10 @@
              <label>d</label>
            </div>
          </div>
+         <div>
+          <label>バーの枠線</label>
+           <input type="color" id="RectStroke" value="#aad9bb" onchange="getSelectedValue()" />
+         </div>
           </details>
       </div>
       </div>
@@ -120,7 +134,7 @@
       <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
       <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.14.2/d3.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-      <script src="./input.js"></script>
+      <script src="./datacontrol.js"></script>
       <script src="./timeline.js"></script>
   </body>
 </html>
