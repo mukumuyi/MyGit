@@ -46,6 +46,8 @@ function timeline(frameTimespan,g_height) {
 
   // data parameter
   const requestURL = "https://mukumuyi.github.io/MyGit/data/trialdata.csv";
+  // Local
+  // const requestURL = "http://127.0.0.1:5500/data/trialdata.csv";
 
   // graph parameter
   if (!frameTimespan) {
