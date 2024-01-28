@@ -3,7 +3,7 @@ let fileInput = $("#SetSettingFile").get(0);
 let typetable = {
     select:["InputFileType","GroupColumn","StartColumn","EndColumn","ColorColumn"],
     radio:["ChangeTimeSpan","ChangeBarWidth"],
-    color:[],
+    color:["ColorPallette"],
 }
 
 function SetSettingFile() {
@@ -42,6 +42,17 @@ function SetSettingFile() {
         }
       })
 
+      // COLORの初期設定
+      typetable.color.map((item) => {
+        if(jsonData[item]){
+          $("#" + item + " > input").remove();
+          $("#" + item + " > label").remove();
+          jsonData[item].map((item2) => {
+            $("#ColorPallette").append( $('<input type="color" class="'+ item2.label +'" value="'+ item2.value + '" id="'+ item2.id + '" onchange="getSelectedValue()"><label for="'+ item2.id + '">' + item2.label + '</label>'));
+          })
+        }
+      })
+
     } catch (error) {
       console.error("JSONファイルの読み込みエラー:", error);
     }
@@ -51,6 +62,7 @@ function SetSettingFile() {
 }
 
 
-console.log($('#ColorColumn').get(0).value);
-console.log($("#ColorPallette > .TEST").get(0).id);
-console.log(document.getElementById('ColorColumn').value)
+// $("#ColorPallette > input").remove()
+// $("#ColorPallette > label").remove()
+
+// $("#ColorPallette").append( $('<input type="color" class="'+ item2.label +'" value="'+ item2.value + '" id="'+ item2.id + '" onchange="getSelectedValue()"><label for="'+ item2.id + '">' + item2.label + '</label>'));

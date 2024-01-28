@@ -16,5 +16,11 @@
         {"value":"8","id":"BarThinest","label":"極細"}
     ],
     "ColorColumn":["status","class"],
+    "ColorPallette":[
+        {"value":"#c7cacc","id":"Color01","label":"Wait"},
+        {"value":"#7f8b94","id":"Color02","label":"Fix"},
+        {"value":"#203b4c","id":"Color03","label":"Run"},
+        {"value":"#e66465","id":"Color04","label":"Mente"}
+    ],
     "author": "Yutaka"
 }

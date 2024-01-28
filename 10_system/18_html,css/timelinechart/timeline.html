@@ -7,7 +7,7 @@
 
 <body>
   <h3>Timeline Chart</h3>
-  <div class="container">
+  <div class="container1">
     <div class="SetSetting">
       <details close>
         <summary>
@@ -15,6 +15,7 @@
           <span class="close">Form設定（折畳可）</span>
         </summary>
         <input type="file" id="SetSettingFile" accept=".json" onchange="SetSettingFile ()">
+        <br>
         <a href="./default_setting.json">設定ファイル（雛形）</a>
       </details>
     </div>
@@ -31,18 +32,27 @@
             <option value="oracle">oracle</option>
           </select>
         </form> -->
-        <div class="container2">
-          <input type="text" id="FileDirectory" onchange="getSelectedValue()"
-            value="https://mukumuyi.github.io/MyGit/data/trialdata.csv">
-          <form id="StartColumnSelector"> 開始時刻項目
-            <select name="StartColumn" id="StartColumn" onchange="getSelectedValue()">
-              <option>starting_time</option>
+        <div class="container4">
+          <form id="InputFileMethodSelector">入力方式
+            <select name="InputMethodType" id="InputMethodType" onchange="FileMethodVisible()">
+              <option value="http">http</option>
+              <option value="local">local</option>
             </select>
           </form>
+          <input type="file" id="FileDirectoryLocal" accept=".csv" onchange="getSelectedValue()">
+          <input type="text" id="FileDirectory" onchange="getSelectedValue()"
+            value="https://mukumuyi.github.io/MyGit/data/trialdata.csv">
+        </div>
+        <div class="container4">
           <form id="GroupColumnSelector"> グルーピング項目
             <select name="GroupColumn" id="GroupColumn" onchange="getSelectedValue()">
               <option>label</option>
               <option>class</option>
+            </select>
+          </form>
+          <form id="StartColumnSelector"> 開始時刻項目
+            <select name="StartColumn" id="StartColumn" onchange="getSelectedValue()">
+              <option>starting_time</option>
             </select>
           </form>
           <form id="EndColumnSelector"> 終了時刻項目
@@ -105,19 +115,11 @@
           <input type="color" class="Wait" id="Color01" value="#c7cacc" onchange="getSelectedValue()" />
           <label for="Color01">Wait</label>
           <input type="color" class="Fix" id="Color02" value="#7f8b94" onchange="getSelectedValue()" />
-          <label for="Fix">Fix</label>
+          <label for="Color02">Fix</label>
           <input type="color" class="Run" id="Color03" value="#203b4c" onchange="getSelectedValue()" />
-          <label for="Run">Run</label>
-          <input type="color" class="a" id="Color04" value="#e66465" onchange="getSelectedValue()" />
-          <label for="Color04">a</label>
-          <input type="color" class="b" id="Color05" value="#e66465" onchange="getSelectedValue()" />
-          <label for="Color05">b</label>
-          <input type="color" class="c" id="Color06" value="#e66465" onchange="getSelectedValue()" />
-          <label for="Color06">c</label>
-          <input type="color" class="d" id="Color07" value="#e66465" onchange="getSelectedValue()" />
-          <label for="Color07">d</label>
-          <input type="color" class="e" id="Color08" value="#e66465" onchange="getSelectedValue()" />
-          <label for="Color08">e</label>
+          <label for="Color03">Run</label>
+          <input type="color" class="Mente" id="Color04" value="#e66465" onchange="getSelectedValue()" />
+          <label for="Color04">Mente</label>
         </form>
       </details>
     </div>
@@ -134,6 +136,7 @@
   <script src="./makehtml.js"></script>
   <script src="./datacontrol.js"></script>
   <script src="./timeline.js"></script>
+  <script src="./main.js"></script>
 </body>
 
 </html>

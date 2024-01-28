@@ -1,4 +1,4 @@
-function timeline(frameTimespan,g_height) {
+function timeline(csvArray,frameTimespan,g_height) {
 
   function makexAxisArray(startingTime, endingTime, span, scale) {
     const recordsArray = [];
@@ -29,7 +29,7 @@ function timeline(frameTimespan,g_height) {
       // 配列をループ
       const group = parseInt(item.group);
       const lane = parseInt(item.lane);
-      const label = item[document.getElementById('GroupColumn').value];
+      const label = item[$('#GroupColumn').get(0).value];
 
       if (!result[group] || lane < result[group].lane) {
         // Groupごとに最小のkeyの値を更新
@@ -70,12 +70,6 @@ function timeline(frameTimespan,g_height) {
       },
     },
   ];
-
-  // File parameter
-  const requestURL = document.getElementById('FileDirectory').value;
-  console.log(requestURL)
-  // Local
-  // const requestURL = "http://127.0.0.1:5500/data/trialdata.csv";
 
   // graph parameter
   if (!frameTimespan) {
@@ -140,11 +134,10 @@ function timeline(frameTimespan,g_height) {
 
   //  Main Proc Start
   //  Input 
-
-  csvArray = loadCSVData();  // Comment Out For Offline *******
-  csvArray = converData(csvArray);
+  // csvArray = loadCSVData();  // Comment Out For Offline *******
+  // csvArray = convertData(csvArray);
   //  Make Parameter From Input
-
+  
   const minTimeStamp =
     Math.floor(
       Math.min(
@@ -268,7 +261,7 @@ function timeline(frameTimespan,g_height) {
         .attr("height", g_height)
         .attr("width", (d) => d.length)
         .attr("fill", (d) => d.barColor)
-        .attr("stroke",rectStroke)
+        .attr("stroke",$("#RectStroke").get(0).value)
         // tooltipを表示内容の制御。for tooltip002
         .on("mouseover", function (d) {
           starting_time = new Date(parseInt(d.starting_time));
@@ -318,42 +311,15 @@ function timeline(frameTimespan,g_height) {
   });
 }
 
-// RadioBottomの値で表示期間を変える。
-function getSelectedValue() {
-  var formTimeSpan = document.getElementById("ChangeTimeSpan");
-  var formBarWidth = document.getElementById("ChangeBarWidth");
-  var selectedTimeSpan = null;
-  var selectedBarWidth = null;
-  for (var i = 0; i < formTimeSpan.TimeSpan.length; i++) {              // Loop through radio buttons to find the selected one
-    if (formTimeSpan.TimeSpan[i].checked) {
-      selectedTimeSpan = parseInt(formTimeSpan.TimeSpan[i].value);
-      break;
-    }
-  }
 
-  for (var i = 0; i < formBarWidth.BarWidth.length; i++) {              // Loop through radio buttons to find the selected one
-    if (formBarWidth.BarWidth[i].checked) {
-      selectedBarWidth = parseInt(formBarWidth.BarWidth[i].value);
-      break;
-    }
-  }
+// const rectStroke  = $("#RectStroke").get(0).value;
+// const groupColumn = $("#GroupColumn").get(0).value;
+// let TempToday = new Date();
+// let csvArray = []
 
-  if (selectedTimeSpan !== null || selectedBarWidth !== null) {    
-    var timeline1Element = document.getElementById("graph");    // id="timeline1"の要素を取得
-    if (timeline1Element) {                                     // もし要素が存在する場合は削除
-      timeline1Element.innerHTML = "";
-    } else {
-      console.error("Element with id 'timeline1' not found.");
-    }
-    timeline(selectedTimeSpan,selectedBarWidth);
-  } else {
-    alert("Please select a radio bottom");
-  }
-}
+// console.log(TempToday.toLocaleTimeString("it-IT"))
 
-const rectStroke  = document.getElementById("RectStroke").value;
-const groupColumn = document.getElementById('GroupColumn').value;
-let TempToday = new Date();
-console.log(TempToday.toLocaleTimeString("it-IT"))
-
-timeline();
+// //  Input 
+// csvArray = loadCSVData();  // Comment Out For Offline *******
+// csvArray = convertData(csvArray);
+// timeline(csvArray);

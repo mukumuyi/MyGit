@@ -1,7 +1,26 @@
+function parseCSV(csvData) {
+  // CSVデータを行ごとに分割し、各行をカンマで分割して配列に格納する
+  const lines = csvData.split(/\r\n|\n/);
+  const header = lines[0].split(","); // 先頭行をヘッダとして格納
+  lines.shift(); // 先頭行の削除
+  const dataArray = [];
+
+  csvArray = lines.map((item) => {
+    let datas = item.split(",");
+    let result = {};
+    for (const index in datas) {
+      let key = header[index];
+      result[key] = datas[index];
+    }
+    return result;
+  });
+  return csvArray;
+}
+
 function loadCSVData() {
   // CSVファイルを取得
 
-  const requestURL = document.getElementById("FileDirectory").value; // Get File URL from html
+  const requestURL = $("#FileDirectory").get(0).value; // Get File URL from html
   let csv = new XMLHttpRequest();
   let csvArray = []; // 配列を定義
 
@@ -63,14 +82,10 @@ function loadCSVData() {
         ending_time: "1703810000000",
       },
     ];
-
     return csvArray;
   }
 
-  console.log(requestURL);
-
   csv.open("GET", requestURL, false); // CSVファイルへのパス
-
   try {
     // csvファイル読み込み失敗時のエラー対応
     csv.send(null);
@@ -78,28 +93,17 @@ function loadCSVData() {
     console.log(err);
   }
 
-  let lines = csv.responseText.split(/\r\n|\n/); // 改行ごとに配列化
-  let header = lines[0].split(","); // 先頭行をヘッダとして格納
-  lines.shift(); // 先頭行の削除
+  csvArray = parseCSV(csv.responseText);
 
-  csvArray = lines.map((item) => {
-    let datas = item.split(",");
-    let result = {};
-    for (const index in datas) {
-      let key = header[index];
-      result[key] = datas[index];
-    }
-    return result;
-  });
   return csvArray;
 }
 
-function converData(indata) {
+function convertData(indata) {
   // データの並び替え、グループの付与、レーンの付与（未実装）
 
-  const groupColumn = document.getElementById("GroupColumn").value; //Get GroupColumnName from html
-  const startColumn = document.getElementById("StartColumn").value; //Get StartColumnName from html
-  const endColumn = document.getElementById("EndColumn").value; //Get endColumnName from html
+  const groupColumn = $("#GroupColumn").get(0).value; //Get GroupColumnName from html
+  const startColumn = $("#StartColumn").get(0).value; //Get StartColumnName from html
+  const endColumn = $("#EndColumn").get(0).value; //Get endColumnName from html
 
   // データを並び替える。（ソートキーはグループと"starting_time"）
   let outdata = indata.sort((a, b) => {
@@ -153,7 +157,6 @@ function converData(indata) {
         break;
       }
     }
-
   });
   return outdata;
 }
