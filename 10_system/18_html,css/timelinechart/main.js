@@ -76,8 +76,6 @@ function timelineLocal(frameTimespan,g_height) {
       const csvData = e.target.result;
       let csvArray = parseCSV(csvData);
       let timeline1Element = $("#graph").get(0); // id="timeline1"の要素を取得
-      console.log("main.js");
-      console.log(csvArray);
       if (timeline1Element) {
         // もし要素が存在する場合は削除
         timeline1Element.innerHTML = "";
@@ -100,6 +98,7 @@ function getSelectedValue() {
   let selectedTimeSpan = null;
   let selectedBarWidth = null;
   let csvArray = [];
+
   for (var i = 0; i < formTimeSpan.TimeSpan.length; i++) {
     // Loop through radio buttons to find the selected one
     if (formTimeSpan.TimeSpan[i].checked) {
@@ -125,7 +124,7 @@ function getSelectedValue() {
       console.error("Element with id 'timeline1' not found.");
     }
     
-    console.log($("#InputMethodType").get(0).value)
+    // console.log($("#InputMethodType").get(0).value)
     if ($("#InputMethodType").get(0).value == "http") {
       csvArray = loadCSVData(); // Comment Out For Offline *******
       csvArray = convertData(csvArray);
