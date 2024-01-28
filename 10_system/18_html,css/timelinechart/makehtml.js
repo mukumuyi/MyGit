@@ -37,7 +37,8 @@ function SetSettingFile() {
           $("#" + item + " > input").remove();
           $("#" + item + " > label").remove();
           jsonData[item].map((item2) => {
-              $("#" + item).append( $('<input type="radio" name="' + item2.name + '" value="'+ item2.value + '" id="'+ item2.id + '" onchange="getSelectedValue()"><label for="'+ item2.id + '">' + item2.label + '</label>'));
+            console.log(item.replace("Change", ""))
+              $("#" + item).append( $('<input type="radio" name="' + item.replace("Change", "") + '" value="'+ item2.value + '" id="'+ item2.id + '" onchange="getSelectedValue()"><label for="'+ item2.id + '">' + item2.label + '</label>'));
           })
         }
       })
