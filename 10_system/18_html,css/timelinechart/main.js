@@ -1,8 +1,15 @@
 // ローカルのcsvは読み込めるが、その後にチャートへ反映するのが難しい
-function timelineLocal() {
+function timelineLocal(frameTimespan,g_height) {
   let fileInput = $("#FileDirectoryLocal").get(0);
   let file = fileInput.files[0];
   const reader = new FileReader();
+  
+  if (!frameTimespan) {
+    frameTimespan = 21600000; // 1フレームの時間（6時間分）
+  }
+  if (!g_height) {
+    g_height = 20; // 1フレームの時間（6時間分）
+  }
 
   if (!fileInput) {
     csvArray = [
@@ -78,7 +85,7 @@ function timelineLocal() {
         console.error("Element with id 'timeline1' not found.");
       }
       csvArray = convertData(csvArray);
-      timeline(csvArray);
+      timeline(csvArray,frameTimespan,g_height);
     } catch (error) {
       console.error("CSVファイルの読み込みエラー:", error);
     }
@@ -125,7 +132,7 @@ function getSelectedValue() {
       timeline(csvArray, selectedTimeSpan, selectedBarWidth);
     }
     if ($("#InputMethodType").get(0).value == "local") {
-      timelineLocal();
+      timelineLocal(selectedTimeSpan, selectedBarWidth);
     }
   } else {
     alert("Please select a radio bottom");
