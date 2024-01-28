@@ -1,0 +1,11 @@
+{
+    "InputFileType":["csv","json","oracle"],
+    "StartColumn":["starting_time","starting_time2","starting_time3","starting_time4"],
+    "EndColumn":["ending_time","starting_time2","starting_time3","starting_time4"],
+    "ColorColumn":["status"],
+    "author": "Yutaka",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.18.2"
+    }
+}

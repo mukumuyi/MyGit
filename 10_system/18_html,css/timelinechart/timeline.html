@@ -1,140 +1,138 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link rel="stylesheet" href="./timeline.css">
-    </head>
-    <body>
-      <h3>Timeline Chart</h3>
-      <div class="container">
-        <div class="container2" id ="ZoomControl">
-          <details open>            
-            <summary>
-              <span class="open">入力ファイル（展開可）</span>
-              <span class="close">入力ファイル（折畳可）</span>
-           </summary>
-              <form id="InputFileTypeSelector">   
-                <select name="InputFileType" id="InputFileType">
-                  <option value="csv">csv</option>
-                  <option value="json">json</option>
-                  <option value="oracle">oracle</option>
-                </select>
-              </form> 
-              <input type="text" id="FileDirectory" onchange="getSelectedValue()" value="https://mukumuyi.github.io/MyGit/data/trialdata.csv">
-              <form id="GroupColumnSelector"> グルーピング項目  
-                <select name="GroupColumn" id="GroupColumn" onchange="getSelectedValue()" >
-                  <option>label</option>
-                  <option>class</option>
-                </select>
-              </form>
-              <form id="StartColumnSelector"> 開始時刻項目  
-                <select name="StartColumn" id="StartColumn" onchange="getSelectedValue()" >
-                  <option>starting_time</option>
-                </select>
-              </form>
-              <form id="EndColumnSelector"> 終了時刻項目  
-                <select name="EndColumn" id="EndColumn" onchange="getSelectedValue()" >
-                  <option>ending_time</option>
-                </select>
-              </form>
-          </details>
+
+<head>
+  <link rel="stylesheet" href="./timeline.css">
+</head>
+
+<body>
+  <h3>Timeline Chart</h3>
+  <div class="container">
+    <div class="SetSetting">
+      <details close>
+        <summary>
+          <span class="open">Form設定（展開可）</span>
+          <span class="close">Form設定（折畳可）</span>
+        </summary>
+        <input type="file" id="SetSettingFile" accept=".json" onchange="SetSettingFile ()">
+      </details>
+    </div>
+    <div class="InputFileSetting">
+      <details open>
+        <summary>
+          <span class="open">入力ファイル（展開可）</span>
+          <span class="close">入力ファイル（折畳可）</span>
+        </summary>
+        <!-- <form id="InputFileTypeSelector">入力ファイル形式
+          <select name="InputFileType" id="InputFileType">
+            <option value="csv">csv</option>
+            <option value="json">json</option>
+            <option value="oracle">oracle</option>
+          </select>
+        </form> -->
+        <div class="container2">
+          <input type="text" id="FileDirectory" onchange="getSelectedValue()"
+            value="https://mukumuyi.github.io/MyGit/data/trialdata.csv">
+          <form id="StartColumnSelector"> 開始時刻項目
+            <select name="StartColumn" id="StartColumn" onchange="getSelectedValue()">
+              <option>starting_time</option>
+            </select>
+          </form>
+          <form id="GroupColumnSelector"> グルーピング項目
+            <select name="GroupColumn" id="GroupColumn" onchange="getSelectedValue()">
+              <option>label</option>
+              <option>class</option>
+            </select>
+          </form>
+          <form id="EndColumnSelector"> 終了時刻項目
+            <select name="EndColumn" id="EndColumn" onchange="getSelectedValue()">
+              <option>ending_time</option>
+            </select>
+          </form>
         </div>
-          <details open>            
-            <summary>
-              <span class="open">表示サイズ（展開可）</span>
-              <span class="close">表示サイズ（折畳可）</span>
-           </summary>
-           <form id="ChangeTimeSpan">表示期間
-             <label for = "Span1h">
-               <input type="radio" name="TimeSpan" value="3600000" id="Span1h" onchange="getSelectedValue()"> 1時間
-             </label>
-             <label for = "Span6h">
-               <input type="radio" name="TimeSpan" value="21600000" id="Span6h" onchange="getSelectedValue()" checked> 6時間
-             </label>
-             <label for = "Span12h">
-               <input type="radio" name="TimeSpan" value="43200000" id="Span12h" onchange="getSelectedValue()"> 12時間
-             </label>
-             <label for = "Span1d">
-               <input type="radio" name="TimeSpan" value="86400000" id="Span1d" onchange="getSelectedValue()"> 1日
-             </label>
-           </form>
-           <form id="ChangeBarWidth">バーの幅
-             <label for = "BarThick">
-               <input type="radio" name="BarWidth" value="40" id="BarThick" onchange="getSelectedValue()"> 太
-             </label>
-             <label for = "BarRgular">
-               <input type="radio" name="BarWidth" value="20" id="BarRgular" onchange="getSelectedValue()" checked> 標準
-             </label>
-             <label for = "BarThin">
-               <input type="radio" name="BarWidth" value="12" id="BarThin" onchange="getSelectedValue()"> 細
-             </label>
-             <label for = "BarThinest">
-               <input type="radio" name="BarWidth" value="8" id="BarThinest" onchange="getSelectedValue()"> 極細
-             </label>
-           </form>
-          </details>
-        <div>
-          <details open>            
-            <summary>
-              <span class="open">色設定（展開可）</span>
-              <span class="close">色設定（折畳可）</span>
-           </summary>
-           <form id="ColorColumnSelector"> 分類項目  
-             <select name="ColorColumn" id="ColorColumn" onchange="getSelectedValue()" >
-               <option>status</option>
-               <option>class</option>
-             </select>
-           </form>
-         <div class="container3" id=" ColorSelectTable">
-           <div>
-             <input type="color" id="Wait" value="#c7cacc" onchange="getSelectedValue()" />
-             <label>Wait</label>
-           </div>
-           <div>
-             <input type="color" id="Fix" value="#7f8b94" onchange="getSelectedValue()" />
-             <label>Fix</label>
-           </div>
-           <div>
-             <input type="color" id="Run" value="#203b4c" onchange="getSelectedValue()" />
-             <label>Run</label>
-           </div>
-           <div>
-             <input type="color" id="Color04" value="#e66465" onchange="getSelectedValue()" />
-             <label>Color04</label>
-           </div>
-           <div>
-             <input type="color" id="a" value="#e66465" onchange="getSelectedValue()" />
-             <label>a</label>
-           </div>
-           <div>
-             <input type="color" id="b" value="#e66465" onchange="getSelectedValue()" />
-             <label>b</label>
-           </div>
-           <div>
-             <input type="color" id="c" value="#e66465" onchange="getSelectedValue()" />
-             <label>c</label>
-           </div>
-           <div>
-             <input type="color" id="d" value="#e66465" onchange="getSelectedValue()" />
-             <label>d</label>
-           </div>
-         </div>
-         <div>
-          <label>バーの枠線</label>
-           <input type="color" id="RectStroke" value="#aad9bb" onchange="getSelectedValue()" />
-         </div>
-          </details>
-      </div>
-      </div>
-      <div id="mainbody">
-        <div id="timeline1"></div>
-        <div id="hoverRes">
-          <div id="graph"></div>
+      </details>
+    </div>
+  </div>
+  <div class="container">
+    <div class="DisplaySetting">
+      <details open>
+        <summary>
+          <span class="open">表示サイズ（展開可）</span>
+          <span class="close">表示サイズ（折畳可）</span>
+        </summary>
+        <form id="ChangeTimeSpan">表示期間
+          <input type="radio" name="TimeSpan" value="3600000" id="Span1h" onchange="getSelectedValue()">
+          <label for="Span1h">1時間</label>
+          <input type="radio" name="TimeSpan" value="21600000" id="Span6h" onchange="getSelectedValue()" checked>
+          <label for="Span6h">6時間</label>
+          <input type="radio" name="TimeSpan" value="43200000" id="Span12h" onchange="getSelectedValue()">
+          <label for="Span12h">12時間</label>
+          <input type="radio" name="TimeSpan" value="86400000" id="Span1d" onchange="getSelectedValue()">
+          <label for="Span1d">1日</label>
+        </form>
+        <form id="ChangeBarWidth">バーの幅
+          <input type="radio" name="BarWidth" value="40" id="BarThick" onchange="getSelectedValue()">
+          <label for="BarThick">太</label>
+          <input type="radio" name="BarWidth" value="20" id="BarRgular" onchange="getSelectedValue()" checked>
+          <label for="BarRgular">標準</label>
+          <input type="radio" name="BarWidth" value="12" id="BarThin" onchange="getSelectedValue()">
+          <label for="BarThin">細</label>
+          <input type="radio" name="BarWidth" value="8" id="BarThinest" onchange="getSelectedValue()">
+          <label for="BarThinest">極細</label>
+        </form>
+      </details>
+    </div>
+    <div class="ColorSetting">
+      <details open>
+        <summary>
+          <span class="open">色設定（展開可）</span>
+          <span class="close">色設定（折畳可）</span>
+        </summary>
+        <div class="container4">
+          <form id="ColorColumnSelector"> 分類項目
+            <select name="ColorColumn" id="ColorColumn" onchange="getSelectedValue()">
+              <option>status</option>
+              <option>class</option>
+            </select>
+          </form>
+          <form id="ColorRectStroke">
+            <label>バーの枠線</label>
+            <input type="color" id="RectStroke" value="#aad9bb" onchange="getSelectedValue()" />
+          </form>
         </div>
-      </div>
-      <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.14.2/d3.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-      <script src="./datacontrol.js"></script>
-      <script src="./timeline.js"></script>
-  </body>
+        <form id="ColorPallette">
+          <input type="color" class="Wait" id="Color01" value="#c7cacc" onchange="getSelectedValue()" />
+          <label for="Color01">Wait</label>
+          <input type="color" class="Fix" id="Color02" value="#7f8b94" onchange="getSelectedValue()" />
+          <label for="Fix">Fix</label>
+          <input type="color" class="Run" id="Color03" value="#203b4c" onchange="getSelectedValue()" />
+          <label for="Run">Run</label>
+          <input type="color" class="a" id="Color04" value="#e66465" onchange="getSelectedValue()" />
+          <label for="Color04">a</label>
+          <input type="color" class="b" id="Color05" value="#e66465" onchange="getSelectedValue()" />
+          <label for="Color05">b</label>
+          <input type="color" class="c" id="Color06" value="#e66465" onchange="getSelectedValue()" />
+          <label for="Color06">c</label>
+          <input type="color" class="d" id="Color07" value="#e66465" onchange="getSelectedValue()" />
+          <label for="Color07">d</label>
+          <input type="color" class="e" id="Color08" value="#e66465" onchange="getSelectedValue()" />
+          <label for="Color08">e</label>
+        </form>
+      </details>
+    </div>
+  </div>
+  <div id="mainbody">
+    <div id="timeline1"></div>
+    <div id="hoverRes">
+      <div id="graph"></div>
+    </div>
+  </div>
+  <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.14.2/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="./makehtml.js"></script>
+  <script src="./datacontrol.js"></script>
+  <script src="./timeline.js"></script>
+</body>
+
 </html>

@@ -176,7 +176,7 @@ function timeline(frameTimespan,g_height) {
     barY: function () {
       return this.cy;
     },
-    barColor: document.getElementById(item[document.getElementById('ColorColumn').value]).value,
+    barColor: $("#" + $("#ColorPallette > ." + item[$('#ColorColumn').get(0).value]).get(0).id).get(0).value,
     labelX: function () {
       return this.cx;
     },

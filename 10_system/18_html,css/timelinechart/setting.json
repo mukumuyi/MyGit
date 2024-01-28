@@ -1,0 +1,21 @@
+{
+    "InputFileType":["csv","oracle"],
+    "GroupColumn":["label","class1"],
+    "StartColumn":["starting_time","starting_time2","starting_time3","starting_time4"],
+    "EndColumn":["ending_time","starting_time2","starting_time3","starting_time4"],
+    "ChangeTimeSpan":[
+        {"value":"3600000","id":"Span1h","label":"1時間"},
+        {"value":"7200000","id":"Span2h","label":"2時間"},
+        {"value":"21600000","id":"Span6h","label":"6時間"},
+        {"value":"43200000","id":"Span12h","label":"12時間"},
+        {"value":"86400000","id":"Span1D","label":"1日"}
+    ],
+    "ChangeBarWidth":[
+        {"value":"40","id":"BarThick","label":"太"},
+        {"value":"20","id":"BarRgular","label":"標準"},
+        {"value":"12","id":"BarThin","label":"細"},
+        {"value":"8","id":"BarThinest","label":"極細"}
+    ],
+    "ColorColumn":["status","class"],
+    "author": "Yutaka"
+}
