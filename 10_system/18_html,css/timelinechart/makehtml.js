@@ -1,7 +1,7 @@
 let fileInput = $("#SetSettingFile").get(0);
 
 let typetable = {
-    select:["InputMethodType","GroupColumn","StartColumn","EndColumn","ColorColumn"],
+    select:["InputMethodType","GroupColumn","StartColumn","EndColumn","ColorColumn","FilterItemSelector","SearchItemSelector"],
     radio:["ChangeTimeSpan","ChangeBarWidth"],
     color:["ColorPallette"],
 }

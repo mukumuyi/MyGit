@@ -23,5 +23,7 @@
         {"value":"#203b4c","id":"Color03","label":"Run"},
         {"value":"#e66465","id":"Color04","label":"Mente"}
     ],
+    "FilterItemSelector":["label","class","name","status"],
+    "SearchItemSelector":["name","label","class"],
     "author": "Yutaka"
 }

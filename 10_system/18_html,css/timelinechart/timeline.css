@@ -29,8 +29,6 @@
   grid-template-rows: 1fr;
 }
 
-
-
 #ColorPallette {
   display: grid;
   margin: 5px;

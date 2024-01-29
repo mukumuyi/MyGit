@@ -1,9 +1,9 @@
 // ローカルのcsvは読み込めるが、その後にチャートへ反映するのが難しい
-function timelineLocal(frameTimespan,g_height) {
+function timelineLocal(frameTimespan, g_height) {
   let fileInput = $("#FileDirectoryLocal").get(0);
   let file = fileInput.files[0];
   const reader = new FileReader();
-  
+
   if (!frameTimespan) {
     frameTimespan = 21600000; // 1フレームの時間（6時間分）
   }
@@ -83,7 +83,7 @@ function timelineLocal(frameTimespan,g_height) {
         console.error("Element with id 'timeline1' not found.");
       }
       csvArray = convertData(csvArray);
-      timeline(csvArray,frameTimespan,g_height);
+      timeline(csvArray, frameTimespan, g_height);
     } catch (error) {
       console.error("CSVファイルの読み込みエラー:", error);
     }
@@ -98,6 +98,7 @@ function getSelectedValue() {
   let selectedTimeSpan = null;
   let selectedBarWidth = null;
   let csvArray = [];
+  let csvArrayTemp = [];
 
   for (var i = 0; i < formTimeSpan.TimeSpan.length; i++) {
     // Loop through radio buttons to find the selected one
@@ -123,10 +124,18 @@ function getSelectedValue() {
     } else {
       console.error("Element with id 'timeline1' not found.");
     }
-    
+
     // console.log($("#InputMethodType").get(0).value)
     if ($("#InputMethodType").get(0).value == "http") {
       csvArray = loadCSVData(); // Comment Out For Offline *******
+      csvArrayTemp = csvArray.filter(
+        (item) =>
+          item[$("#FilterItemSelector").get(0).value] ===
+          $("#FilterText").get(0).value
+      );
+      if (csvArrayTemp.length !== 0) {
+        csvArray = csvArrayTemp;
+      }
       csvArray = convertData(csvArray);
       timeline(csvArray, selectedTimeSpan, selectedBarWidth);
     }
@@ -138,26 +147,38 @@ function getSelectedValue() {
   }
 }
 
-function FileMethodVisible () {
+function FileMethodVisible() {
   if ($("#InputMethodType").get(0).value == "http") {
     $("#FileDirectoryLocal").hide();
     $("#FileDirectory").show();
-  } else if  ($("#InputMethodType").get(0).value == "local") {
+  } else if ($("#InputMethodType").get(0).value == "local") {
     $("#FileDirectoryLocal").show();
     $("#FileDirectory").hide();
-  } 
+  }
 }
 
 const frameTimespan = 21600000; // 1フレームの時間（6時間分）
 const g_height = 20; // 1フレームの時間（6時間分）
 
+console.log($("#FilterItemSelector").get(0).value);
+console.log($("#FilterText").get(0).value);
+
 let TempToday = new Date();
 let csvArray = [];
+let csvArrayTemp = [];
 
 console.log(TempToday.toLocaleTimeString("it-IT"));
 
-FileMethodVisible()
+FileMethodVisible();
 //  Input
 csvArray = loadCSVData(); // Comment Out For Offline *******
+csvArrayTemp = csvArray.filter(
+  (item) =>
+    item[$("#FilterItemSelector").get(0).value] ===
+    $("#FilterText").get(0).value
+);
+if (csvArrayTemp.length !== 0) {
+  csvArray = csvArrayTemp;
+}
 csvArray = convertData(csvArray);
 timeline(csvArray, frameTimespan, g_height);

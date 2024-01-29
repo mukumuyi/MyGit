@@ -169,7 +169,8 @@ function timeline(csvArray,frameTimespan,g_height) {
     barY: function () {
       return this.cy;
     },
-    barColor: $("#" + $("#ColorPallette > ." + item[$('#ColorColumn').get(0).value]).get(0).id).get(0).value,
+    barColor: (item[$('#SearchItemSelector').get(0).value] === $("#SearchText").get(0).value ? "red" : $("#" + $("#ColorPallette > ." + item[$('#ColorColumn').get(0).value]).get(0).id).get(0).value ),
+    // barColor: (1 === 1 ? "#e66465" : $("#" + $("#ColorPallette > ." + item[$('#ColorColumn').get(0).value]).get(0).id).get(0).value ),
     labelX: function () {
       return this.cx;
     },
