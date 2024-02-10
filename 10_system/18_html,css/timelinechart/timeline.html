@@ -64,6 +64,7 @@
         <form id="GroupColumnSelector"> 縦軸項目
           <select name="GroupColumn" id="GroupColumn" onchange="getSelectedValue()">
             <option>label</option>
+            <option>name</option>
             <option>class</option>
           </select>
         </form>
@@ -75,7 +76,7 @@
         </form>
         <form id="CommentColumnSelector"> コメント
           <select name="CommentColumn" id="CommentColumn" onchange="getSelectedValue()">
-            <option>name</option>
+            <option>comment</option>
             <option>class</option>
           </select>
         </form>
@@ -88,8 +89,10 @@
           <label for="Span6h">6時間</label>
           <input type="radio" name="TimeSpan" value="43200000" id="Span12h" onchange="getSelectedValue()">
           <label for="Span12h">12時間</label>
-          <input type="radio" name="TimeSpan" value="86400000" id="Span1d" onchange="getSelectedValue()" checked>
+          <input type="radio" name="TimeSpan" value="86400000" id="Span1d" onchange="getSelectedValue()">
           <label for="Span1d">1日</label>
+          <input type="radio" name="TimeSpan" value="172800000" id="Span2d" onchange="getSelectedValue()" checked>
+          <label for="Span2d">2日</label>
         </form>
         <form id="ChangeBarWidth">バーの幅
           <input type="radio" name="BarWidth" value="40" id="BarThick" onchange="getSelectedValue()">
@@ -98,8 +101,10 @@
           <label for="BarRgular">標準</label>
           <input type="radio" name="BarWidth" value="12" id="BarThin" onchange="getSelectedValue()">
           <label for="BarThin">細</label>
-          <input type="radio" name="BarWidth" value="8" id="BarThinest" onchange="getSelectedValue()" checked>
+          <input type="radio" name="BarWidth" value="8" id="BarThinest" onchange="getSelectedValue()">
           <label for="BarThinest">極細</label>
+          <input type="radio" name="BarWidth" value="4" id="BarSuperThinest" onchange="getSelectedValue()" checked>
+          <label for="BarSuperThinest">超極細</label>
         </form>
         <input type="text" value="0" id="xTotalMove" hidden>
         <input type="text" value="0" id="yTotalMove" hidden>
