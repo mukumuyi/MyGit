@@ -3,19 +3,38 @@ function timeline(csvArray,frameTimespan,g_height) {
   function makexAxisArray(startingTime, endingTime, span, scale) { //横軸のラベル用データ作成 
     const recordsArray = [];
     let currentTime = startingTime;
+    let record
     while (currentTime <= endingTime) {// 時間と分を取得
       const currentTimeD = new Date(currentTime);
       const dates = currentTimeD.toLocaleDateString("ja-JP",{month: "numeric",day: "numeric"});
       const hours = currentTimeD.getHours();
       const minutes = currentTimeD.getMinutes();
       // スパンごとにループ
-      let record = {
+      if((hours * 60 + minutes) % (xAxisTimespan/10000) == 0){
+        record = {
+          // レコードを作成
+          coord: "xAxis0",
+          cx: (currentTime - startingTime) * scale + tx,
+          cy: 25,
+          r: 10,
+          label: formattedTime = `${dates}`,
+          labelX: function () {
+            return this.cx;
+          },
+          labelY: function () {
+            return this.cy ;
+          },
+        };
+        recordsArray.push(record); // レコードを配列に追加
+      }
+      
+      record = {
         // レコードを作成
-        coord: "xAxis",
+        coord: "xAxis1",
         cx: (currentTime - startingTime) * scale + tx,
-        cy: 50,
+        cy: 25,
         r: 10,
-        label: formattedTime = `${dates} \n ${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`,
+        label: formattedTime = `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`,
         labelX: function () {
           return this.cx;
         },
@@ -28,6 +47,7 @@ function timeline(csvArray,frameTimespan,g_height) {
     }
     return recordsArray;
   }
+
 
   function makeyAxisArray(inputArray,g_margin,g_height) { //縦軸のラベル用データ作成 
     const recordsArray = {};
@@ -63,6 +83,7 @@ function timeline(csvArray,frameTimespan,g_height) {
   const width0 = 1300;
   const height0 = 500;
   const px0 = 100;
+  const py1 = 25;
   const py0 = 50;
 
   // part-group parameters
@@ -70,8 +91,13 @@ function timeline(csvArray,frameTimespan,g_height) {
   const height1 = height0 - py0;
   const graphData = [
     {
-      area: "xAxis",px: px0,py: 0,clipPath: {
-        x: 0,y: 0,width: width1,height: py0,
+      area: "xAxis0",px: px0,py: 0,clipPath: {
+        x: 0,y: 0,width: width1,height: py1,
+      },
+    },
+    {
+      area: "xAxis1",px: px0,py: py1,clipPath: {
+        x: 0,y: 0,width: width1,height: py0 - py1,
       },
     },
     {
@@ -138,7 +164,8 @@ function timeline(csvArray,frameTimespan,g_height) {
   const dragAllMarker = (dx, dy) => {
     if(tx + dx > 0 && dx >0){dx = 0}
     if(ty + dy > 0 && dy >0){dy = 0}
-    dragCoord("xAxis", dx, 0); // move horizontal
+    dragCoord("xAxis0", dx, 0); // move horizontal
+    dragCoord("xAxis1", dx, 0); // move horizontal
     dragCoord("yAxis", 0, dy); // move vertical
     dragCoord("plotArea", dx, dy);
     tx += dx; // 画面を開いてからのトータルの移動量
@@ -148,7 +175,8 @@ function timeline(csvArray,frameTimespan,g_height) {
   };
 
   const dragHandlerOf = {
-    xAxis: () => dragAllMarker(d3.event.dx, 0),
+    xAxis0: () => dragAllMarker(d3.event.dx, 0),
+    xAxis1: () => dragAllMarker(d3.event.dx, 0),
     yAxis: () => dragAllMarker(0, d3.event.dy),
     plotArea: () => dragAllMarker(d3.event.dx, d3.event.dy),
   };
@@ -190,20 +218,18 @@ function timeline(csvArray,frameTimespan,g_height) {
     barY: function () {
       return this.cy;
     },
-    barColor: (item[$('#SearchItemSelector').get(0).value] === $("#SearchText").get(0).value ? "red" : $("#" + $("#ColorPallette > ." + item[$('#ColorColumn').get(0).value]).get(0).id).get(0).value ),
-    // barColor: (1 === 1 ? "#e66465" : $("#" + $("#ColorPallette > ." + item[$('#ColorColumn').get(0).value]).get(0).id).get(0).value ),
+    barColor: (item[$('#SearchItem').get(0).value].match(RegExp("^" + $('#SearchText').get(0).value.replace(/\*/g, ".*") + "$")) ? "red" : $("#" + $("#ColorPallette > ." + item[$('#ColorColumn').get(0).value]).get(0).id).get(0).value), 
     labelX: function () {
       return this.cx;
     },
     labelY: function () {
-      return this.cy + (this.coord === "xAxis" ? 0 : g_height);
+      return this.cy;
     },
   }));
 
-  const xAxisArray = makexAxisArray(minTimeStamp,maxTimeStamp,xAxisTimespan,scaleFactor);
+  const xAxis0Array = makexAxisArray(minTimeStamp,maxTimeStamp,xAxisTimespan,scaleFactor);
   const yAxisArray = makeyAxisArray(plotArray,g_margin,g_height);
-
-  const mergedArray = [...plotArray, ...xAxisArray, ...yAxisArray];
+  const mergedArray = [...plotArray, ...xAxis0Array, ...yAxisArray];
 
   groups
     .append("defs")
@@ -232,7 +258,7 @@ function timeline(csvArray,frameTimespan,g_height) {
     .attr("clip-path", (d) => `url(#${d.area}-clip)`);
 
   // draw markers
-  for (const coord of ["svg", "xAxis", "yAxis", "plotArea"]) {
+  for (const coord of ["svg", "xAxis0", "xAxis1", "yAxis", "plotArea"]) {
     const coordMarkers = mergedArray.filter((d) => d.coord === coord);
     const g = coord === "svg" ? svg : selectClippedGroup(coord);
     g.selectAll("circle.marker-circle")
@@ -272,10 +298,14 @@ function timeline(csvArray,frameTimespan,g_height) {
                 ending_time.toLocaleDateString() +
                 " " +
                 ending_time.toLocaleTimeString("it-IT") +
-                "<br>name : " +
-                d.name +
-                "<br>status : " +
-                d.status 
+                "<br>" + $('#GroupColumn').get(0).value + " : " +
+                d[$('#GroupColumn').get(0).value] +
+                "<br>" + $('#RecordColumn').get(0).value + " : " +
+                d[$('#RecordColumn').get(0).value] +
+                "<br>" + $('#ColorColumn').get(0).value + " : " +
+                d[$('#ColorColumn').get(0).value] +
+                "<br>" + $('#CommentColumn').get(0).value + " : " +
+                d[$('#CommentColumn').get(0).value] 
             );
         })
         .on("mousemove", function (d) {
@@ -287,7 +317,7 @@ function timeline(csvArray,frameTimespan,g_height) {
           tooltip.style("visibility", "hidden");
         });
     }
-    if (coord === "xAxis" || coord === "yAxis") {
+    if (coord === "xAxis0" || coord === "xAxis1" || coord === "yAxis") {
       g.selectAll("text.marker-label")
         .data(coordMarkers)
         .enter()
@@ -296,11 +326,6 @@ function timeline(csvArray,frameTimespan,g_height) {
         .attr("x", (d) => d.labelX())
         .attr("y", (d) => d.labelY())
         .text((d) => d.label);
-        // .html((d) => {
-        //   // ラベルを改行して表示する
-        //   const lines = d.label.split('\n');
-        //   return lines.map((line, index) => `<tspan x="${d.labelX()}" dy="${index === 0 ? 0 : '1.2em'}">${line}</tspan>`).join('');
-        // });
     }
   }
 
@@ -310,16 +335,3 @@ function timeline(csvArray,frameTimespan,g_height) {
       .call(d3.drag().on("drag", dragHandlerOf[area]));
   });
 }
-
-
-// const rectStroke  = $("#RectStroke").get(0).value;
-// const groupColumn = $("#GroupColumn").get(0).value;
-// let TempToday = new Date();
-// let csvArray = []
-
-// console.log(TempToday.toLocaleTimeString("it-IT"))
-
-// //  Input 
-// csvArray = loadCSVData();  // Comment Out For Offline *******
-// csvArray = convertData(csvArray);
-// timeline(csvArray);

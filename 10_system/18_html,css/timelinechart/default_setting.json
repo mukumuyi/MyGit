@@ -1,20 +1,22 @@
 {
     "InputFileType":["csv","json","oracle"],
-    "InputMethodType":["http","local"],
+    "InputMethodType":["local","http"],
     "GroupColumn":["label","class"],
+    "RecordColumn":["name","class"],
+    "CommentColumn":["name","class"],
     "StartColumn":["starting_time"],
     "EndColumn":["ending_time"],
     "ChangeTimeSpan":[
-        {"value":"3600000","id":"Span1h","label":"1時間"},
-        {"value":"21600000","id":"Span6h","label":"6時間"},
-        {"value":"43200000","id":"Span12h","label":"12時間"},
-        {"value":"86400000","id":"Span1D","label":"1日"}
+        {"value":"3600000","id":"Span1h","label":"1時間","checked":""},
+        {"value":"21600000","id":"Span6h","label":"6時間","checked":"checked"},
+        {"value":"43200000","id":"Span12h","label":"12時間","checked":""},
+        {"value":"86400000","id":"Span1D","label":"1日","checked":""}
     ],
     "ChangeBarWidth":[
-        {"value":"40","id":"BarThick","label":"太"},
-        {"value":"20","id":"BarRgular","label":"標準"},
-        {"value":"12","id":"BarThin","label":"細"},
-        {"value":"8","id":"BarThinest","label":"極細"}
+        {"value":"40","id":"BarThick","label":"太","checked":""},
+        {"value":"20","id":"BarRgular","label":"標準","checked":"checked"},
+        {"value":"12","id":"BarThin","label":"細","checked":""},
+        {"value":"8","id":"BarThinest","label":"極細","checked":""}
     ],
     "ColorColumn":["status","class"],
     "ColorPallette":[

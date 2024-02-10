@@ -2,7 +2,7 @@ function SetSettingFile() {
   let fileInput = $("#SetSettingFile").get(0).files[0];
 
   let typetable = {
-      select:["InputMethodType","GroupColumn","StartColumn","EndColumn","ColorColumn","FilterItemSelector","SearchItemSelector"],
+      select:["InputMethodType","GroupColumn","RecordColumn","CommentColumn","StartColumn","EndColumn","ColorColumn","FilterItem","SearchItem"],
       radio:["ChangeTimeSpan","ChangeBarWidth"],
       color:["ColorPallette"],
   }
@@ -38,7 +38,7 @@ function SetSettingFile() {
           $("#" + item + " > label").remove();
           jsonData[item].map((item2) => {
             console.log(item.replace("Change", ""))
-              $("#" + item).append( $('<input type="radio" name="' + item.replace("Change", "") + '" value="'+ item2.value + '" id="'+ item2.id + '" onchange="getSelectedValue()"><label for="'+ item2.id + '">' + item2.label + '</label>'));
+              $("#" + item).append( $('<input type="radio" name="' + item.replace("Change", "") + '" value="'+ item2.value + '" id="'+ item2.id + '" onchange="getSelectedValue()" '+item2.checked+'><label for="'+ item2.id + '">' + item2.label + '</label>'));
           })
         }
       })

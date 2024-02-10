@@ -204,8 +204,7 @@ function CsvToTimelineChart(csvData, frameTimespan, Height) {
   csvArray = parseCSV(csvData);
   csvArrayTemp = csvArray.filter(
     (item) =>
-      item[$("#FilterItemSelector").get(0).value] ===
-      $("#FilterText").get(0).value
+      item[$('#FilterItem').get(0).value].match(RegExp("^" + $('#FilterText').get(0).value.replace(/\*/g, ".*") + "$"))
   );
   if (csvArrayTemp.length !== 0) {
     csvArray = csvArrayTemp;

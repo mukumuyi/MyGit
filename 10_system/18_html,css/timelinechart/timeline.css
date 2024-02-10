@@ -1,3 +1,6 @@
+body {
+  background: #F4E8C1;
+}
 
 .container {
   display: grid;
@@ -51,23 +54,29 @@ details:not([open]) .close {
 svg {
   margin: 20pt;
 }
+
 rect.drag-handler {
   pointer-events: all;
   fill-opacity: 0.5;
-  &.xAxis {
-    fill: grey;
+  &.xAxis0 {
+    fill: #709FB0;
+  }
+  &.xAxis1 {
+    fill: #709FB0;
   }
   &.yAxis {
-    fill: grey;
+    fill: #709FB0;
   }
   &.plotArea {
-    fill: lightyellow;
+    fill: #A0C1B8;
   }
 }
+
 line {
   stroke-width: 1px;
   stroke: #111;
 }
+
 text {
   font-size: 10pt;
   &.right {
