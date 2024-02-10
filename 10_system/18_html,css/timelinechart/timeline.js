@@ -10,7 +10,7 @@ function timeline(csvArray,frameTimespan,g_height) {
       const hours = currentTimeD.getHours();
       const minutes = currentTimeD.getMinutes();
       // スパンごとにループ
-      if((hours * 60 + minutes) % (xAxisTimespan/10000) == 0){
+      if((hours * 60 + minutes) % (xAxisTimespan/10000) == 0 || currentTime == startingTime){
         record = {
           // レコードを作成
           coord: "xAxis0",
@@ -104,8 +104,8 @@ function timeline(csvArray,frameTimespan,g_height) {
   }
 
   // basic parameters
-  const width0 = 1300;
-  const height0 = 500;
+  const width0 = 1350;
+  const height0 = 650;
   const px0 = 100;
   const py1 = 25;
   const py0 = 50;
@@ -191,8 +191,8 @@ function timeline(csvArray,frameTimespan,g_height) {
   };
 
   const dragAllMarker = (dx, dy) => {
-    if(tx + dx > 0 && dx >0){dx = 0}
-    if(ty + dy > 0 && dy >0){dy = 0}
+    if(tx + dx > 0 && dx >0 ){dx = 0}
+    if(ty + dy > 0 && dy >0 ){dy = 0}
     dragCoord("xAxis0", dx, 0); // move horizontal
     dragCoord("xAxis1", dx, 0); // move horizontal
     dragCoord("yAxis", 0, dy); // move vertical
