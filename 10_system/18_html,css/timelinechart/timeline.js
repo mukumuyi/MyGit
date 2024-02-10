@@ -1,20 +1,27 @@
 function timeline(csvArray,frameTimespan,g_height) {
 
-  function makexAxisArray(startingTime, endingTime, span, scale) {
+  function makexAxisArray(startingTime, endingTime, span, scale) { //横軸のラベル用データ作成 
     const recordsArray = [];
-    var currentTime = startingTime;
+    let currentTime = startingTime;
     while (currentTime <= endingTime) {// 時間と分を取得
-      const currentTimeD = new Date(currentTime)
+      const currentTimeD = new Date(currentTime);
+      const dates = currentTimeD.toLocaleDateString("ja-JP",{month: "numeric",day: "numeric"});
       const hours = currentTimeD.getHours();
       const minutes = currentTimeD.getMinutes();
       // スパンごとにループ
-      var record = {
+      let record = {
         // レコードを作成
         coord: "xAxis",
-        cx: (currentTime - startingTime) * scale,
+        cx: (currentTime - startingTime) * scale + tx,
         cy: 50,
-        r: 10,        
-        label: formattedTime = `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`
+        r: 10,
+        label: formattedTime = `${dates} \n ${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`,
+        labelX: function () {
+          return this.cx;
+        },
+        labelY: function () {
+          return this.cy ;
+        },
       };
       recordsArray.push(record); // レコードを配列に追加
       currentTime += span; // 次のスパンへ進める
@@ -22,25 +29,33 @@ function timeline(csvArray,frameTimespan,g_height) {
     return recordsArray;
   }
 
-  function makeyAxisArray(inputArray) {
-    const result = {};
-
+  function makeyAxisArray(inputArray,g_margin,g_height) { //縦軸のラベル用データ作成 
+    const recordsArray = {};
     for (const item of inputArray) {
       // 配列をループ
       const group = parseInt(item.group);
       const lane = parseInt(item.lane);
       const label = item[$('#GroupColumn').get(0).value];
-
-      if (!result[group] || lane < result[group].lane) {
+      if (!recordsArray[group] || lane < recordsArray[group].lane) {
         // Groupごとに最小のkeyの値を更新
-        result[group] = {
+        recordsArray[group] = {
           group: group,
           lane: lane,
           label: label,
+          coord: "yAxis",
+          cx: 0,
+          cy: g_margin * group + g_height * (lane - 1) + ty,
+          r: 10,
+          labelX: function () {
+            return this.cx;
+          },
+          labelY: function () {
+            return this.cy + g_height
+          },
         };
       }
     }
-    const resultArray = Object.values(result); // 結果を配列に変換
+    const resultArray = Object.values(recordsArray); // 結果を配列に変換
     return resultArray;
   }
 
@@ -78,9 +93,9 @@ function timeline(csvArray,frameTimespan,g_height) {
   if (!g_height) {
     g_height = 20; // 1フレームの時間（6時間分）
   }
-  var g_margin = g_height / 4; // 1フレームの時間（6時間分）
-  var xAxisTimespan = frameTimespan / 6 ; // x軸の1目盛りの時間（1時間分）
-  var scaleFactor = (1 / frameTimespan) * width0;
+  let g_margin = g_height / 4; 
+  let xAxisTimespan = frameTimespan / 6 ; // x軸の1目盛りの時間（1時間分）
+  let scaleFactor = (1 / frameTimespan) * width0;
 
   // append SVG
   const svg = d3
@@ -119,10 +134,17 @@ function timeline(csvArray,frameTimespan,g_height) {
       .attr("x", (d) => d.labelX())
       .attr("y", (d) => d.labelY());
   };
+
   const dragAllMarker = (dx, dy) => {
+    if(tx + dx > 0 && dx >0){dx = 0}
+    if(ty + dy > 0 && dy >0){dy = 0}
     dragCoord("xAxis", dx, 0); // move horizontal
     dragCoord("yAxis", 0, dy); // move vertical
     dragCoord("plotArea", dx, dy);
+    tx += dx; // 画面を開いてからのトータルの移動量
+    ty += dy; // 画面を開いてからのトータルの移動量
+    $("#xTotalMove").val(tx)
+    $("#yTotalMove").val(ty)
   };
 
   const dragHandlerOf = {
@@ -130,7 +152,6 @@ function timeline(csvArray,frameTimespan,g_height) {
     yAxis: () => dragAllMarker(0, d3.event.dy),
     plotArea: () => dragAllMarker(d3.event.dx, d3.event.dy),
   };
-
 
   //  Main Proc Start
   //  Input 
@@ -160,8 +181,8 @@ function timeline(csvArray,frameTimespan,g_height) {
     ...item,
     coord: "plotArea",
     length: (item.ending_time - item.starting_time) * scaleFactor,
-    cx: (item.starting_time - minTimeStamp) * scaleFactor,
-    cy: g_margin * item.group + g_height * (item.lane - 1),
+    cx: (item.starting_time - minTimeStamp) * scaleFactor + tx,
+    cy: g_margin * item.group + g_height * (item.lane - 1) +ty,
     r: 10, // constant: radius of marker circle
     barX: function () {
       return this.cx;
@@ -179,34 +200,8 @@ function timeline(csvArray,frameTimespan,g_height) {
     },
   }));
 
-  const xAxisArray = makexAxisArray(
-    minTimeStamp,
-    maxTimeStamp,
-    xAxisTimespan,
-    scaleFactor
-  ).map((item) => ({
-    ...item,
-    labelX: function () {
-      return this.cx;
-    },
-    labelY: function () {
-      return this.cy + (this.coord === "xAxis" ? 0 : g_height);
-    },
-  }));
-
-  const yAxisArray = makeyAxisArray(plotArray).map((item) => ({
-    ...item,
-    coord: "yAxis",
-    cx: 0,
-    cy: g_margin * item.group + g_height * (item.lane - 1),
-    r: 10,
-    labelX: function () {
-      return this.cx;
-    },
-    labelY: function () {
-      return this.cy + g_height
-    },
-  }));
+  const xAxisArray = makexAxisArray(minTimeStamp,maxTimeStamp,xAxisTimespan,scaleFactor);
+  const yAxisArray = makeyAxisArray(plotArray,g_margin,g_height);
 
   const mergedArray = [...plotArray, ...xAxisArray, ...yAxisArray];
 
@@ -238,7 +233,6 @@ function timeline(csvArray,frameTimespan,g_height) {
 
   // draw markers
   for (const coord of ["svg", "xAxis", "yAxis", "plotArea"]) {
-    // const coordMarkers = markers.filter(d => d.coord === coord)
     const coordMarkers = mergedArray.filter((d) => d.coord === coord);
     const g = coord === "svg" ? svg : selectClippedGroup(coord);
     g.selectAll("circle.marker-circle")
@@ -302,6 +296,11 @@ function timeline(csvArray,frameTimespan,g_height) {
         .attr("x", (d) => d.labelX())
         .attr("y", (d) => d.labelY())
         .text((d) => d.label);
+        // .html((d) => {
+        //   // ラベルを改行して表示する
+        //   const lines = d.label.split('\n');
+        //   return lines.map((line, index) => `<tspan x="${d.labelX()}" dy="${index === 0 ? 0 : '1.2em'}">${line}</tspan>`).join('');
+        // });
     }
   }
 

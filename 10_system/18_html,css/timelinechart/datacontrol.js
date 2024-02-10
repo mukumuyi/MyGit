@@ -12,91 +12,26 @@ function parseCSV(csvData) {
       let key = header[index];
       result[key] = datas[index];
     }
+
+    if(result[ $("#StartColumn").get(0).value].indexOf(':') < 0)
+    {
+      result.starting_time = parseInt(result[ $("#StartColumn").get(0).value])
+    } else {
+      result.starting_time =Date.parse(result[ $("#StartColumn").get(0).value])
+    }
+
+    if(result[$("#EndColumn").get(0).value].indexOf(':') < 0)
+    {
+      result.ending_time = parseInt(result[$("#EndColumn").get(0).value])
+    } else {
+      result.ending_time =Date.parse(result[$("#EndColumn").get(0).value])
+    }
+
     return result;
   });
   return csvArray;
 }
 
-function loadCSVData() {
-  // CSVファイルを取得
-
-  const requestURL = $("#FileDirectory").get(0).value; // Get File URL from html
-  let csv = new XMLHttpRequest();
-  let csvArray = []; // 配列を定義
-
-  if (!requestURL) {
-    csvArray = [
-      {
-        label: "person_a",
-        class: "a",
-        status: "Run",
-        name: "test1",
-        color: "green",
-        group: "1",
-        lane: "1",
-        starting_time: "1703808000000",
-        ending_time: "1703814500000",
-      },
-      {
-        label: "person_a",
-        class: "a",
-        status: "Wait",
-        name: "test2",
-        color: "blue",
-        group: "1",
-        lane: "1",
-        starting_time: "1703850510000",
-        ending_time: "1703870010000",
-      },
-      {
-        label: "person_a",
-        class: "a",
-        status: "Fix",
-        name: "test5",
-        color: "red",
-        group: "1",
-        lane: "2",
-        starting_time: "1703809000000",
-        ending_time: "1703819900000",
-      },
-      {
-        label: "person_b",
-        class: "b",
-        status: "Run",
-        name: "test3",
-        color: "pink",
-        group: "2",
-        lane: "3",
-        starting_time: "1703807000000",
-        ending_time: "1703808990000",
-      },
-      {
-        label: "person_c",
-        class: "c",
-        status: "Run",
-        name: "test4",
-        color: "yellow",
-        group: "3",
-        lane: "4",
-        starting_time: "1703808000000",
-        ending_time: "1703810000000",
-      },
-    ];
-    return csvArray;
-  }
-
-  csv.open("GET", requestURL, false); // CSVファイルへのパス
-  try {
-    // csvファイル読み込み失敗時のエラー対応
-    csv.send(null);
-  } catch (err) {
-    console.log(err);
-  }
-
-  csvArray = parseCSV(csv.responseText);
-
-  return csvArray;
-}
 
 function convertData(indata) {
   // データの並び替え、グループの付与、レーンの付与（未実装）

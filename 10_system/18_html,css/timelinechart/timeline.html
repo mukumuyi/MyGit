@@ -6,8 +6,8 @@
 </head>
 
 <body>
-  <h3>Timeline Chart</h3>
   <div class="container1">
+      <h3>Timeline Chart</h3>
     <div class="SetSetting">
       <details close>
         <summary>
@@ -15,8 +15,8 @@
           <span class="close">Form設定（折畳可）</span>
         </summary>
         <input type="file" id="SetSettingFile" accept=".json" onchange="SetSettingFile ()">
-        <br>
         <a href="./default_setting.json">設定ファイル（雛形）</a>
+        <br>
       </details>
     </div>
     <div class="InputFileSetting">
@@ -35,8 +35,8 @@
         <div class="container4">
           <form id="InputFileMethodSelector">入力方式
             <select name="InputMethodType" id="InputMethodType" onchange="FileMethodVisible()">
-              <option value="http">http</option>
               <option value="local">local</option>
+              <option value="http">http</option>
             </select>
           </form>
           <input type="file" id="FileDirectoryLocal" accept=".csv" onchange="getSelectedValue()">
@@ -44,12 +44,6 @@
             value="https://mukumuyi.github.io/MyGit/data/trialdata.csv">
         </div>
         <div class="container4">
-          <form id="GroupColumnSelector"> グルーピング項目
-            <select name="GroupColumn" id="GroupColumn" onchange="getSelectedValue()">
-              <option>label</option>
-              <option>class</option>
-            </select>
-          </form>
           <form id="StartColumnSelector"> 開始時刻項目
             <select name="StartColumn" id="StartColumn" onchange="getSelectedValue()">
               <option>starting_time</option>
@@ -65,6 +59,20 @@
     </div>
   </div>
   <div class="container">
+    <div class="GroupSetting">
+      <details open>
+        <summary>
+          <span class="open">グループ項目（展開可）</span>
+          <span class="close">グループ項目（折畳可）</span>
+        </summary>      
+      <form id="GroupColumnSelector"> 
+        <select name="GroupColumn" id="GroupColumn" onchange="getSelectedValue()">
+          <option>label</option>
+          <option>class</option>
+        </select>
+      </form>
+    </details>
+    </div>
     <div class="DisplaySetting">
       <details open>
         <summary>
@@ -92,6 +100,8 @@
           <label for="BarThinest">極細</label>
         </form>
       </details>
+      <input type="text" value="0" id="xTotalMove" hidden>
+      <input type="text" value="0" id="yTotalMove" hidden>
     </div>
     <div class="ColorSetting">
       <details open>

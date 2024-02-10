@@ -1,16 +1,16 @@
-let fileInput = $("#SetSettingFile").get(0);
-
-let typetable = {
-    select:["InputMethodType","GroupColumn","StartColumn","EndColumn","ColorColumn","FilterItemSelector","SearchItemSelector"],
-    radio:["ChangeTimeSpan","ChangeBarWidth"],
-    color:["ColorPallette"],
-}
-
 function SetSettingFile() {
+  let fileInput = $("#SetSettingFile").get(0).files[0];
+
+  let typetable = {
+      select:["InputMethodType","GroupColumn","StartColumn","EndColumn","ColorColumn","FilterItemSelector","SearchItemSelector"],
+      radio:["ChangeTimeSpan","ChangeBarWidth"],
+      color:["ColorPallette"],
+  }
+  
   if (!fileInput) {
     return;
   }
-  let file = fileInput.files[0];
+  // let file = fileInput.files[0];
   const reader = new FileReader();
 
   reader.onload = function (e) {
@@ -59,7 +59,7 @@ function SetSettingFile() {
     }
   };
 
-  reader.readAsText(file);
+  reader.readAsText(fileInput);
 }
 
 
