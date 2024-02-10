@@ -41,6 +41,18 @@ function timeline(csvArray,frameTimespan,g_height) {
         labelY: function () {
           return this.cy ;
         },
+        lineX1: function () {
+          return this.cx;
+        },
+        lineX2: function () {
+          return this.cx; 
+        },
+        lineY1: function () {
+          return 0;
+        },
+        lineY2: function () {
+          return height0;
+        },
       };
       recordsArray.push(record); // レコードを配列に追加
       currentTime += span; // 次のスパンへ進める
@@ -70,7 +82,19 @@ function timeline(csvArray,frameTimespan,g_height) {
             return this.cx;
           },
           labelY: function () {
-            return this.cy + g_height
+            return this.cy + g_height;
+          },
+          lineX1: function () {
+            return 0;
+          },
+          lineX2: function () {
+            return width0;
+          },
+          lineY1: function () {
+            return this.group !== 1 ? this.cy - g_margin / 2: 0; 
+          },
+          lineY2: function () {
+            return this.group !== 1 ? this.cy - g_margin / 2: 0; 
           },
         };
       }
@@ -159,6 +183,11 @@ function timeline(csvArray,frameTimespan,g_height) {
     cg.selectAll("text.marker-label")
       .attr("x", (d) => d.labelX())
       .attr("y", (d) => d.labelY());
+    cg.selectAll("line.marker-line")
+      .attr("x1", (d) => d.lineX1())
+      .attr("x2", (d) => d.lineX2())
+      .attr("y1", (d) => d.lineY1())
+      .attr("y2", (d) => d.lineY2());
   };
 
   const dragAllMarker = (dx, dy) => {
@@ -271,7 +300,31 @@ function timeline(csvArray,frameTimespan,g_height) {
       .attr("r", (d) => d.r)
       .attr("stroke", "none")
       .attr("fill", "none");
+    
+      if (coord === "xAxis1" || coord === "yAxis") {
+        g.selectAll("line.marker-line")
+        .data(coordMarkers)
+        .enter()
+        .append("line")
+        .attr("class", (d) => `${d.coord} marker-line `)
+        .attr("x1", (d) => d.lineX1()) // 始点の x 座標
+        .attr("y1", (d) => d.lineY1()) // 始点の y 座標
+        .attr("x2", (d) => d.lineX2()) // 終点の x 座標
+        .attr("y2", (d) => d.lineY2()) // 終点の y 座標
+        .attr("stroke",$("#LineStroke").get(0).value);
+      }   
     if (coord === "plotArea") {
+      g.selectAll("line.marker-line")
+        .data(mergedArray.filter((d) => d.coord === "yAxis" || d.coord === "xAxis1"))
+        .enter()
+        .append("line")
+        .attr("class", (d) => `plotArea marker-line `)
+        .attr("x1", (d) => d.lineX1()) // 始点の x 座標
+        .attr("y1", (d) => d.lineY1()) // 始点の y 座標
+        .attr("x2", (d) => d.lineX2()) // 終点の x 座標
+        .attr("y2", (d) => d.lineY2()) // 終点の y 座標
+        .attr("stroke",$("#LineStroke").get(0).value);
+
       g.selectAll("rect.marker-rect")
         .data(coordMarkers)
         .enter()

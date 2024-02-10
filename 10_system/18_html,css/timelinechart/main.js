@@ -193,7 +193,7 @@ function getSelectedValue() {
 function FileMethodVisible() {
   if ($("#InputMethodType").get(0).value == "http") {
     $("#FileDirectoryLocal").hide();
-    $("#FileDirectory").show();
+    $("#FileDirectory").show(); 
   } else if ($("#InputMethodType").get(0).value == "local") {
     $("#FileDirectoryLocal").show();
     $("#FileDirectory").hide();

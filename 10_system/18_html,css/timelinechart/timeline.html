@@ -39,10 +39,7 @@
             </select>
           </form>
           <input type="file" id="FileDirectoryLocal" accept=".csv" onchange="getSelectedValue()">
-          <input type="text" id="FileDirectory" onchange="getSelectedValue()"
-            value="https://mukumuyi.github.io/MyGit/data/trialdata.csv">
-        </div>
-        <div class="container4">
+          <input type="text" id="FileDirectory" onchange="getSelectedValue()" value="https://mukumuyi.github.io/MyGit/data/trialdata.csv">
           <form id="StartColumnSelector"> 開始時刻項目
             <select name="StartColumn" id="StartColumn" onchange="getSelectedValue()">
               <option>starting_time</option>
@@ -116,8 +113,12 @@
             </select>
           </form>
           <form id="ColorRectStroke">
-            <label>バーの枠線</label>
-            <input type="color" id="RectStroke" value="#aad9bb" onchange="getSelectedValue()" />
+            <label>バー枠線</label>
+            <input type="color" class="custom-color-input" id="RectStroke" value="#849974" onchange="getSelectedValue()" />
+          </form>
+          <form id="ColorLineStroke">
+            <label>区切り枠線</label>
+            <input type="color" class="custom-color-input" id="LineStroke" value="#FFFFFF" onchange="getSelectedValue()" />
           </form>
         </div>
         <form id="ColorPallette">
@@ -143,7 +144,7 @@
               <option value="status">status</option>
             </select>
           </form>
-          <input type="text" id="FilterText" onchange="getSelectedValue()" value="label for filter">
+          <input type="text" id="FilterText" onchange="getSelectedValue()" value="name for filter">
         </div>
         <div class="container">
           <form id="SearchItemSelector">検索項目
@@ -153,7 +154,7 @@
               <option value="class">class</option>
             </select>
           </form>
-          <input type="text" id="SearchText" onchange="getSelectedValue()" value="label for search">
+          <input type="text" id="SearchText" onchange="getSelectedValue()" value="name for search">
         </div>
       </div>
     </div>
