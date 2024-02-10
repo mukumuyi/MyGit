@@ -34,8 +34,8 @@
         <div class="container4">
           <form id="InputFileMethodSelector">入力方式
             <select name="InputMethodType" id="InputMethodType" onchange="FileMethodVisible()">
-              <option value="local">local</option>
               <option value="http">http</option>
+              <option value="local">local</option>
             </select>
           </form>
           <input type="file" id="FileDirectoryLocal" accept=".csv" onchange="getSelectedValue()">
@@ -84,21 +84,21 @@
         <form id="ChangeTimeSpan">表示期間
           <input type="radio" name="TimeSpan" value="3600000" id="Span1h" onchange="getSelectedValue()">
           <label for="Span1h">1時間</label>
-          <input type="radio" name="TimeSpan" value="21600000" id="Span6h" onchange="getSelectedValue()" checked>
+          <input type="radio" name="TimeSpan" value="21600000" id="Span6h" onchange="getSelectedValue()">
           <label for="Span6h">6時間</label>
           <input type="radio" name="TimeSpan" value="43200000" id="Span12h" onchange="getSelectedValue()">
           <label for="Span12h">12時間</label>
-          <input type="radio" name="TimeSpan" value="86400000" id="Span1d" onchange="getSelectedValue()">
+          <input type="radio" name="TimeSpan" value="86400000" id="Span1d" onchange="getSelectedValue()" checked>
           <label for="Span1d">1日</label>
         </form>
         <form id="ChangeBarWidth">バーの幅
           <input type="radio" name="BarWidth" value="40" id="BarThick" onchange="getSelectedValue()">
           <label for="BarThick">太</label>
-          <input type="radio" name="BarWidth" value="20" id="BarRgular" onchange="getSelectedValue()" checked>
+          <input type="radio" name="BarWidth" value="20" id="BarRgular" onchange="getSelectedValue()">
           <label for="BarRgular">標準</label>
           <input type="radio" name="BarWidth" value="12" id="BarThin" onchange="getSelectedValue()">
           <label for="BarThin">細</label>
-          <input type="radio" name="BarWidth" value="8" id="BarThinest" onchange="getSelectedValue()">
+          <input type="radio" name="BarWidth" value="8" id="BarThinest" onchange="getSelectedValue()" checked>
           <label for="BarThinest">極細</label>
         </form>
         <input type="text" value="0" id="xTotalMove" hidden>

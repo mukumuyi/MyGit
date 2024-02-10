@@ -241,5 +241,6 @@ let ty = 0;
 
 let TempToday = new Date();
 console.log(TempToday.toLocaleTimeString("it-IT"));
+getSelectedValue();
 // SetSettingFile();
-Main(frameTimespan,Height);
+// Main(frameTimespan,Height);
