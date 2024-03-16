@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="./timeline.css">
+</head>
+
+<body>
+  <div class="container1">
+    <div class="SetSetting">
+      <details close>
+        <summary>
+          <span class="open">Form設定（展開可）</span>
+          <span class="close">Form設定（折畳可）</span>
+        </summary>
+        <input type="file" id="SetSettingFile" accept=".json" onchange="SetSettingFile ()">
+        <a href="./default_setting.json">設定ファイル（雛形）</a>
+        <br>
+      </details>
+    </div>
+    <div class="InputFileSetting">
+      <details open>
+        <summary>
+          <span class="open">入力ファイル（展開可）</span>
+          <span class="close">入力ファイル（折畳可）</span>
+        </summary>
+        <!-- <form id="InputFileTypeSelector">入力ファイル形式
+          <select name="InputFileType" id="InputFileType">
+            <option value="csv">csv</option>
+            <option value="json">json</option>
+            <option value="oracle">oracle</option>
+          </select>
+        </form> -->
+        <div class="container4">
+          <form id="InputFileMethodSelector">入力方式
+            <select name="InputMethodType" id="InputMethodType" onchange="FileMethodVisible()">
+              <option value="http">http</option>
+              <option value="local">local</option>
+            </select>
+          </form>
+          <input type="file" id="FileDirectoryLocal" accept=".csv" onchange="getSelectedValue()">
+          <input type="text" id="FileDirectory" onchange="getSelectedValue()" value="https://mukumuyi.github.io/MyGit/data/TEST_DATA.csv">
+          <form id="StartColumnSelector"> 開始時刻項目
+            <select name="StartColumn" id="StartColumn" onchange="getSelectedValue()">
+              <option>starting_time</option>
+            </select>
+          </form>
+          <form id="EndColumnSelector"> 終了時刻項目
+            <select name="EndColumn" id="EndColumn" onchange="getSelectedValue()">
+              <option>ending_time</option>
+            </select>
+          </form>
+        </div>
+      </details>
+    </div>
+  </div>
+  <details open>
+    <summary>
+      <span class="open">表示コントロール（展開可）</span>
+      <span class="close">表示コントロール（折畳可）</span>
+    </summary>
+    <div class="container">
+      <div class="GroupSetting">
+        <form id="GroupColumnSelector"> 縦軸項目
+          <select name="GroupColumn" id="GroupColumn" onchange="getSelectedValue()">
+            <option>label</option>
+            <option>name</option>
+            <option>class</option>
+          </select>
+        </form>
+        <form id="RecordColumnSelector"> 名前
+          <select name="RecordColumn" id="RecordColumn" onchange="getSelectedValue()">
+            <option>name</option>
+            <option>class</option>
+          </select>
+        </form>
+        <form id="CommentColumnSelector"> コメント
+          <select name="CommentColumn" id="CommentColumn" onchange="getSelectedValue()">
+            <option>comment</option>
+            <option>class</option>
+          </select>
+        </form>
+      </div>
+      <div class="DisplaySetting">
+        <form id="ChangeTimeSpan">表示期間
+          <input type="radio" name="TimeSpan" value="3600000" id="Span1h" onchange="getSelectedValue()">
+          <label for="Span1h">1時間</label>
+          <input type="radio" name="TimeSpan" value="21600000" id="Span6h" onchange="getSelectedValue()">
+          <label for="Span6h">6時間</label>
+          <input type="radio" name="TimeSpan" value="43200000" id="Span12h" onchange="getSelectedValue()">
+          <label for="Span12h">12時間</label>
+          <input type="radio" name="TimeSpan" value="86400000" id="Span1d" onchange="getSelectedValue()">
+          <label for="Span1d">1日</label>
+          <input type="radio" name="TimeSpan" value="172800000" id="Span2d" onchange="getSelectedValue()" checked>
+          <label for="Span2d">2日</label>
+        </form>
+        <form id="ChangeBarWidth">バーの幅
+          <input type="radio" name="BarWidth" value="40" id="BarThick" onchange="getSelectedValue()">
+          <label for="BarThick">太</label>
+          <input type="radio" name="BarWidth" value="20" id="BarRgular" onchange="getSelectedValue()">
+          <label for="BarRgular">標準</label>
+          <input type="radio" name="BarWidth" value="12" id="BarThin" onchange="getSelectedValue()">
+          <label for="BarThin">細</label>
+          <input type="radio" name="BarWidth" value="8" id="BarThinest" onchange="getSelectedValue()">
+          <label for="BarThinest">極細</label>
+          <input type="radio" name="BarWidth" value="4" id="BarSuperThinest" onchange="getSelectedValue()" checked>
+          <label for="BarSuperThinest">超極細</label>
+        </form>
+        <input type="text" value="0" id="xTotalMove" hidden>
+        <input type="text" value="0" id="yTotalMove" hidden>
+      </div>
+      <div class="ColorSetting">
+        <div class="container4">
+          <form id="ColorColumnSelector"> 色分類項目
+            <select name="ColorColumn" id="ColorColumn" onchange="getSelectedValue()">
+              <option>status</option>
+              <option>class</option>
+            </select>
+          </form>
+          <form id="ColorRectStroke">
+            <label>バー枠線</label>
+            <input type="color" class="custom-color-input" id="RectStroke" value="#849974" onchange="getSelectedValue()" />
+          </form>
+          <form id="ColorLineStroke">
+            <label>区切り枠線</label>
+            <input type="color" class="custom-color-input" id="LineStroke" value="#FFFFFF" onchange="getSelectedValue()" />
+          </form>
+        </div>
+        <form id="ColorPallette">
+          <input type="color" class="Wait" id="Color01" value="#FEB47B" onchange="getSelectedValue()" />
+          <label for="Color01">Wait</label>
+          <input type="color" class="Fix" id="Color02" value="#726A95" onchange="getSelectedValue()" />
+          <label for="Color02">Fix</label>
+          <input type="color" class="Run" id="Color03" value="#351F39" onchange="getSelectedValue()" />
+          <label for="Color03">Run</label>
+          <input type="color" class="Mente" id="Color04" value="#FF7E5F" onchange="getSelectedValue()" />
+          <label for="Color04">Mente</label>
+        </form>
+      </div>
+    </div>
+    <div class="container1">
+      <div class="DisplaySetting">
+        <div class="container">
+          <form id="FilterItemSelector">フィルタ項目
+            <select name="FilterItem" id="FilterItem">
+              <option value="name">name</option>
+              <option value="label">label</option>
+              <option value="class">class</option>
+              <option value="status">status</option>
+            </select>
+          </form>
+          <input type="text" id="FilterText" onchange="getSelectedValue()" value="name for filter">
+        </div>
+        <div class="container">
+          <form id="SearchItemSelector">検索項目
+            <select name="SearchItem" id="SearchItem">
+              <option value="name">name</option>
+              <option value="label">label</option>
+              <option value="class">class</option>
+            </select>
+          </form>
+          <input type="text" id="SearchText" onchange="getSelectedValue()" value="name for search">
+        </div>
+      </div>
+    </div>
+    </div>
+  </details>
+  <div id="mainbody">
+    <div id="hoverRes">
+      <div id="graph"></div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.14.2/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="./makehtml.js"></script>
+  <script src="./datacontrol.js"></script>
+  <script src="./timeline.js"></script>
+  <script src="./main.js"></script>
+</body>
+
+</html>

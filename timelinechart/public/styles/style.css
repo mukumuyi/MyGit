@@ -1,0 +1,109 @@
+body {
+  background: #F4E8C1;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 4fr;
+  grid-template-rows: 1fr;
+}
+
+.container1 {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+}
+
+.container2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+
+.container4 {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  grid-template-rows: 1fr;
+}
+
+.container8 {
+  display: grid;
+  grid-template-columns: repeat(8,1fr);
+  grid-template-rows: 1fr;
+}
+
+#ColorPallette {
+  display: grid;
+  margin: 5px;
+  grid-template-columns: repeat(16,1fr);
+  grid-template-rows: 1fr;
+}
+
+details[open] .open {
+  display: none ;
+}
+
+#FileDirectory{
+  width:300px;
+}
+
+details:not([open]) .close {
+  display: none ;
+}
+
+svg {
+  margin: 20pt;
+}
+
+rect.drag-handler {
+  pointer-events: all;
+  fill-opacity: 0.5;
+  &.xAxis0 {
+    fill: #709FB0;
+  }
+  &.xAxis1 {
+    fill: #709FB0;
+  }
+  &.yAxis {
+    fill: #709FB0;
+  }
+  &.plotArea {
+    fill: #A0C1B8;
+  }
+}
+
+line {
+  stroke-width: 1px;
+}
+
+text {
+  font-size: 10pt;
+  &.right {
+    text-anchor: end;
+  }
+  &.left {
+    text-anchor: start
+  }
+}
+
+.tooltip {
+  position: absolute;
+  text-align: left;
+  width: auto;
+  height: auto;
+  padding: 5px;
+  font: 10px;
+  background: white;
+  -webkit-box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
+  -moz-box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
+  visibility: hidden;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.collapse {
+  visibility: collapse;
+}
