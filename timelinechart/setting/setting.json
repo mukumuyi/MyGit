@@ -16,8 +16,8 @@
     "ChangeBarWidth":[
         {"value":"40","id":"BarThick","label":"太","checked":""},
         {"value":"20","id":"BarRgular","label":"標準","checked":""},
-        {"value":"12","id":"BarThin","label":"細","checked":""},
-        {"value":"8","id":"BarThinest","label":"極細","checked":"checked"}
+        {"value":"12","id":"BarThin","label":"細","checked":"checked"},
+        {"value":"8","id":"BarThinest","label":"極細","checked":""}
     ],
     "ColorColumn":["status","class"],
     "ColorPallette":[
@@ -25,6 +25,5 @@
         {"value":"#7f8b94","id":"Color02","label":"Fix"},
         {"value":"#203b4c","id":"Color03","label":"Run"},
         {"value":"#e66465","id":"Color04","label":"Mente"}
-    ],
-    "author": "Yutaka"
+    ]
 }

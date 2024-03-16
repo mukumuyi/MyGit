@@ -15,6 +15,9 @@
           <span class="close">Form設定（折畳可）</span>
         </summary>
         <input type="file" id="SetSettingFile" accept=".json" onchange="SetSettingFile ()">
+        <form action="/setting" method="GET"> 
+          <input type="submit" value="設定ファイル雛形">
+        </form>
         <a href="./setting/default_setting.json">設定ファイル（雛形）</a>
         <br>
       </details>
@@ -44,7 +47,7 @@
             </select>
           </form>
           <input type="file" id="FileDirectoryLocal" accept=".csv" onchange="getSelectedValue()">
-          <input type="text" id="FileDirectory" onchange="getSelectedValue()" value="https://mukumuyi.github.io/MyGit/data/TEST_DATA.csv">
+          <input type="text" id="FileDirectory" onchange="getSelectedValue()" value="http://localhost:3000/data?filename=TEST_DATA">
           <% if(settingfile.StartColumn) { %>
           <form id="StartColumnSelector" 
           <% if(settingfile.StartColumn.length == 1) { %> hidden <% } %>
