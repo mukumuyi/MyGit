@@ -3,7 +3,7 @@ function parseCSV(csvData) {
   let lines = csvData.split(/\r\n|\n/);
   const header = lines[0].split(","); // 先頭行をヘッダとして格納
   lines.shift(); // 先頭行の削除
-  lines = lines.filter((lines) => lines.length > 1);
+  lines = lines.filter((line) => line.length > 1);
 
   csvArray = lines.map((item) => {
     let datas = item.split(",");

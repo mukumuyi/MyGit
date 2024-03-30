@@ -148,23 +148,14 @@ function timeline(csvArray,frameTimespan,g_height) {
   let scaleFactor = (1 / frameTimespan) * width0;
 
   // append SVG
-  const svg = d3
-    .select("div#graph")
-    .append("svg")
-    .attr("width", width0)
-    .attr("height", height0);
+  const svg = d3.select("div#graph").append("svg").attr("width", width0).attr("height", height0);
 
   // append tooltip
   const tooltip = d3.select("div#graph").append("div").attr("class", "tooltip");
 
   // append part-groups
-  const groups = svg
-    .selectAll("g")
-    .data(graphData)
-    .enter()
-    .append("g")
-    .attr("id", (d) => `${d.area}-group`)
-    .attr("transform", (d) => `translate(${d.px},${d.py})`);
+  const groups = svg.selectAll("g").data(graphData).enter()
+    .append("g").attr("id", (d) => `${d.area}-group`).attr("transform", (d) => `translate(${d.px},${d.py})`);
 
   const selectGroup = (key) => d3.select(`g#${key}-group`);
   const selectClippedGroup = (key) => selectGroup(key).select("g");
@@ -173,6 +164,8 @@ function timeline(csvArray,frameTimespan,g_height) {
   const dragCoord = (coord, dx, dy) => {
     const cg = selectClippedGroup(coord);
     // update cx/cy in binded data
+    // (d) => (d.cx += dx);
+    // (d) => (d.cy += dy);
     cg.selectAll("circle.marker-circle")
       .attr("cx", (d) => (d.cx += dx))
       .attr("cy", (d) => (d.cy += dy));

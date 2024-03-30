@@ -5,67 +5,6 @@ function loadCSVData() {
   let csv = new XMLHttpRequest();
   let csvArray = []; // 配列を定義
 
-  if (!requestURL) {
-    csvArray = [
-      {
-        label: "person_a",
-        class: "a",
-        status: "Run",
-        name: "test1",
-        color: "green",
-        group: "1",
-        lane: "1",
-        starting_time: "1703808000000",
-        ending_time: "1703814500000",
-      },
-      {
-        label: "person_a",
-        class: "a",
-        status: "Wait",
-        name: "test2",
-        color: "blue",
-        group: "1",
-        lane: "1",
-        starting_time: "1703850510000",
-        ending_time: "1703870010000",
-      },
-      {
-        label: "person_a",
-        class: "a",
-        status: "Fix",
-        name: "test5",
-        color: "red",
-        group: "1",
-        lane: "2",
-        starting_time: "1703809000000",
-        ending_time: "1703819900000",
-      },
-      {
-        label: "person_b",
-        class: "b",
-        status: "Run",
-        name: "test3",
-        color: "pink",
-        group: "2",
-        lane: "3",
-        starting_time: "1703807000000",
-        ending_time: "1703808990000",
-      },
-      {
-        label: "person_c",
-        class: "c",
-        status: "Run",
-        name: "test4",
-        color: "yellow",
-        group: "3",
-        lane: "4",
-        starting_time: "1703808000000",
-        ending_time: "1703810000000",
-      },
-    ];
-    return csvArray;
-  }
-
   csv.open("GET", requestURL, false); // CSVファイルへのパス
   try {
     // csvファイル読み込み失敗時のエラー対応
@@ -84,68 +23,6 @@ function timelineLocal(Timespan, Height) {
   let file = fileInput.files[0];
   const reader = new FileReader();
 
-  if (!fileInput.value) {
-    csvArray = [
-      {
-        label: "person_a",
-        class: "a",
-        status: "Run",
-        name: "test1",
-        color: "green",
-        group: "1",
-        lane: "1",
-        starting_time: "1703808000000",
-        ending_time: "1703814500000",
-      },
-      {
-        label: "person_a",
-        class: "a",
-        status: "Wait",
-        name: "test2",
-        color: "blue",
-        group: "1",
-        lane: "1",
-        starting_time: "1703850510000",
-        ending_time: "1703870010000",
-      },
-      {
-        label: "person_a",
-        class: "a",
-        status: "Fix",
-        name: "test5",
-        color: "red",
-        group: "1",
-        lane: "2",
-        starting_time: "1703809000000",
-        ending_time: "1703819900000",
-      },
-      {
-        label: "person_b",
-        class: "b",
-        status: "Run",
-        name: "test3",
-        color: "pink",
-        group: "2",
-        lane: "3",
-        starting_time: "1703807000000",
-        ending_time: "1703808990000",
-      },
-      {
-        label: "person_c",
-        class: "c",
-        status: "Run",
-        name: "test4",
-        color: "yellow",
-        group: "3",
-        lane: "4",
-        starting_time: "1703808000000",
-        ending_time: "1703810000000",
-      },
-    ];
-    timeline(csvArray, Timespan, Height);
-    return ;
-    // return csvArray; 
-  }
   reader.onload = (e) => {
     try {
       const csvData = e.target.result;
@@ -240,7 +117,8 @@ let tx = 0;
 let ty = 0;
 
 let TempToday = new Date();
-console.log(TempToday.toLocaleTimeString("it-IT"));
+console.log('MAIN.js START:',TempToday.toLocaleTimeString("it-IT"));
 getSelectedValue();
-// SetSettingFile();
-// Main(frameTimespan,Height);
+
+TempToday = new Date();
+console.log('MAIN.js END:',TempToday.toLocaleTimeString("it-IT"));

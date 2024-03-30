@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="./styles/style.css">
+</head>
+
+<body>
+  <div class="container1">
+    <!-- <div class="SetSetting">
+      <details close>
+        <summary>
+          <span class="open">Form設定（展開可）</span>
+          <span class="close">Form設定（折畳可）</span>
+        </summary>
+        <input type="file" id="SetSettingFile" accept=".json" onchange="SetSettingFile ()">
+        <form action="/setting" method="GET"> 
+          <input type="submit" value="設定ファイル雛形">
+        </form>
+        <a href="./setting/default_setting.json">設定ファイル（雛形）</a>
+        <br>
+      </details>
+    </div> -->
+    <div class="InputFileSetting">
+      <details open>
+        <summary>
+          <span class="open">入力ファイル（展開可）</span>
+          <span class="close">入力ファイル（折畳可）</span>
+        </summary>
+        <% if(settingfile.InputFileType) { %>
+        <form id="InputFileTypeSelector"
+        <% if(settingfile.InputFileType.length == 1) { %> hidden <% } %>
+          >入力ファイル形式
+          <select name="InputFileType" id="InputFileType">
+            <% settingfile.InputFileType.map((item) => { %>
+              <option> <%=item %></option>
+            <% }) %>
+          </select>
+        </form>
+        <% } %>
+        <div class="container4">
+          <form id="InputFileMethodSelector">入力方式
+            <select name="InputMethodType" id="InputMethodType" onchange="FileMethodVisible()">
+              <option value="http">http</option>
+              <option value="local">local</option>
+            </select>
+          </form>
+          <input type="file" id="FileDirectoryLocal" accept=".csv" onchange="getSelectedValue()">
+          <input type="text" id="FileDirectory" onchange="getSelectedValue()" value="http://localhost:3000/data?filename=TEST_DATA">
+          <% if(settingfile.StartColumn) { %>
+          <form id="StartColumnSelector" 
+          <% if(settingfile.StartColumn.length == 1) { %> hidden <% } %>
+            > 開始時刻項目
+            <select name="StartColumn" id="StartColumn" onchange="getSelectedValue()">
+              <% settingfile.StartColumn.map((item) => { %>
+                <option> <%=item %></option>
+              <% }) %>
+            </select>
+          </form>
+          <% } %>
+          <% if(settingfile.EndColumn ) { %>
+          <form id="EndColumnSelector"
+          <% if(settingfile.EndColumn.length == 1) { %> hidden <% } %>
+            > 終了時刻項目
+            <select name="EndColumn" id="EndColumn" onchange="getSelectedValue()">
+              <% settingfile.EndColumn.map((item) => { %>
+                <option> <%=item %></option>
+              <% }) %>
+            </select>
+          </form>
+          <% } %>
+        </div>
+      </details>
+    </div>
+  </div>
+  <details open>
+    <summary>
+      <span class="open">表示コントロール（展開可）</span>
+      <span class="close">表示コントロール（折畳可）</span>
+    </summary>
+    <div class="container">
+      <div class="GroupSetting">
+        <% if(settingfile.GroupColumn) { %>
+        <form id="GroupColumnSelector"
+        <% if(settingfile.GroupColumn.length == 1) { %> hidden <% } %>
+          > 縦軸項目
+          <select name="GroupColumn" id="GroupColumn" onchange="getSelectedValue()">
+            <% settingfile.GroupColumn.map((item) => { %>
+              <option> <%=item %></option>
+            <% }) %>
+          </select>
+        </form>
+        <% } %>
+        <% if(settingfile.RecordColumn) { %>
+        <form id="RecordColumnSelector"
+        <% if(settingfile.RecordColumn.length == 1) { %> hidden <% } %>
+          > 名前
+          <select name="RecordColumn" id="RecordColumn" onchange="getSelectedValue()">
+            <% settingfile.RecordColumn.map((item) => { %>
+              <option> <%=item %></option>
+            <% }) %>
+          </select>
+        </form>
+        <% } %>
+        <% if(settingfile.CommentColumn) { %>
+        <form id="CommentColumnSelector"
+        <% if(settingfile.CommentColumn.length == 1) { %> hidden <% } %>
+          > コメント
+          <select name="CommentColumn" id="CommentColumn" onchange="getSelectedValue()">
+            <% settingfile.CommentColumn.map((item) => { %>
+              <option> <%=item %></option>
+            <% }) %>
+          </select>
+        </form>
+        <% } %>
+      </div>
+      <div class="DisplaySetting">
+        <% if(settingfile.ChangeTimeSpan && settingfile.ChangeTimeSpan.length > 1) { %>
+        <form id="ChangeTimeSpan">表示期間
+          <% settingfile.ChangeTimeSpan.map((item) => { %>
+          <input type="radio" name="TimeSpan" value=<%= item.value %>  id= <%= item.id %> onchange="getSelectedValue()" <%= item.checked %> >
+          <label for=<%= item.id %>><%= item.label %></label>
+          <% }) %>
+        </form>
+        <% } %>
+        <% if(settingfile.ChangeBarWidth && settingfile.ChangeBarWidth.length > 1) { %>
+        <form id="ChangeBarWidth">バーの幅
+          <% settingfile.ChangeBarWidth.map((item) => { %>
+          <input type="radio" name="BarWidth" value=<%= item.value %>  id= <%= item.id %> onchange="getSelectedValue()" <%= item.checked %> >
+          <label for=<%= item.id %>><%= item.label %></label>
+          <% }) %>
+        </form>
+        <% } %>
+        <input type="text" value="0" id="xTotalMove" hidden>
+        <input type="text" value="0" id="yTotalMove" hidden>
+      </div>
+      <div class="ColorSetting">
+        <div class="container4">
+          <% if(settingfile.ColorColumn) { %>
+          <form id="ColorColumnSelector"
+          <% if(settingfile.ColorColumn.length == 1) { %> hidden <% } %>
+            > 色分類項目
+            <select name="ColorColumn" id="ColorColumn" onchange="getSelectedValue()">
+              <% settingfile.ColorColumn.map((item) => { %>
+                <option> <%=item %></option>
+              <% }) %>
+            </select>
+          </form>
+          <% } %>
+          <form id="ColorRectStroke">
+            <label>バー枠線</label>
+            <input type="color" class="custom-color-input" id="RectStroke" value="#849974" onchange="getSelectedValue()" />
+          </form>
+          <form id="ColorLineStroke">
+            <label>区切り枠線</label>
+            <input type="color" class="custom-color-input" id="LineStroke" value="#FFFFFF" onchange="getSelectedValue()" />
+          </form>
+        </div>
+        <% if(settingfile.ColorPallette) { %>
+        <form id="ColorPallette"
+        <% if(settingfile.ColorPallette.length == 1) { %> hidden <% } %>
+          >
+          <% settingfile.ColorPallette.map((item) => { %>
+            <input type="color" class=<%=item.label %> id=<%=item.id %> value=<%=item.value %> onchange="getSelectedValue()" />
+            <label for=<%=item.id %>><%=item.label %></label>
+          <% }) %>
+        </form>
+        <% } %>
+      </div>
+    </div>
+    <div class="container1">
+      <div class="DisplaySetting">
+        <div class="container">
+          <% if(settingfile.FilterItem) { %>
+          <form id="FilterItemSelector"
+          <% if(settingfile.FilterItem.length == 1) { %> hidden <% } %>
+            >フィルタ項目
+            <select name="FilterItem" id="FilterItem">
+              <% settingfile.FilterItem.map((item) => { %>
+                <option> <%=item %></option>
+              <% }) %>
+            </select>
+          </form>
+          <% } %>
+          <input type="text" id="FilterText" onchange="getSelectedValue()" value="name for filter">
+        </div>
+        <div class="container">
+          <% if(settingfile.SearchItem) { %>
+          <form id="SearchItemSelector"
+          <% if(settingfile.SearchItem.length == 1) { %> hidden <% } %>
+            >検索項目
+            <select name="SearchItem" id="SearchItem">
+              <% settingfile.SearchItem.map((item) => { %>
+                <option> <%=item %></option>
+              <% }) %>
+            </select>
+          </form>
+          <% } %>
+          <input type="text" id="SearchText" onchange="getSelectedValue()" value="name for search">
+        </div>
+      </div>
+    </div>
+    </div>
+  </details>
+  <div id="mainbody">
+    <div id="hoverRes">
+      <div id="graph"></div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.14.2/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="./scripts/makehtml.js"></script>
+  <script src="./scripts/datacontrol.js"></script>
+  <script src="./scripts/timeline.js"></script>
+  <script src="./scripts/main.js"></script>
+</body>
+
+</html>

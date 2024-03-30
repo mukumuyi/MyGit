@@ -61,9 +61,4 @@ function SetSettingFile() {
 
   reader.readAsText(fileInput);
 }
-
-
-// $("#ColorPallette > input").remove()
-// $("#ColorPallette > label").remove()
-
-// $("#ColorPallette").append( $('<input type="color" class="'+ item2.label +'" value="'+ item2.value + '" id="'+ item2.id + '" onchange="getSelectedValue()"><label for="'+ item2.id + '">' + item2.label + '</label>'));
+;

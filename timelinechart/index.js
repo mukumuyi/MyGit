@@ -11,14 +11,21 @@ const app = express();
 const port = 3000;
 
 // for initial setting parameter
-const settingfiledir = "./setting/setting.json";
-const settingfile = JSON.parse(fs.readFileSync(settingfiledir));
+const settingDir = "./setting/setting.json";
+const settingFile = JSON.parse(fs.readFileSync(settingDir));
+const dataPtnDir = "./setting/dataPtn.json";
+const dataPtnFile = JSON.parse(fs.readFileSync(dataPtnDir));
 
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.get("/", (req, res) => {
-  res.render("timeline.ejs", { settingfile: settingfile });
+  let getDate = new Date();
+  console.log('MAIN.js START:',getDate.toLocaleTimeString("it-IT"));
+  res.render("timeline.ejs", { settingfile: settingFile,dataPtnFile:dataPtnFile });
+
+  getDate = new Date();
+  console.log('MAIN.js END:',getDate.toLocaleTimeString("it-IT"));
 });
 
 app.get("/setting", (req, res) => {

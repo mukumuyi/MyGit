@@ -7,6 +7,7 @@
     "EndColumn":["ending_time"],
     "FilterItem":["label","class"],
     "SearchItem":["label","class"],
+    "ColorColumn":["status","class"],
     "ChangeTimeSpan":[
         {"value":"7200000","id":"Span2h","label":"2時間","checked":""},
         {"value":"21600000","id":"Span6h","label":"6時間","checked":""},
@@ -19,7 +20,6 @@
         {"value":"12","id":"BarThin","label":"細","checked":"checked"},
         {"value":"8","id":"BarThinest","label":"極細","checked":""}
     ],
-    "ColorColumn":["status","class"],
     "ColorPallette":[
         {"value":"#c7cacc","id":"Color01","label":"Wait"},
         {"value":"#7f8b94","id":"Color02","label":"Fix"},
