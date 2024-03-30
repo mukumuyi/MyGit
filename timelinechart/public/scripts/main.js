@@ -1,124 +1,164 @@
-function loadCSVData() {
+async function drawFromLocalFile() {
+  console.log("=== GET LOCAL FILE START  :",new Date().toLocaleTimeString("it-IT"),"===");
+  let fileInput = $("#FileDirectoryLocal").get(0);
+  let file = fileInput.files[0];
+  // let inputData = "";
+  try {
+    // csvData = await readFile(file);
+    inputData = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        resolve(e.target.result);
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+      reader.readAsText(file);
+    });
+    CsvToTimelineChart(inputData, dynaParm);
+  } catch (error) {
+    console.error("CSVファイルの読み込みエラー:", error);
+  }
+};
+
+function drawFromHttpFile() {
+  console.log("=== GET HTTP FILE START  :",new Date().toLocaleTimeString("it-IT"),"===");
   // CSVファイルを取得
-
-  const requestURL = $("#FileDirectory").get(0).value; // Get File URL from html
-  let csv = new XMLHttpRequest();
-  let csvArray = []; // 配列を定義
-
-  csv.open("GET", requestURL, false); // CSVファイルへのパス
+  let reqHttp = new XMLHttpRequest();
+  // let inputData = []; // 配列を定義
+  // console.log($("#FileDirectory").get(0).value)
+  reqHttp.open("GET", $("#FileDirectory").get(0).value, false); // CSVファイルへのパス
   try {
     // csvファイル読み込み失敗時のエラー対応
-    csv.send(null);
+    reqHttp.send(null);
   } catch (err) {
     console.log(err);
   }
+  inputData = reqHttp.responseText;
+  CsvToTimelineChart(inputData, dynaParm);
+};
 
-  csvArray = csv.responseText;
-  return csvArray ;
-}
-
-// ローカルのcsvは読み込めるが、その後にチャートへ反映するのが難しい
-function timelineLocal(Timespan, Height) {
-  let fileInput = $("#FileDirectoryLocal").get(0);
-  let file = fileInput.files[0];
-  const reader = new FileReader();
-
-  reader.onload = (e) => {
-    try {
-      const csvData = e.target.result;
-      CsvToTimelineChart(csvData, Timespan, Height);
-    } catch (error) {
-      console.error("CSVファイルの読み込みエラー:", error);
-    }
-  };
-  reader.readAsText(file);
-}
-
-// RadioBottomの値で表示期間を変える。
-function getSelectedValue() {
-  let formTimeSpan = $("#ChangeTimeSpan").get(0);
-  let formBarWidth = $("#ChangeBarWidth").get(0);
-  let selectedTimeSpan = null;
-  let selectedBarWidth = null;
-
-  let tx = $("#xTotalMove").val()
-  let ty = $("#yTotalMove").val()
-
-  for (var i = 0; i < formTimeSpan.TimeSpan.length; i++) {
-    // Loop through radio buttons to find the selected one
-    if (formTimeSpan.TimeSpan[i].checked) {
-      selectedTimeSpan = parseInt(formTimeSpan.TimeSpan[i].value);
-      break;
-    }
-  }
-
-  for (var i = 0; i < formBarWidth.BarWidth.length; i++) {
-    // Loop through radio buttons to find the selected one
-    if (formBarWidth.BarWidth[i].checked) {
-      selectedBarWidth = parseInt(formBarWidth.BarWidth[i].value);
-      break;
-    }
-  }
-
-  if (selectedTimeSpan !== null || selectedBarWidth !== null) {
-    Main(selectedTimeSpan,selectedBarWidth);
-  } else {
-    alert("Please select a radio bottom");
-  }
-}
-
-function FileMethodVisible() {
-  if ($("#InputMethodType").get(0).value == "http") {
-    $("#FileDirectoryLocal").hide();
-    $("#FileDirectory").show(); 
-  } else if ($("#InputMethodType").get(0).value == "local") {
-    $("#FileDirectoryLocal").show();
-    $("#FileDirectory").hide();
-  }
-}
-
-function CsvToTimelineChart(csvData, frameTimespan, Height) {
-  csvArray = parseCSV(csvData);
-  csvArrayTemp = csvArray.filter(
+function CsvToTimelineChart(inputData, dynaParm) {
+  console.log("=== TRANSFER DATA START  :",new Date().toLocaleTimeString("it-IT"),"===");
+  const timeline1Element = $("#graph").get(0); // id="timeline1"の要素を取得
+  let parseDataTemp;
+  parseData = parseCSV(inputData);
+  parseDataTemp = parseData.filter(
     (item) =>
-      item[$('#FilterItem').get(0).value].match(RegExp("^" + $('#FilterText').get(0).value.replace(/\*/g, ".*") + "$"))
+      item[dynaParm.curFilterColumn].match(RegExp("^" + dynaParm.curFilterText.replace(/\*/g, ".*") + "$"))
   );
-  if (csvArrayTemp.length !== 0) {
-    csvArray = csvArrayTemp;
+  if (parseDataTemp.length !== 0) {
+    parseData = parseDataTemp;
   }
-  csvArray = convertData(csvArray);
-  timeline(csvArray, frameTimespan, Height);
-}
+  timelineData = convertData(parseData,dynaParm);
 
-function Main(TimeSpan,Height) {
-  FileMethodVisible();
-
-  let timeline1Element = $("#graph").get(0); // id="timeline1"の要素を取得
   if (timeline1Element) {
     // もし要素が存在する場合は削除
     timeline1Element.innerHTML = "";
   } else {
     console.error("Element with id 'timeline1' not found.");
-  }
+  };
 
-  //  Input
-  if ($("#InputMethodType").get(0).value == "http") {
-    csvData = loadCSVData(); // Comment Out For Offline *******
-    CsvToTimelineChart(csvData, TimeSpan, Height);
+  timeline(timelineData, dynaParm.curTimeSpan, dynaParm.curBarWidth);
+};
+
+function changeDynaParm() {
+  console.log("=== CHANGE DYNAMIC PARAMETER START  :",new Date().toLocaleTimeString("it-IT"),"===");
+  const timeline1Element = $("#graph").get(0); // id="timeline1"の要素を取得
+  dynaParm = {
+    curInFileMethodType: $("#InputDataType").get(0).value,
+    curReqUrl: $("#FileDirectory").get(0).value,
+    curStaColumn: $("#StartColumn").get(0).value,
+    curStaDType: $("#StartDateType").get(0).value,
+    curEndColumn: $("#EndColumn").get(0).value,
+    curEndDType: $("#EndDateType").get(0).value,
+    curGrpNameColumn: $("#GroupNameColumn").get(0).value,
+    curRecNameColumn: $("#RecordNameColumn").get(0).value,
+    curCommentColumn: $("#CommentColumn").get(0).value,
+    curTimeSpan: parseInt($("input:radio[name=TimeSpanSetting]:checked").val()),
+    curBarWidth: parseInt($("input:radio[name=BarWidthSetting]:checked").val()),
+    curColorColumn: $("#ColorColumn").get(0).value,
+    curBarFlameColor: $("#BarFlameColor").get(0).value,
+    curSepLineColor: $("#SeparatorLineColor").get(0).value,
+    curFilterColumn: $("#FilterColumn").get(0).value,
+    curFilterText: $("#FilterText").get(0).value,
+    curSearchColumn: $("#SearchColumn").get(0).value,
+    curSearchText: $("#SearchText").get(0).value,
+  };
+
+  timelineData = convertData(parseData,dynaParm);
+
+  if (timeline1Element) {
+    // もし要素が存在する場合は削除
+    timeline1Element.innerHTML = "";
   } else {
-    timelineLocal(TimeSpan, Height);
-  }
-}
+    console.error("Element with id 'timeline1' not found.");
+  };
 
-const frameTimespan = 21600000; // 1フレームの時間（6時間分）
-const Height = 20; // 1フレームの時間（6時間分）
+  timeline(timelineData, dynaParm.curTimeSpan, dynaParm.curBarWidth);
+
+};
 
 let tx = 0;
 let ty = 0;
+let inputData;
+let parseData;
 
-let TempToday = new Date();
-console.log('MAIN.js START:',TempToday.toLocaleTimeString("it-IT"));
-getSelectedValue();
+console.log("=== INITIAL START  :",new Date().toLocaleTimeString("it-IT")," ===");
 
-TempToday = new Date();
-console.log('MAIN.js END:',TempToday.toLocaleTimeString("it-IT"));
+//Set Static Parameter
+if ($("#SetSettingFile").get(0)) {
+  console.log("===  ->ClientMode               ===");
+  console.log(
+    "===  SET STATIC PARAM :",
+    new Date().toLocaleTimeString("it-IT"),
+    " ==="
+  );
+  setStaticParam();
+} else {
+  console.log("===  ->ServerMode               ===");
+}
+
+console.log(
+  "===  SET DYNAMIC PARAM :",
+  new Date().toLocaleTimeString("it-IT"),
+  " ==="
+);
+
+//Control Visvible
+fileMethodVisible();
+
+//Set Dynamic Parameter
+let dynaParm = {
+  curInFileMethodType: $("#InputDataType").get(0).value,
+  curReqUrl: $("#FileDirectory").get(0).value,
+  curStaColumn: $("#StartColumn").get(0).value,
+  curStaDType: $("#StartDateType").get(0).value,
+  curEndColumn: $("#EndColumn").get(0).value,
+  curEndDType: $("#EndDateType").get(0).value,
+  curGrpNameColumn: $("#GroupNameColumn").get(0).value,
+  curRecNameColumn: $("#RecordNameColumn").get(0).value,
+  curCommentColumn: $("#CommentColumn").get(0).value,
+  curTimeSpan: parseInt($("input:radio[name=TimeSpanSetting]:checked").val()),
+  curBarWidth: parseInt($("input:radio[name=BarWidthSetting]:checked").val()),
+  curColorColumn: $("#ColorColumn").get(0).value,
+  curBarFlameColor: $("#BarFlameColor").get(0).value,
+  curSepLineColor: $("#SeparatorLineColor").get(0).value,
+  curFilterColumn: $("#FilterColumn").get(0).value,
+  curFilterText: $("#FilterText").get(0).value,
+  curSearchColumn: $("#SearchColumn").get(0).value,
+  curSearchText: $("#SearchText").get(0).value,
+};
+
+//Load Timeline Data
+if (dynaParm.curInFileMethodType === 'http') {
+  //Load Timeline Data
+  //Draw Timeline Chart
+  drawFromHttpFile();
+} else {
+  //Load Timeline Data
+  //Draw Timeline Chart
+  drawFromLocalFile();
+}
+console.log("=== INITIAL END  :",new Date().toLocaleTimeString("it-IT")," ===");
+

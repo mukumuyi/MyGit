@@ -67,7 +67,7 @@ function timeline(csvArray,frameTimespan,g_height) {
       // 配列をループ
       const group = parseInt(item.group);
       const lane = parseInt(item.lane);
-      const label = item[$('#GroupColumn').get(0).value];
+      const label = item[dynaParm.curGrpNameColumn];
       if (!recordsArray[group] || lane < recordsArray[group].lane) {
         // Groupごとに最小のkeyの値を更新
         recordsArray[group] = {
@@ -83,6 +83,7 @@ function timeline(csvArray,frameTimespan,g_height) {
           },
           labelY: function () {
             return this.cy + g_height;
+            // return this.cy + g_height;
           },
           lineX1: function () {
             return 0;
@@ -102,6 +103,8 @@ function timeline(csvArray,frameTimespan,g_height) {
     const resultArray = Object.values(recordsArray); // 結果を配列に変換
     return resultArray;
   }
+  
+  console.log("=== DRAW TIMELINE START  :",new Date().toLocaleTimeString("it-IT"),"===");
 
   // basic parameters
   const width0 = 1350;
@@ -202,12 +205,6 @@ function timeline(csvArray,frameTimespan,g_height) {
     yAxis: () => dragAllMarker(0, d3.event.dy),
     plotArea: () => dragAllMarker(d3.event.dx, d3.event.dy),
   };
-
-  //  Main Proc Start
-  //  Input 
-  // csvArray = loadCSVData();  // Comment Out For Offline *******
-  // csvArray = convertData(csvArray);
-  //  Make Parameter From Input
   
   const minTimeStamp =
     Math.floor(
@@ -232,7 +229,7 @@ function timeline(csvArray,frameTimespan,g_height) {
     coord: "plotArea",
     length: (item.ending_time - item.starting_time) * scaleFactor,
     cx: (item.starting_time - minTimeStamp) * scaleFactor + tx,
-    cy: g_margin * item.group + g_height * (item.lane - 1) +ty,
+    cy: g_margin * item.group + g_height * (item.lane - 1) + ty,
     r: 10, // constant: radius of marker circle
     barX: function () {
       return this.cx;
@@ -240,7 +237,7 @@ function timeline(csvArray,frameTimespan,g_height) {
     barY: function () {
       return this.cy;
     },
-    barColor: (item[$('#SearchItem').get(0).value].match(RegExp("^" + $('#SearchText').get(0).value.replace(/\*/g, ".*") + "$")) ? "red" : $("#" + $("#ColorPallette > ." + item[$('#ColorColumn').get(0).value]).get(0).id).get(0).value), 
+    barColor: (item[dynaParm.curSearchColumn].match(RegExp("^" + dynaParm.curSearchText.replace(/\*/g, ".*") + "$")) ? "red" : $("#" + $("#ColorPallette > ." + item[dynaParm.curColorColumn]).get(0).id).get(0).value), 
     labelX: function () {
       return this.cx;
     },
@@ -252,6 +249,11 @@ function timeline(csvArray,frameTimespan,g_height) {
   const xAxis0Array = makexAxisArray(minTimeStamp,maxTimeStamp,xAxisTimespan,scaleFactor);
   const yAxisArray = makeyAxisArray(plotArray,g_margin,g_height);
   const mergedArray = [...plotArray, ...xAxis0Array, ...yAxisArray];
+
+  
+  // console.log(g_height);
+  // console.log(g_margin);
+  // console.log(yAxisArray);
 
   groups
     .append("defs")
@@ -304,7 +306,7 @@ function timeline(csvArray,frameTimespan,g_height) {
         .attr("y1", (d) => d.lineY1()) // 始点の y 座標
         .attr("x2", (d) => d.lineX2()) // 終点の x 座標
         .attr("y2", (d) => d.lineY2()) // 終点の y 座標
-        .attr("stroke",$("#LineStroke").get(0).value);
+        .attr("stroke",dynaParm.curSepLineColor);
       }   
     if (coord === "plotArea") {
       g.selectAll("line.marker-line")
@@ -316,7 +318,7 @@ function timeline(csvArray,frameTimespan,g_height) {
         .attr("y1", (d) => d.lineY1()) // 始点の y 座標
         .attr("x2", (d) => d.lineX2()) // 終点の x 座標
         .attr("y2", (d) => d.lineY2()) // 終点の y 座標
-        .attr("stroke",$("#LineStroke").get(0).value);
+        .attr("stroke",dynaParm.curSepLineColor);
 
       g.selectAll("rect.marker-rect")
         .data(coordMarkers)
@@ -328,7 +330,7 @@ function timeline(csvArray,frameTimespan,g_height) {
         .attr("height", g_height)
         .attr("width", (d) => d.length)
         .attr("fill", (d) => d.barColor)
-        .attr("stroke",$("#RectStroke").get(0).value)
+        .attr("stroke",dynaParm.curBarFlameColor)
         // tooltipを表示内容の制御。for tooltip002
         .on("mouseover", function (d) {
           starting_time = new Date(parseInt(d.starting_time));
@@ -344,14 +346,14 @@ function timeline(csvArray,frameTimespan,g_height) {
                 ending_time.toLocaleDateString() +
                 " " +
                 ending_time.toLocaleTimeString("it-IT") +
-                "<br>" + $('#GroupColumn').get(0).value + " : " +
-                d[$('#GroupColumn').get(0).value] +
-                "<br>" + $('#RecordColumn').get(0).value + " : " +
-                d[$('#RecordColumn').get(0).value] +
-                "<br>" + $('#ColorColumn').get(0).value + " : " +
-                d[$('#ColorColumn').get(0).value] +
-                "<br>" + $('#CommentColumn').get(0).value + " : " +
-                d[$('#CommentColumn').get(0).value] 
+                "<br>" + dynaParm.curGrpNameColumn + " : " +
+                d[dynaParm.curGrpNameColumn] +
+                "<br>" + dynaParm.curRecNameColumn + " : " +
+                d[dynaParm.curRecNameColumn] +
+                "<br>" + dynaParm.curColorColumn + " : " +
+                d[dynaParm.curColorColumn] +
+                "<br>" + dynaParm.curCommentColumn + " : " +
+                d[dynaParm.curCommentColumn] 
             );
         })
         .on("mousemove", function (d) {
@@ -380,4 +382,6 @@ function timeline(csvArray,frameTimespan,g_height) {
       .select("rect.drag-handler")
       .call(d3.drag().on("drag", dragHandlerOf[area]));
   });
+
+  console.log("=== DRAW TIMELINE END  :",new Date().toLocaleTimeString("it-IT"),"===");
 }

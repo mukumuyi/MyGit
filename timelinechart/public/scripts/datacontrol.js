@@ -1,4 +1,7 @@
 function parseCSV(csvData) {
+  console.log("=== PARSE CSV START  :",new Date().toLocaleTimeString("it-IT"),"===");
+  const startColumn = dynaParm.curStaColumn; //Get StartColumnName from html
+  const endColumn = dynaParm.curEndColumn; //Get endColumnName from html
   // CSVデータを行ごとに分割し、各行をカンマで分割して配列に格納する
   let lines = csvData.split(/\r\n|\n/);
   const header = lines[0].split(","); // 先頭行をヘッダとして格納
@@ -16,18 +19,18 @@ function parseCSV(csvData) {
       result[key] = datas[index];
     }
 
-    if(result[ $("#StartColumn").get(0).value].indexOf(':') < 0)
+    if(result[startColumn].indexOf(':') < 0)
     {
-      result.starting_time = parseInt(result[ $("#StartColumn").get(0).value])
+      result.starting_time = parseInt(result[startColumn])
     } else {
-      result.starting_time =Date.parse(result[ $("#StartColumn").get(0).value])
+      result.starting_time =Date.parse(result[startColumn])
     }
 
-    if(result[$("#EndColumn").get(0).value].indexOf(':') < 0)
+    if(result[endColumn].indexOf(':') < 0)
     {
-      result.ending_time = parseInt(result[$("#EndColumn").get(0).value])
+      result.ending_time = parseInt(result[endColumn])
     } else {
-      result.ending_time =Date.parse(result[$("#EndColumn").get(0).value])
+      result.ending_time =Date.parse(result[endColumn])
     }
 
     }
@@ -39,65 +42,64 @@ function parseCSV(csvData) {
 }
 
 
-function convertData(indata) {
-  // データの並び替え、グループの付与、レーンの付与（未実装）
-
-  const groupColumn = $("#GroupColumn").get(0).value; //Get GroupColumnName from html
-  const startColumn = $("#StartColumn").get(0).value; //Get StartColumnName from html
-  const endColumn = $("#EndColumn").get(0).value; //Get endColumnName from html
+function convertData(inData) {
+  console.log("=== MAKE TIMELINE DATA START  :",new Date().toLocaleTimeString("it-IT"),"===");
+  const groupColumn = dynaParm.curGrpNameColumn; //Get GroupColumnName from html
+  const startColumn = dynaParm.curStaColumn; //Get StartColumnName from html
+  const endColumn = dynaParm.curEndColumn; //Get endColumnName from html
 
   // データを並び替える。（ソートキーはグループと"starting_time"）
-  let outdata = indata.sort((a, b) => {
-    if (a[groupColumn] < b[groupColumn]) {
-      return -1;
+  inData.sort((a, b) => {
+    if (a[groupColumn] !== b[groupColumn]) {
+      return a[groupColumn] < b[groupColumn] ? -1 : 1;
     }
-    if (a[groupColumn] > b[groupColumn]) {
-      return 1;
-    }
-    if (a[startColumn] < b[startColumn]) {
-      return -1;
-    }
-    if (a[startColumn] > b[startColumn]) {
-      return 1;
-    }
-    return 0;
+    return a[startColumn] - b[startColumn];
   });
-
+  
   // グループ・レーンの連番を振る
-  let countOfLabel = {};
   let laneArray = [];
+  let preGroup = '';
   let i = 0;
-  let j = 1;
+  let j = 0;
 
-  laneArray.push({ group: 0, lane: 0, endingTime: 0 });
+  laneArray.push({ totalLane: 0, lane: 0, endingTime: 0 });
 
-  outdata.map((item, index, array) => {
-    if (!countOfLabel[item[groupColumn]]) {
+  inData.forEach(item => {
+    const group = item[groupColumn];
+    const start = item[startColumn];
+    const end = item[endColumn];
+
+    if (group != preGroup) {
       i = i + 1;
-      countOfLabel[item[groupColumn]] = i;
+      j = j + 1;
+      laneArray = [];
+      laneArray.push({ totalLane: j, lane: 0, endingTime: 0 });
     }
-    item["group"] = countOfLabel[item[groupColumn]];
+    item["group"] = i;
 
     for (var k = 0; k < laneArray.length; k++) {
       if (
-        laneArray[k].endingTime < item[startColumn] &&
-        laneArray[k].group === item.group
+        laneArray[k].endingTime < start 
       ) {
-        laneArray[k].endingTime = item[endColumn];
-        item["lane"] = k;
+        laneArray[k].endingTime = end;
+        item["lane"] = laneArray[k].totalLane;
         break;
       }
       if (k + 1 === laneArray.length) {
+        j = j + 1
         let laneRecord = {
-          group: item["group"],
+          totalLane: j,
           lane: k + 1,
-          endingTime: item[endColumn],
+          endingTime: end,
         };
-        item["lane"] = k + 1;
         laneArray.push(laneRecord);
+        item["lane"] = j;
         break;
       }
     }
+    preGroup = group
+
   });
-  return outdata;
+
+  return inData;
 }

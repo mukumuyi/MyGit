@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <link rel="stylesheet" href="./timeline.css">
+  <link rel="stylesheet" href="./styles/style.css">
 </head>
 
 <body>
@@ -13,8 +13,8 @@
           <span class="open">Form設定（展開可）</span>
           <span class="close">Form設定（折畳可）</span>
         </summary>
-        <input type="file" id="SetSettingFile" accept=".json" onchange="SetSettingFile ()">
-        <a href="./default_setting.json">設定ファイル（雛形）</a>
+        <input type="file" id="setSettingFile" accept=".json" onchange="setStaticParam()">
+        <a href="../setting/default_setting.json">設定ファイル（雛形）</a>
         <br>
       </details>
     </div>
@@ -32,22 +32,28 @@
           </select>
         </form> -->
         <div class="container4">
-          <form id="InputFileMethodSelector">入力方式
-            <select name="InputMethodType" id="selectInputFileMethodType" onchange="FileMethodVisible()">
+          <form id="InputDataTypeSelector">入力方式
+            <select name="InputDataType" id="InputDataType" onchange="fileMethodVisible()">
               <option value="http">http</option>
               <option value="local">local</option>
             </select>
+            <input type="file" id="FileDirectoryLocal" accept=".csv" onchange="drawFromLocalFile()">
+            <input type="text" id="FileDirectory" onchange="drawFromHttpFile()" value="https://mukumuyi.github.io/MyGit/data/TEST_DATA.csv">
           </form>
-          <input type="file" id="FileDirectoryLocal" accept=".csv" onchange="getSelectedValue()">
-          <input type="text" id="FileDirectory" onchange="getSelectedValue()" value="https://mukumuyi.github.io/MyGit/data/TEST_DATA.csv">
           <form id="StartColumnSelector"> 開始時刻項目
-            <select name="StartColumn" id="StartColumn" onchange="getSelectedValue()">
+            <select name="StartColumn" id="StartColumn" onchange="changeDynaParm()">
               <option>starting_time</option>
+            </select>
+            <select name="StartDateType" id="StartDateType" onchange="changeDynaParm()">
+              <option>YYYY/MM/DD HH:mm:SS</option>
             </select>
           </form>
           <form id="EndColumnSelector"> 終了時刻項目
-            <select name="EndColumn" id="EndColumn" onchange="getSelectedValue()">
+            <select name="EndColumn" id="EndColumn" onchange="changeDynaParm()">
               <option>ending_time</option>
+            </select>
+            <select name="EndDateType" id="EndDateType" onchange="changeDynaParm()">
+              <option>YYYY/MM/DD HH:mm:SS</option>
             </select>
           </form>
         </div>
@@ -61,49 +67,49 @@
     </summary>
     <div class="container">
       <div class="GroupSetting">
-        <form id="groupColumnSelector"> 縦軸項目
-          <select name="GroupColumn" id="selectGroupColumn" onchange="getSelectedValue()">
+        <form id="GroupNameColumnSelector"> 縦軸項目
+          <select name="GroupNameColumn" id="GroupNameColumn" onchange="changeDynaParm()">
             <option>label</option>
             <option>name</option>
             <option>class</option>
           </select>
         </form>
-        <form id="recordNameColumnSelector"> 名前
-          <select name="RecordColumn" id="selectRecordNameColumn" onchange="getSelectedValue()">
+        <form id="RecordNameColumnSelector"> 名前
+          <select name="RecordNameColumn" id="RecordNameColumn" onchange="changeDynaParm()">
             <option>name</option>
             <option>class</option>
           </select>
         </form>
-        <form id="commentColumnSelector"> コメント
-          <select name="CommentColumn" id="selectCommentColumn" onchange="getSelectedValue()">
+        <form id="CommentColumnSelector"> コメント
+          <select name="CommentColumn" id="CommentColumn" onchange="changeDynaParm()">
             <option>comment</option>
             <option>class</option>
           </select>
         </form>
       </div>
       <div class="DisplaySetting">
-        <form id="radioTimeSpan">表示期間
-          <input type="radio" name="TimeSpan" value="3600000" id="Span1h" onchange="getSelectedValue()">
+        <form id="TimeSpanSettingButton">表示期間
+          <input type="radio" name="TimeSpanSetting" value="3600000" id="Span1h" onchange="changeDynaParm()">
           <label for="Span1h">1時間</label>
-          <input type="radio" name="TimeSpan" value="21600000" id="Span6h" onchange="getSelectedValue()">
+          <input type="radio" name="TimeSpanSetting" value="21600000" id="Span6h" onchange="changeDynaParm()">
           <label for="Span6h">6時間</label>
-          <input type="radio" name="TimeSpan" value="43200000" id="Span12h" onchange="getSelectedValue()">
+          <input type="radio" name="TimeSpanSetting" value="43200000" id="Span12h" onchange="changeDynaParm()">
           <label for="Span12h">12時間</label>
-          <input type="radio" name="TimeSpan" value="86400000" id="Span1d" onchange="getSelectedValue()">
+          <input type="radio" name="TimeSpanSetting" value="86400000" id="Span1d" onchange="changeDynaParm()">
           <label for="Span1d">1日</label>
-          <input type="radio" name="TimeSpan" value="172800000" id="Span2d" onchange="getSelectedValue()" checked>
+          <input type="radio" name="TimeSpanSetting" value="172800000" id="Span2d" onchange="changeDynaParm()" checked>
           <label for="Span2d">2日</label>
         </form>
-        <form id="radioBarWidth">バーの幅
-          <input type="radio" name="BarWidth" value="40" id="BarThick" onchange="getSelectedValue()">
+        <form id="BarWidthSettingButton">バーの幅
+          <input type="radio" name="BarWidthSetting" value="40" id="BarThick" onchange="changeDynaParm()">
           <label for="BarThick">太</label>
-          <input type="radio" name="BarWidth" value="20" id="BarRgular" onchange="getSelectedValue()">
+          <input type="radio" name="BarWidthSetting" value="20" id="BarRgular" onchange="changeDynaParm()">
           <label for="BarRgular">標準</label>
-          <input type="radio" name="BarWidth" value="12" id="BarThin" onchange="getSelectedValue()">
+          <input type="radio" name="BarWidthSetting" value="12" id="BarThin" onchange="changeDynaParm()">
           <label for="BarThin">細</label>
-          <input type="radio" name="BarWidth" value="8" id="BarThinest" onchange="getSelectedValue()">
+          <input type="radio" name="BarWidthSetting" value="8" id="BarThinest" onchange="changeDynaParm()">
           <label for="BarThinest">極細</label>
-          <input type="radio" name="BarWidth" value="4" id="BarSuperThinest" onchange="getSelectedValue()" checked>
+          <input type="radio" name="BarWidthSetting" value="4" id="BarSuperThinest" onchange="changeDynaParm()" checked>
           <label for="BarSuperThinest">超極細</label>
         </form>
         <input type="text" value="0" id="xTotalMove" hidden>
@@ -112,28 +118,28 @@
       <div class="ColorSetting">
         <div class="container4">
           <form id="ColorColumnSelector"> 色分類項目
-            <select name="ColorColumn" id="selectColorCategorizeColumn" onchange="getSelectedValue()">
+            <select name="ColorColumn" id="ColorColumn" onchange="changeDynaParm()">
               <option>status</option>
               <option>class</option>
             </select>
           </form>
           <form id="ColorRectStroke">
             <label>バー枠線</label>
-            <input type="color" class="custom-color-input" id="colorBarColor" value="#849974" onchange="getSelectedValue()" />
+            <input type="color" class="custom-color-input" id="BarFlameColor" value="#849974" onchange="changeDynaParm()" />
           </form>
           <form id="ColorLineStroke">
             <label>区切り枠線</label>
-            <input type="color" class="custom-color-input" id="colorSeparatorLineColor" value="#FFFFFF" onchange="getSelectedValue()" />
+            <input type="color" class="custom-color-input" id="SeparatorLineColor" value="#FFFFFF" onchange="changeDynaParm()" />
           </form>
         </div>
         <form id="ColorPallette">
-          <input type="color" class="Wait" id="Color01" value="#FEB47B" onchange="getSelectedValue()" />
+          <input type="color" class="Wait" id="Color01" value="#FEB47B" onchange="changeDynaParm()" />
           <label for="Color01">Wait</label>
-          <input type="color" class="Fix" id="Color02" value="#726A95" onchange="getSelectedValue()" />
+          <input type="color" class="Fix" id="Color02" value="#726A95" onchange="changeDynaParm()" />
           <label for="Color02">Fix</label>
-          <input type="color" class="Run" id="Color03" value="#351F39" onchange="getSelectedValue()" />
+          <input type="color" class="Run" id="Color03" value="#351F39" onchange="changeDynaParm()" />
           <label for="Color03">Run</label>
-          <input type="color" class="Mente" id="Color04" value="#FF7E5F" onchange="getSelectedValue()" />
+          <input type="color" class="Mente" id="Color04" value="#FF7E5F" onchange="changeDynaParm()" />
           <label for="Color04">Mente</label>
         </form>
       </div>
@@ -141,25 +147,25 @@
     <div class="container1">
       <div class="DisplaySetting">
         <div class="container">
-          <form id="filterColumnSelector">フィルタ項目
-            <select name="FilterItem" id="selectFilterColumn">
+          <form id="FilterColumnSelector">フィルタ項目
+            <select name="FilterColumn" id="FilterColumn">
               <option value="name">name</option>
               <option value="label">label</option>
               <option value="class">class</option>
               <option value="status">status</option>
             </select>
           </form>
-          <input type="text" id="FilterText" onchange="getSelectedValue()" value="name for filter">
+          <input type="text" id="FilterText" onchange="changeDynaParm()" value="name for filter">
         </div>
         <div class="container">
-          <form id="searchColumnSelector">検索項目
-            <select name="SearchItem" id="selectSearchColumn">
+          <form id="SearchColumnSelector">検索項目
+            <select name="SearchColumn" id="SearchColumn">
               <option value="name">name</option>
               <option value="label">label</option>
               <option value="class">class</option>
             </select>
           </form>
-          <input type="text" id="SearchText" onchange="getSelectedValue()" value="name for search">
+          <input type="text" id="SearchText" onchange="changeDynaParm()" value="name for search">
         </div>
       </div>
     </div>
@@ -172,10 +178,10 @@
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.14.2/d3.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="./makehtml.js"></script>
-  <script src="./datacontrol.js"></script>
-  <script src="./timeline.js"></script>
-  <script src="./main.js"></script>
+  <script src="./scripts/makehtml.js"></script>
+  <script src="./scripts/datacontrol.js"></script>
+  <script src="./scripts/timeline.js"></script>
+  <script src="./scripts/main.js"></script>
 </body>
 
 </html>

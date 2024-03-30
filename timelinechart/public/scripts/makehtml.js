@@ -1,9 +1,10 @@
-function SetSettingFile() {
-  let fileInput = $("#SetSettingFile").get(0).files[0];
+function setStaticParam() {
+  console.log("=== CHANGE STATIC PARAMETER START  :",new Date().toLocaleTimeString("it-IT"),"===");
+  let fileInput = $("#setSettingFile").get(0).files[0];
 
   let typetable = {
-      select:["InputMethodType","GroupColumn","RecordColumn","CommentColumn","StartColumn","EndColumn","ColorColumn","FilterItem","SearchItem"],
-      radio:["ChangeTimeSpan","ChangeBarWidth"],
+      select:["InputDataType","StartColumn","StartDateType","EndColumn","EndDateType","GroupNameColumn","RecordNameColumn","CommentColumn","ColorColumn","FilterColumn","SearchColumn"],
+      radio:["TimeSpanSetting","BarWidthSetting"],
       color:["ColorPallette"],
   }
   
@@ -23,9 +24,11 @@ function SetSettingFile() {
 
       // ドロップダウンリスト(SELECT)の初期設定
       typetable.select.map((item) => {
+        console.log(item)
         if(jsonData[item]){
             $("#" + item + " > option").remove();
             jsonData[item].map((item2) => {
+              console.log(item2)
                 $("#"+item).append($("<option>").html(item2));
             })
           }        
@@ -62,3 +65,14 @@ function SetSettingFile() {
   reader.readAsText(fileInput);
 }
 ;
+
+function fileMethodVisible() {
+  if ($("#InputDataType").get(0).value == "http") {
+    $("#FileDirectoryLocal").hide();
+    $("#FileDirectory").show(); 
+  } else if ($("#InputDataType").get(0).value == "local") {
+    $("#FileDirectoryLocal").show();
+    $("#FileDirectory").hide();
+  }
+}
+
