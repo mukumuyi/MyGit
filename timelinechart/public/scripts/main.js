@@ -18,7 +18,7 @@ async function drawFromLocalFile() {
     parseData = parseCSV(inputData);
     filterData = filterTimelineData(parseData);
     timelineData = convertTimelineData(filterData);
-    CsvToTimelineChart(timelineData);
+    drawTimelineChart(timelineData);
   } catch (error) {
     console.error("CSVファイルの読み込みエラー:", error);
   }
@@ -41,10 +41,10 @@ function drawFromHttpFile() {
   parseData = parseCSV(inputData);
   filterData = filterTimelineData(parseData);
   timelineData = convertTimelineData(filterData);
-  CsvToTimelineChart(timelineData);
+  drawTimelineChart(timelineData);
 };
 
-function CsvToTimelineChart(timelineData) {
+function drawTimelineChart(timelineData) {
   
   const timeline1Element = $("#graph").get(0); // id="timeline1"の要素を取得
 
@@ -82,14 +82,13 @@ function changeDynaParm(procPtn) {
     curSearchText: $("#SearchText").get(0).value,
   };
 
-  console.log(procPtn);
   if(procPtn=== 'F' ){
     filterData = filterTimelineData(parseData);
     timelineData = convertTimelineData(filterData);
   } else if (procPtn=== 'C' ){  
     timelineData = convertTimelineData(filterData);
   };
-  CsvToTimelineChart(timelineData);
+  drawTimelineChart(timelineData);
 };
 
 let tx = 0;

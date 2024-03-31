@@ -1,3 +1,21 @@
+function parseDateTime(dateTimeString, type) {
+  if (type === "YYYYMMDDHHmmSS") {
+    const year = dateTimeString.slice(0, 4);
+    const month = dateTimeString.slice(4, 6);
+    const day = dateTimeString.slice(6, 8);
+    const hours = dateTimeString.slice(8, 10);
+    const minutes = dateTimeString.slice(10, 12);
+    const seconds = dateTimeString.slice(12, 14);
+    return new Date(year, month - 1, day, hours, minutes, seconds);
+  } else if (type === "UNIX") {
+    return parseInt(dateTimeString);
+  } else if (type === "YYYY/MM/DD HH:mm:SS") {
+    return Date.parse(dateTimeString);
+  } else {
+    return Date.parse(dateTimeString.replace(/-/g, "/")); // デフォルトはISO 8601形式の日付文字列
+  }
+}
+
 function parseCSV(csvData) {
   console.log(
     "=== PARSE CSV START  :",
@@ -10,93 +28,30 @@ function parseCSV(csvData) {
   let lines = csvData.split(/\r\n|\n/);
   const header = lines[0].split(","); // 先頭行をヘッダとして格納
   lines.shift(); // 先頭行の削除
-  lines = lines.filter((line) => line.length > 1);
+  return lines
+    .filter((line) => line.length > 1) // 空白行を除外
+    .map((item) => {
+      let datas = item.split(",");
+      let result = {};
 
-  csvArray = lines.map((item) => {
-    let datas = item.split(",");
-    let result = {};
-
-    if (datas.length > 1) {
-      for (const index in datas) {
-        let key = header[index];
-        result[key] = datas[index];
-      }
-
-      if (dynaParm.curStaDType === "") {
-        if (result[startColumn].indexOf(":") < 0) {
-          result.starting_time = parseInt(result[startColumn]);
-        } else {
-          result.starting_time = Date.parse(result[startColumn]);
+      if (datas.length > 1) {
+        for (const index in datas) {
+          let key = header[index];
+          result[key] = datas[index];
         }
-      } else if (dynaParm.curStaDType === "YYYYMMDDHHmmSS") {
-        const dateString = result[startColumn];
-        const year = dateString.slice(0, 4);
-        const month = dateString.slice(4, 6);
-        const day = dateString.slice(6, 8);
-        const hours = dateString.slice(8, 10);
-        const minutes = dateString.slice(10, 12);
-        const seconds = dateString.slice(12, 14);
-        result.starting_time = new Date(
-          year,
-          month - 1,
-          day,
-          hours,
-          minutes,
-          seconds
+
+        result.starting_time = parseDateTime(
+          result[startColumn],
+          dynaParm.curStaDType
         );
-      } else if (dynaParm.curStaDType === "UNIX") {
-        result.starting_time = parseInt(result[startColumn]);
-      } else if (dynaParm.curStaDType === "YYYY/MM/DD HH:mm:SS") {
-        result.starting_time = Date.parse(result[startColumn]);
+        result.ending_time = parseDateTime(
+          result[endColumn],
+          dynaParm.curEndDType
+        );
       }
 
-      if (dynaParm.curEndDType === "") {
-        if (result[endColumn].indexOf(":") < 0) {
-          result.ending_time = parseInt(result[endColumn]);
-        } else {
-          result.ending_time = Date.parse(result[endColumn]);
-        }
-      } else if (dynaParm.curEndDType === "YYYYMMDDHHmmSS") {
-        const dateString = result[endColumn];
-        const year = dateString.slice(0, 4);
-        const month = dateString.slice(4, 6);
-        const day = dateString.slice(6, 8);
-        const hours = dateString.slice(8, 10);
-        const minutes = dateString.slice(10, 12);
-        const seconds = dateString.slice(12, 14);
-        result.ending_time = new Date(
-          year,
-          month - 1,
-          day,
-          hours,
-          minutes,
-          seconds
-        );
-      } else if (dynaParm.curEndDType === "UNIX") {
-        result.ending_time = parseInt(result[endColumn]);
-      } else if (dynaParm.curEndDType === "YYYY/MM/DD HH:mm:SS") {
-        result.ending_time = Date.parse(result[endColumn]);
-      }
-
-      // if(result[startColumn].indexOf(':') < 0)
-      // {
-      //   result.starting_time = parseInt(result[startColumn])
-      // } else {
-      //   result.starting_time =Date.parse(result[startColumn])
-      // }
-
-      // if(result[endColumn].indexOf(':') < 0)
-      // {
-      //   result.ending_time = parseInt(result[endColumn])
-      // } else {
-      //   result.ending_time =Date.parse(result[endColumn])
-      // }
-    }
-
-    return result;
-  });
-
-  return csvArray;
+      return result;
+    });
 }
 
 function filterTimelineData(inData) {

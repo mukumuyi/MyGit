@@ -14,7 +14,7 @@
           <span class="open">入力ファイル（展開可）</span>
           <span class="close">入力ファイル（折畳可）</span>
         </summary>
-        <div class="container4">
+        <div class="container1">
           <% if(settingfile.InputDataType) { %>
             <form id="InputDataTypeSelector" onsubmit="return false;">入力方式
               <select name="InputDataType" id="InputDataType" onchange="fileMethodVisible()">
@@ -29,46 +29,92 @@
               <input type="file" id="FileDirectoryLocal" accept=".csv" onchange="drawFromLocalFile()">
             </form>
             <% } %>
-              <% if(settingfile.StartColumn) { %>
-                <form id="StartColumnSelector" <% if(settingfile.StartColumn.length==1 &&
-                  settingfile.StartDateType.length==1) { %> hidden <% } %>
-                    > 開始時刻項目
-                    <select name="StartColumn" id="StartColumn" onchange="changeDynaParm()">
-                      <% settingfile.StartColumn.map((item)=> { %>
-                        <option>
-                          <%=item %>
-                        </option>
-                        <% }) %>
-                    </select>
-                    <select name="StartDateType" id="StartDateType" onchange="changeDynaParm()">
-                      <% settingfile.StartDateType.map((item)=> { %>
-                        <option>
-                          <%=item %>
-                        </option>
-                        <% }) %>
-                    </select>
-                </form>
-                <% } %>
-                  <% if(settingfile.EndColumn ) { %>
-                    <form id="EndColumnSelector" <% if(settingfile.EndColumn.length==1 &&
-                      settingfile.EndDateType.length==1) { %> hidden <% } %>
-                        > 終了時刻項目
-                        <select name="EndColumn" id="EndColumn" onchange="changeDynaParm()">
-                          <% settingfile.EndColumn.map((item)=> { %>
-                            <option>
-                              <%=item %>
-                            </option>
-                            <% }) %>
-                        </select>
-                        <select name="EndDateType" id="EndDateType" onchange="changeDynaParm()">
-                          <% settingfile.EndDateType.map((item)=> { %>
-                            <option>
-                              <%=item %>
-                            </option>
-                            <% }) %>
-                        </select>
-                    </form>
-                    <% } %>
+              <div class="container8">
+
+                <% if(settingfile.RecordNameColumn) { %>
+                  <form id="RecordNameColumnSelector" <% if(settingfile.RecordNameColumn.length==1) { %> hidden <% } %>
+                      >
+                      <label for="RecordNameColumn">名前</label>
+                      <select name="RecordNameColumn" id="RecordNameColumn" onchange="changeDynaParm()">
+                        <% settingfile.RecordNameColumn.map((item)=> { %>
+                          <option>
+                            <%=item %>
+                          </option>
+                          <% }) %>
+                      </select>
+                  </form>
+                  <% } %>
+                    <% if(settingfile.CommentColumn) { %>
+                      <form id="CommentColumnSelector" <% if(settingfile.CommentColumn.length==1) { %> hidden <% } %>
+                          >
+                          <label for="CommentColumn">コメント</label>
+                          <select name="CommentColumn" id="CommentColumn" onchange="changeDynaParm()">
+                            <% settingfile.CommentColumn.map((item)=> { %>
+                              <option>
+                                <%=item %>
+                              </option>
+                              <% }) %>
+                          </select>
+                      </form>
+                      <% } %>
+                        <% if(settingfile.ColorColumn) { %>
+                          <form id="ColorColumnSelector" <% if(settingfile.ColorColumn.length==1) { %> hidden <% } %>
+                              >
+                              <label for="ColorColumn">色分類項目</label>
+                              <select name="ColorColumn" id="ColorColumn" onchange="changeDynaParm()">
+                                <% settingfile.ColorColumn.map((item)=> { %>
+                                  <option>
+                                    <%=item %>
+                                  </option>
+                                  <% }) %>
+                              </select>
+                          </form>
+                          <% } %>
+              </div>
+              <div class="container3">
+                <% if(settingfile.StartColumn) { %>
+                  <form id="StartColumnSelector" <% if(settingfile.StartColumn.length==1 &&
+                    settingfile.StartDateType.length==1) { %> hidden <% } %>
+                      >
+                      <label for="StartColumn">開始時刻項目</label>
+                      <select name="StartColumn" id="StartColumn" onchange="changeDynaParm()">
+                        <% settingfile.StartColumn.map((item)=> { %>
+                          <option>
+                            <%=item %>
+                          </option>
+                          <% }) %>
+                      </select>
+                      <select name="StartDateType" id="StartDateType" onchange="changeDynaParm()">
+                        <% settingfile.StartDateType.map((item)=> { %>
+                          <option>
+                            <%=item %>
+                          </option>
+                          <% }) %>
+                      </select>
+                  </form>
+                  <% } %>
+                    <% if(settingfile.EndColumn ) { %>
+                      <form id="EndColumnSelector" <% if(settingfile.EndColumn.length==1 &&
+                        settingfile.EndDateType.length==1) { %> hidden <% } %>
+                          >
+                          <label for="EndColumn">終了時刻項目</label>
+                          <select name="EndColumn" id="EndColumn" onchange="changeDynaParm()">
+                            <% settingfile.EndColumn.map((item)=> { %>
+                              <option>
+                                <%=item %>
+                              </option>
+                              <% }) %>
+                          </select>
+                          <select name="EndDateType" id="EndDateType" onchange="changeDynaParm()">
+                            <% settingfile.EndDateType.map((item)=> { %>
+                              <option>
+                                <%=item %>
+                              </option>
+                              <% }) %>
+                          </select>
+                      </form>
+                      <% } %>
+              </div>
         </div>
       </details>
     </div>
@@ -78,61 +124,23 @@
       <span class="open">表示コントロール（展開可）</span>
       <span class="close">表示コントロール（折畳可）</span>
     </summary>
-    <div class="container">
-      <div class="GroupSetting">
-        <% if(settingfile.GroupNameColumn) { %>
-          <form id="GroupNameColumnSelector" <% if(settingfile.GroupNameColumn.length==1) { %> hidden <% } %>
-              > 縦軸項目
-              <select name="GroupNameColumn" id="GroupNameColumn" onchange="changeDynaParm('C')">
-                <% settingfile.GroupNameColumn.map((item)=> { %>
-                  <option>
-                    <%=item %>
-                  </option>
-                  <% }) %>
-              </select>
-          </form>
-          <% } %>
-            <% if(settingfile.RecordNameColumn) { %>
-              <form id="RecordNameColumnSelector" <% if(settingfile.RecordNameColumn.length==1) { %> hidden <% } %>
-                  > 名前
-                  <select name="RecordNameColumn" id="RecordNameColumn" onchange="changeDynaParm()">
-                    <% settingfile.RecordNameColumn.map((item)=> { %>
-                      <option>
-                        <%=item %>
-                      </option>
-                      <% }) %>
-                  </select>
-              </form>
-              <% } %>
-                <% if(settingfile.CommentColumn) { %>
-                  <form id="CommentColumnSelector" <% if(settingfile.CommentColumn.length==1) { %> hidden <% } %>
-                      > コメント
-                      <select name="CommentColumn" id="CommentColumn" onchange="changeDynaParm()">
-                        <% settingfile.CommentColumn.map((item)=> { %>
-                          <option>
-                            <%=item %>
-                          </option>
-                          <% }) %>
-                      </select>
-                  </form>
-                  <% } %>
-      </div>
+    <div class="container3">
       <div class="DisplaySetting">
         <% if(settingfile.TimeSpanSetting && settingfile.TimeSpanSetting.length> 1) { %>
           <form id="TimeSpanSettingButton">表示期間
             <% settingfile.TimeSpanSetting.map((item)=> { %>
-              <input type="radio" name="TimeSpanSetting" value = <%=item.value %> id = <%= item.id %>
+              <input type="radio" name="TimeSpanSetting" value=<%=item.value %> id = <%= item.id %>
                 onchange="changeDynaParm()" <%= item.checked %> >
-                  <label for = <%=item.id %>><%= item.label %></label>
+                  <label for=<%=item.id %>><%= item.label %></label>
                   <% }) %>
           </form>
           <% } %>
             <% if(settingfile.BarWidthSetting && settingfile.BarWidthSetting.length> 1) { %>
               <form id="BarWidthSettingButton">バーの幅
                 <% settingfile.BarWidthSetting.map((item)=> { %>
-                  <input type="radio" name="BarWidthSetting" value = <%=item.value %> id = <%= item.id %>
+                  <input type="radio" name="BarWidthSetting" value=<%=item.value %> id = <%= item.id %>
                     onchange="changeDynaParm()" <%= item.checked %> >
-                      <label for = <%=item.id %>><%= item.label %></label>
+                      <label for=<%=item.id %>><%= item.label %></label>
                       <% }) %>
               </form>
               <% } %>
@@ -141,36 +149,24 @@
       </div>
       <div class="ColorSetting">
         <div class="container4">
-          <% if(settingfile.ColorColumn) { %>
-            <form id="ColorColumnSelector" <% if(settingfile.ColorColumn.length==1) { %> hidden <% } %>
-                > 色分類項目
-                <select name="ColorColumn" id="ColorColumn" onchange="changeDynaParm()">
-                  <% settingfile.ColorColumn.map((item)=> { %>
-                    <option>
-                      <%=item %>
-                    </option>
-                    <% }) %>
-                </select>
-            </form>
-            <% } %>
-              <form id="ColorRectStroke">
-                <label>バー枠線</label>
-                <input type="color" class="custom-color-input" id="BarFlameColor" value="#849974"
-                  onchange="changeDynaParm()" />
-              </form>
-              <form id="ColorLineStroke">
-                <label>区切り枠線</label>
-                <input type="color" class="custom-color-input" id="SeparatorLineColor" value="#FFFFFF"
-                  onchange="changeDynaParm()" />
-              </form>
+          <form id="ColorRectStroke" hidden>
+            <label>バー枠線</label>
+            <input type="color" class="custom-color-input" id="BarFlameColor" value="#849974"
+              onchange="changeDynaParm()" />
+          </form>
+          <form id="ColorLineStroke" hidden>
+            <label>区切り枠線</label>
+            <input type="color" class="custom-color-input" id="SeparatorLineColor" value="#FFFFFF"
+              onchange="changeDynaParm()" />
+          </form>
         </div>
         <% if(settingfile.ColorPallette) { %>
           <form id="ColorPallette" <% if(settingfile.ColorPallette.length==1) { %> hidden <% } %>
               >
               <% settingfile.ColorPallette.map((item)=> { %>
-                <input type="color" class = <%=item.label %> id = <%=item.id %> value = <%=item.value %>
+                <input type="color" class=<%=item.label %> id = <%=item.id %> value = <%=item.value %>
                     onchange="changeDynaParm()" />
-                    <label for = <%=item.id %>><%=item.label %></label>
+                    <label for=<%=item.id %>><%=item.label %></label>
                     <% }) %>
           </form>
           <% } %>
@@ -178,33 +174,46 @@
     </div>
     <div class="container1">
       <div class="DisplaySetting">
-        <div class="container">
-          <% if(settingfile.FilterColumn) { %>
-            <form id="FilterColumnSelector" onsubmit="return false;">フィルタ項目
-              <select name="FilterColumn" id="FilterColumn">
-                <% settingfile.FilterColumn.map((item)=> { %>
-                  <option>
-                    <%=item %>
-                  </option>
-                  <% }) %>
-              </select>
+        <div class="container1">
+          <% if(settingfile.GroupNameColumn) { %>
+            <form id="GroupNameColumnSelector" <% if(settingfile.GroupNameColumn.length==1) { %> hidden <% } %>
+                >
+                <label for="GroupNameColumn">縦軸項目</label>
+                <select name="GroupNameColumn" id="GroupNameColumn" onchange="changeDynaParm('C')">
+                  <% settingfile.GroupNameColumn.map((item)=> { %>
+                    <option>
+                      <%=item %>
+                    </option>
+                    <% }) %>
+                </select>
             </form>
             <% } %>
-              <input type="text" id="FilterText" onchange="changeDynaParm('F')" value="name for filter">
-        </div>
-        <div class="container">
-          <% if(settingfile.SearchColumn) { %>
-            <form id="SearchColumnSelector" onsubmit="return false;">検索項目
-              <select name="SearchColumn" id="SearchColumn">
-                <% settingfile.SearchColumn.map((item)=> { %>
-                  <option>
-                    <%=item %>
-                  </option>
-                  <% }) %>
-              </select>
-            </form>
-            <% } %>
-              <input type="text" id="SearchText" onchange="changeDynaParm()" value="name for search">
+              <% if(settingfile.FilterColumn) { %>
+                <form id="FilterColumnSelector" onsubmit="return false;">
+                  <label for="FilterColumn">フィルタ</label>
+                  <select name="FilterColumn" id="FilterColumn">
+                    <% settingfile.FilterColumn.map((item)=> { %>
+                      <option>
+                        <%=item %>
+                      </option>
+                      <% }) %>
+                  </select>
+                  <input type="text" id="FilterText" onchange="changeDynaParm('F')" value="name for filter">
+                </form>
+                <% } %>
+                  <% if(settingfile.SearchColumn) { %>
+                    <form id="SearchColumnSelector" onsubmit="return false;">
+                      <label for="SearchColumn">検索</label>
+                      <select name="SearchColumn" id="SearchColumn">
+                        <% settingfile.SearchColumn.map((item)=> { %>
+                          <option>
+                            <%=item %>
+                          </option>
+                          <% }) %>
+                      </select>
+                      <input type="text" id="SearchText" onchange="changeDynaParm()" value="name for search">
+                    </form>
+                    <% } %>
         </div>
       </div>
     </div>
