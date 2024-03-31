@@ -15,7 +15,10 @@ async function drawFromLocalFile() {
       };
       reader.readAsText(file);
     });
-    CsvToTimelineChart(inputData, dynaParm);
+    parseData = parseCSV(inputData);
+    filterData = filterTimelineData(parseData);
+    timelineData = convertTimelineData(filterData);
+    CsvToTimelineChart(timelineData);
   } catch (error) {
     console.error("CSVファイルの読み込みエラー:", error);
   }
@@ -35,22 +38,15 @@ function drawFromHttpFile() {
     console.log(err);
   }
   inputData = reqHttp.responseText;
-  CsvToTimelineChart(inputData, dynaParm);
+  parseData = parseCSV(inputData);
+  filterData = filterTimelineData(parseData);
+  timelineData = convertTimelineData(filterData);
+  CsvToTimelineChart(timelineData);
 };
 
-function CsvToTimelineChart(inputData, dynaParm) {
-  console.log("=== TRANSFER DATA START  :",new Date().toLocaleTimeString("it-IT"),"===");
+function CsvToTimelineChart(timelineData) {
+  
   const timeline1Element = $("#graph").get(0); // id="timeline1"の要素を取得
-  let parseDataTemp;
-  parseData = parseCSV(inputData);
-  parseDataTemp = parseData.filter(
-    (item) =>
-      item[dynaParm.curFilterColumn].match(RegExp("^" + dynaParm.curFilterText.replace(/\*/g, ".*") + "$"))
-  );
-  if (parseDataTemp.length !== 0) {
-    parseData = parseDataTemp;
-  }
-  timelineData = convertData(parseData,dynaParm);
 
   if (timeline1Element) {
     // もし要素が存在する場合は削除
@@ -62,7 +58,7 @@ function CsvToTimelineChart(inputData, dynaParm) {
   timeline(timelineData, dynaParm.curTimeSpan, dynaParm.curBarWidth);
 };
 
-function changeDynaParm() {
+function changeDynaParm(procPtn) {
   console.log("=== CHANGE DYNAMIC PARAMETER START  :",new Date().toLocaleTimeString("it-IT"),"===");
   const timeline1Element = $("#graph").get(0); // id="timeline1"の要素を取得
   dynaParm = {
@@ -86,23 +82,21 @@ function changeDynaParm() {
     curSearchText: $("#SearchText").get(0).value,
   };
 
-  timelineData = convertData(parseData,dynaParm);
-
-  if (timeline1Element) {
-    // もし要素が存在する場合は削除
-    timeline1Element.innerHTML = "";
-  } else {
-    console.error("Element with id 'timeline1' not found.");
+  console.log(procPtn);
+  if(procPtn=== 'F' ){
+    filterData = filterTimelineData(parseData);
+    timelineData = convertTimelineData(filterData);
+  } else if (procPtn=== 'C' ){  
+    timelineData = convertTimelineData(filterData);
   };
-
-  timeline(timelineData, dynaParm.curTimeSpan, dynaParm.curBarWidth);
-
+  CsvToTimelineChart(timelineData);
 };
 
 let tx = 0;
 let ty = 0;
 let inputData;
 let parseData;
+let filterData;
 
 console.log("=== INITIAL START  :",new Date().toLocaleTimeString("it-IT")," ===");
 

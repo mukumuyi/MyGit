@@ -32,7 +32,7 @@
           </select>
         </form> -->
         <div class="container4">
-          <form id="InputDataTypeSelector">入力方式
+          <form id="InputDataTypeSelector" onsubmit="return false;">入力方式
             <select name="InputDataType" id="InputDataType" onchange="fileMethodVisible()">
               <option value="http">http</option>
               <option value="local">local</option>
@@ -68,7 +68,7 @@
     <div class="container">
       <div class="GroupSetting">
         <form id="GroupNameColumnSelector"> 縦軸項目
-          <select name="GroupNameColumn" id="GroupNameColumn" onchange="changeDynaParm()">
+          <select name="GroupNameColumn" id="GroupNameColumn" onchange="changeDynaParm('C')">
             <option>label</option>
             <option>name</option>
             <option>class</option>
@@ -147,7 +147,7 @@
     <div class="container1">
       <div class="DisplaySetting">
         <div class="container">
-          <form id="FilterColumnSelector">フィルタ項目
+          <form id="FilterColumnSelector" onsubmit="return false;">フィルタ項目
             <select name="FilterColumn" id="FilterColumn">
               <option value="name">name</option>
               <option value="label">label</option>
@@ -155,10 +155,10 @@
               <option value="status">status</option>
             </select>
           </form>
-          <input type="text" id="FilterText" onchange="changeDynaParm()" value="name for filter">
+          <input type="text" id="FilterText" onchange="changeDynaParm('F')" value="name for filter">
         </div>
         <div class="container">
-          <form id="SearchColumnSelector">検索項目
+          <form id="SearchColumnSelector" onsubmit="return false;">検索項目
             <select name="SearchColumn" id="SearchColumn">
               <option value="name">name</option>
               <option value="label">label</option>

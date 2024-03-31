@@ -19,13 +19,11 @@ const dataPtnFile = JSON.parse(fs.readFileSync(dataPtnDir));
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: false}));
 
-app.get("/", (req, res) => {
-  let getDate = new Date();
-  console.log('MAIN.js START:',getDate.toLocaleTimeString("it-IT"));
+app.get("/", (req, res) => { 
+  console.log('MAIN GET START:',new Date().toLocaleTimeString("it-IT"));
   res.render("timeline.ejs", { settingfile: settingFile,dataPtnFile:dataPtnFile });
 
-  getDate = new Date();
-  console.log('MAIN.js END:',getDate.toLocaleTimeString("it-IT"));
+  console.log('MAIN GET END:',new Date().toLocaleTimeString("it-IT"));
 });
 
 app.get("/setting", (req, res) => {
@@ -33,6 +31,7 @@ app.get("/setting", (req, res) => {
 });
 
 app.get("/data", (req, res) => {
+  console.log('DATA GET START:',new Date().toLocaleTimeString("it-IT"));
   try{
     if (fs.existsSync(datadir + "/" + req.query.filename + ".csv")){
       res.sendFile(datadir + "/" + req.query.filename + ".csv");
@@ -44,6 +43,7 @@ app.get("/data", (req, res) => {
     res.send('There is a error')
     console.log('There is a error')
   }  
+  console.log('DATA GET END:',new Date().toLocaleTimeString("it-IT"));
 });
 
 app.listen(port, () => {

@@ -1,10 +1,10 @@
 {
-    "InputDataType":["local","http"],
+    "InputDataType":["http","local"],
     "StartColumn":["starting_time"],
-    "StartDateType":["YYYYMMDDHHmmSS","UNIX","YYYY/MM/DD HH:mm:SS"],
+    "StartDateType":["","UNIX","YYYYMMDDHHmmSS","YYYY/MM/DD HH:mm:SS"],
     "EndColumn":["ending_time"],
-    "EndDateType":["YYYYMMDDHHmmSS","UNIX","YYYY/MM/DD HH:mm:SS"],
-    "GroupNameColumn":["name","class"],
+    "EndDateType":["","UNIX","YYYYMMDDHHmmSS","YYYY/MM/DD HH:mm:SS"],
+    "GroupNameColumn":["name","class","label"],
     "RecordNameColumn":["class","label"],
     "CommentColumn":["label","class"],
     "TimeSpanSetting":[
