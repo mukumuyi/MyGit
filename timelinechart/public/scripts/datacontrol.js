@@ -19,9 +19,7 @@ function parseDateTime(dateTimeString, type) {
 function parseCSV(csvData) {
   console.log(
     "=== PARSE CSV START  :",
-    new Date().toLocaleTimeString("it-IT"),
-    "==="
-  );
+    new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
   const startColumn = dynaParm.curStaColumn; //Get StartColumnName from html
   const endColumn = dynaParm.curEndColumn; //Get endColumnName from html
   // CSVデータを行ごとに分割し、各行をカンマで分割して配列に格納する
@@ -57,9 +55,7 @@ function parseCSV(csvData) {
 function filterTimelineData(inData) {
   console.log(
     "=== FILTER DATA START  :",
-    new Date().toLocaleTimeString("it-IT"),
-    "==="
-  );
+    new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
 
   let outData = inData.filter((item) =>
     item[dynaParm.curFilterColumn].match(
@@ -75,9 +71,7 @@ function filterTimelineData(inData) {
 function convertTimelineData(inData) {
   console.log(
     "=== MAKE TIMELINE DATA START  :",
-    new Date().toLocaleTimeString("it-IT"),
-    "==="
-  );
+    new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
   const groupColumn = dynaParm.curGrpNameColumn; //Get GroupColumnName from html
   const startColumn = dynaParm.curStaColumn; //Get StartColumnName from html
   const endColumn = dynaParm.curEndColumn; //Get endColumnName from html

@@ -1,5 +1,5 @@
 async function drawFromLocalFile() {
-  console.log("=== GET LOCAL FILE START  :",new Date().toLocaleTimeString("it-IT"),"===");
+  console.log("=== GET LOCAL FILE START  :",new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
   let fileInput = $("#FileDirectoryLocal").get(0);
   let file = fileInput.files[0];
   // let inputData = "";
@@ -25,7 +25,7 @@ async function drawFromLocalFile() {
 };
 
 function drawFromHttpFile() {
-  console.log("=== GET HTTP FILE START  :",new Date().toLocaleTimeString("it-IT"),"===");
+  console.log("=== GET HTTP FILE START  :",new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
   // CSVファイルを取得
   let reqHttp = new XMLHttpRequest();
   // let inputData = []; // 配列を定義
@@ -59,7 +59,7 @@ function drawTimelineChart(timelineData) {
 };
 
 function changeDynaParm(procPtn) {
-  console.log("=== CHANGE DYNAMIC PARAMETER START  :",new Date().toLocaleTimeString("it-IT"),"===");
+  console.log("=== CHANGE DYNAMIC PARAMETER START  :",new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
   const timeline1Element = $("#graph").get(0); // id="timeline1"の要素を取得
   dynaParm = {
     curInFileMethodType: $("#InputDataType").get(0).value,
@@ -97,7 +97,7 @@ let inputData;
 let parseData;
 let filterData;
 
-console.log("=== INITIAL START  :",new Date().toLocaleTimeString("it-IT")," ===");
+console.log("=== INITIAL START  :",new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
 
 //Set Static Parameter
 if ($("#SetSettingFile").get(0)) {
@@ -153,5 +153,5 @@ if (dynaParm.curInFileMethodType === 'http') {
   //Draw Timeline Chart
   drawFromLocalFile();
 }
-console.log("=== INITIAL END  :",new Date().toLocaleTimeString("it-IT")," ===");
+console.log("=== INITIAL END  :",new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
 

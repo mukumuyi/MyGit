@@ -104,7 +104,7 @@ function timeline(csvArray,frameTimespan,g_height) {
     return resultArray;
   }
   
-  console.log("=== DRAW TIMELINE START  :",new Date().toLocaleTimeString("it-IT"),"===");
+  console.log("=== DRAW TIMELINE START  :", new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
 
   // basic parameters
   const width0 = 1350;
@@ -245,7 +245,7 @@ function timeline(csvArray,frameTimespan,g_height) {
       return this.cy;
     },
   }));
-
+  console.log("=== PREPARE DATASET START  :", new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(), "===");
   const xAxis0Array = makexAxisArray(minTimeStamp,maxTimeStamp,xAxisTimespan,scaleFactor);
   const yAxisArray = makeyAxisArray(plotArray,g_margin,g_height);
   const mergedArray = [...plotArray, ...xAxis0Array, ...yAxisArray];
@@ -285,6 +285,7 @@ function timeline(csvArray,frameTimespan,g_height) {
   for (const coord of ["svg", "xAxis0", "xAxis1", "yAxis", "plotArea"]) {
     const coordMarkers = mergedArray.filter((d) => d.coord === coord);
     const g = coord === "svg" ? svg : selectClippedGroup(coord);
+    console.log(`=== ${coord} START  :`, new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(), "===");
     g.selectAll("circle.marker-circle")
       .data(coordMarkers)
       .enter()
@@ -363,7 +364,8 @@ function timeline(csvArray,frameTimespan,g_height) {
         })
         .on("mouseout", function (d) {
           tooltip.style("visibility", "hidden");
-        });
+        })
+        ;
     }
     if (coord === "xAxis0" || coord === "xAxis1" || coord === "yAxis") {
       g.selectAll("text.marker-label")
@@ -377,11 +379,13 @@ function timeline(csvArray,frameTimespan,g_height) {
     }
   }
 
+  console.log(`=== MAKE DRAG HUNDLER START  :`, new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(), "===");
+  
   Object.keys(dragHandlerOf).forEach((area) => {
     selectGroup(area)
       .select("rect.drag-handler")
       .call(d3.drag().on("drag", dragHandlerOf[area]));
   });
-
-  console.log("=== DRAW TIMELINE END  :",new Date().toLocaleTimeString("it-IT"),"===");
+  
+  console.log("=== DRAW TIMELINE END   :", new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(), "===");
 }
