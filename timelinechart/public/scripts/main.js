@@ -39,10 +39,15 @@ function drawFromHttpFile() {
   }
   inputData = reqHttp.responseText;
   parseData = parseCSV(inputData);
+  console.log(parseData);
   filterData = filterTimelineData(parseData);
   timelineData = convertTimelineData(filterData);
   drawTimelineChart(timelineData);
 };
+
+function drawFromDBFile(inpuData) {
+  console.log('InputData',inpuData);
+}
 
 function drawTimelineChart(timelineData) {
   
@@ -97,61 +102,91 @@ let inputData;
 let parseData;
 let filterData;
 
-console.log("=== INITIAL START  :",new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
+//Set Dynamic Parameter
+let dynaParm = {
+  curInFileMethodType: "",
+  curReqUrl:"" ,
+  curStaColumn: "",
+  curStaDType: "",
+  curEndColumn: "",
+  curEndDType: "",
+  curGrpNameColumn: "",
+  curRecNameColumn: "",
+  curCommentColumn: "",
+  curTimeSpan: "",
+  curBarWidth: "",
+  curColorColumn: "",
+  curBarFlameColor: "",
+  curSepLineColor: "",
+  curFilterColumn: "",
+  curFilterText: "",
+  curSearchColumn: "",
+  curSearchText: "",
+};
 
-//Set Static Parameter
-if ($("#SetSettingFile").get(0)) {
-  console.log("===  ->ClientMode               ===");
+function init(inputJson) {
+
+  console.log("=== INITIAL START  :",new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
+
+  //Set Static Parameter
+  if ($("#SetSettingFile").get(0)) {
+    console.log("===  ->ClientMode               ===");
+    console.log(
+      "===  SET STATIC PARAM :",
+      new Date().toLocaleTimeString("it-IT"),
+      " ==="
+    );
+    setStaticParam();
+  } else {
+    console.log("===  ->ServerMode               ===");
+  }
+  
   console.log(
-    "===  SET STATIC PARAM :",
+    "===  SET DYNAMIC PARAM :",
     new Date().toLocaleTimeString("it-IT"),
     " ==="
   );
-  setStaticParam();
-} else {
-  console.log("===  ->ServerMode               ===");
-}
-
-console.log(
-  "===  SET DYNAMIC PARAM :",
-  new Date().toLocaleTimeString("it-IT"),
-  " ==="
-);
-
-//Control Visvible
-fileMethodVisible();
-
-//Set Dynamic Parameter
-let dynaParm = {
-  curInFileMethodType: $("#InputDataType").get(0).value,
-  curReqUrl: $("#FileDirectory").get(0).value,
-  curStaColumn: $("#StartColumn").get(0).value,
-  curStaDType: $("#StartDateType").get(0).value,
-  curEndColumn: $("#EndColumn").get(0).value,
-  curEndDType: $("#EndDateType").get(0).value,
-  curGrpNameColumn: $("#GroupNameColumn").get(0).value,
-  curRecNameColumn: $("#RecordNameColumn").get(0).value,
-  curCommentColumn: $("#CommentColumn").get(0).value,
-  curTimeSpan: parseInt($("input:radio[name=TimeSpanSetting]:checked").val()),
-  curBarWidth: parseInt($("input:radio[name=BarWidthSetting]:checked").val()),
-  curColorColumn: $("#ColorColumn").get(0).value,
-  curBarFlameColor: $("#BarFlameColor").get(0).value,
-  curSepLineColor: $("#SeparatorLineColor").get(0).value,
-  curFilterColumn: $("#FilterColumn").get(0).value,
-  curFilterText: $("#FilterText").get(0).value,
-  curSearchColumn: $("#SearchColumn").get(0).value,
-  curSearchText: $("#SearchText").get(0).value,
-};
-
-//Load Timeline Data
-if (dynaParm.curInFileMethodType === 'http') {
+  
+  //Control Visvible
+  fileMethodVisible();
+  
+  //Set Dynamic Parameter
+  dynaParm = {
+    curInFileMethodType: $("#InputDataType").get(0).value,
+    curReqUrl: $("#FileDirectory").get(0).value,
+    curStaColumn: $("#StartColumn").get(0).value,
+    curStaDType: $("#StartDateType").get(0).value,
+    curEndColumn: $("#EndColumn").get(0).value,
+    curEndDType: $("#EndDateType").get(0).value,
+    curGrpNameColumn: $("#GroupNameColumn").get(0).value,
+    curRecNameColumn: $("#RecordNameColumn").get(0).value,
+    curCommentColumn: $("#CommentColumn").get(0).value,
+    curTimeSpan: parseInt($("input:radio[name=TimeSpanSetting]:checked").val()),
+    curBarWidth: parseInt($("input:radio[name=BarWidthSetting]:checked").val()),
+    curColorColumn: $("#ColorColumn").get(0).value,
+    curBarFlameColor: $("#BarFlameColor").get(0).value,
+    curSepLineColor: $("#SeparatorLineColor").get(0).value,
+    curFilterColumn: $("#FilterColumn").get(0).value,
+    curFilterText: $("#FilterText").get(0).value,
+    curSearchColumn: $("#SearchColumn").get(0).value,
+    curSearchText: $("#SearchText").get(0).value,
+  };
+  
   //Load Timeline Data
-  //Draw Timeline Chart
-  drawFromHttpFile();
-} else {
-  //Load Timeline Data
-  //Draw Timeline Chart
-  drawFromLocalFile();
+  // if (inputJson){
+  //   console.log(inputJson)
+  //   // drawFromDBFile(inputJson);
+  // } else 
+  if (dynaParm.curInFileMethodType === 'http') {
+    //Load Timeline Data
+    //Draw Timeline Chart
+    drawFromHttpFile();
+  } else {
+    //Load Timeline Data
+    //Draw Timeline Chart
+    drawFromLocalFile();
+  }
+  console.log("=== INITIAL END  :",new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
+  
+  
 }
-console.log("=== INITIAL END  :",new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
-

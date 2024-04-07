@@ -3,9 +3,20 @@ import express from "express";
 import bodyParser from "body-parser";
 import fs from "fs";
 import path from "path";
+import pg from "pg"
 
 const __dirname = import.meta.dirname;
 const datadir = path.join(__dirname, '../data');
+
+const db = new pg.Client({
+  user: 'postgres',
+  host: 'localhost',
+  database: 'postgres',
+  password: 'YTK@pg',
+  port: 5432
+});
+
+db.connect();
 
 const app = express();
 const port = 3000;
@@ -19,9 +30,12 @@ const dataPtnFile = JSON.parse(fs.readFileSync(dataPtnDir));
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: false}));
 
-app.get("/", (req, res) => { 
+app.get("/", async (req, res) => { 
+  // const result = await db.query('select * from timeline')
+  // const inputData = result.rows;
+  // console.log(inputData);
   console.log('MAIN GET START:',new Date().toLocaleTimeString("it-IT"));
-  res.render("timeline.ejs", { settingfile: settingFile,dataPtnFile:dataPtnFile });
+  res.render("timeline.ejs", { settingfile: settingFile,dataPtnFile:dataPtnFile,inputData:inputData });
 
   console.log('MAIN GET END:',new Date().toLocaleTimeString("it-IT"));
 });
