@@ -244,7 +244,9 @@ function timeline(csvArray,frameTimespan,g_height) {
     labelY: function () {
       return this.cy;
     },
-  }));
+  }))
+  // .filter((item)=>item.cx < width0 - px0 && item.cx > 0 && item.cy < height0 - py0 && item.cy > 0)
+  ;
   console.log("=== PREPARE DATASET START  :", new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(), "===");
   const xAxis0Array = makexAxisArray(minTimeStamp,maxTimeStamp,xAxisTimespan,scaleFactor);
   const yAxisArray = makeyAxisArray(plotArray,g_margin,g_height);
