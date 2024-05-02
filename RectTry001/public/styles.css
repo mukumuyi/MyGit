@@ -12,7 +12,6 @@ body {
   background: #50a3a2;
   width: 100%;
   height: 100%;
-  overflow: hidden;
 }
 
 .container {
@@ -24,7 +23,7 @@ body {
 .container8 {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
-  grid-template-rows: 2fr;
+  grid-template-rows: 1fr;
 }
 
 .container h1 {
@@ -59,6 +58,25 @@ button {
   font-size: 18px;
 }
 
+.note {
+  background: #3e2bd0;
+  border-radius: 7px;
+  box-shadow: 0 2px 5px #ccc;
+  padding: 10px;
+  width: 240px;
+  margin: 16px;
+  float: left;
+}
+.note h1 {
+  font-size: 1.1em;
+  margin-bottom: 6px;
+}
+.note p {
+  font-size: 1.1em;
+  margin-bottom: 10px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
 
 svg {
   cursor : grab;
@@ -123,25 +141,5 @@ svg:active {
     background: #50a3a2;
     font-weight: 500;
     color: #fff;
-  }
-}
-
-
-.inline-header {  
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr;
-  label {
-    position: relative;
-    top: 0; left: 0;
-    color: #50a3a2;
-    font-size: 18px;
-    width: 100%;
-    height: 100%;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-right: 1px solid #b6b6b6;
   }
 }

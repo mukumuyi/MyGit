@@ -121,5 +121,3 @@ const csv2json = async (inputCsvPath, outputJsonPath,colStart,colEnd,colGrp,date
   
   // 実行
   csv2json(dir + file, targetJsonPath,colStart,colEnd,colGrp,dateType);
-
-  export default csv2json;

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef ,useEffect} from "react";
 import Rect from "./Rect";
 import Line from "./Line";
 import csvArray from "../csvArray";
@@ -9,12 +9,7 @@ export default function PlotArea(props) {
   const [gap, setGap] = useState({ x: 0, y: 0 });
   const [isMouseDown, setIsMouseDown] = useState(false);
   const svgRef = useRef(null);
-  const [tooltipText, setTooltipText] = useState({
-    start: "1983/12/30",
-    end: "2099/12/31",
-    name: "muku",
-    desc: null,
-  });
+  const [tooltipText, setTooltipText] = useState({start:"1983/12/30" , end:"2099/12/31" ,name:"muku",desc:null});
   const [tooltipPos, setTooltipPos] = useState({
     x: 0,
     y: 0,
@@ -28,6 +23,7 @@ export default function PlotArea(props) {
     const mouseX = e.pageX;
     const mouseY = e.pageY;
     setGap({ x: mouseX - cordinate.x, y: mouseY - cordinate.y });
+
   }
 
   // マウス押下解除時
@@ -42,26 +38,22 @@ export default function PlotArea(props) {
       const mouseX = e.pageX;
       const mouseY = e.pageY;
 
-      const relativeX = mouseX;
-      const relativeY = mouseY;
+      const relativeX = mouseX ;
+      const relativeY = mouseY ;
 
-      setCordinate({
-        x: relativeX - gap.x < 0 ? relativeX - gap.x : 0,
-        y: relativeY - gap.y < 0 ? relativeY - gap.y : 0,
-      });
+      setCordinate({ x: relativeX - gap.x < 0 ? relativeX - gap.x : 0, y: relativeY - gap.y < 0 ? relativeY - gap.y : 0 });
+
     }
   }
 
   // マウス通過時 idを取得して、csvArrayの値をtooltipのテキストに渡す。
   function onMouseOver(e) {
-    const targetItem = csvArray.filter(
-      (item) => item.id == e.target.getAttribute("id")
-    )[0];
+    const targetItem = csvArray.filter((item) => item.id == e.target.getAttribute("id"))[0];
     setTooltipText({
       start: new Date(targetItem.starting_time).toLocaleString("jp-JP"),
       end: new Date(targetItem.ending_time).toLocaleString("jp-JP"),
       name: targetItem.name,
-    });
+    }); 
     setTooltipPos({
       x: e.pageX + 10,
       y: e.pageY - 20,
@@ -71,7 +63,7 @@ export default function PlotArea(props) {
 
   // マウス通過終了時
   function onMouseOut(e) {
-    if (!showTooltipAll) {
+    if(!showTooltipAll){
       setTooltipPos({
         x: e.pageX + 10,
         y: e.pageY - 20,
@@ -80,32 +72,27 @@ export default function PlotArea(props) {
     }
   }
 
-  function onDbClick(e) {
-    console.log("DbClick!!");
-    if (showTooltipAll) {
-      setShowTooltipAll(false);
+  function onDbClick(e){
+    console.log("DbClick!!")
+    if(showTooltipAll){
+      setShowTooltipAll(false)
     } else {
-      setShowTooltipAll(true);
+      setShowTooltipAll(true)
     }
   }
 
   // basic parameters
-  const [svgWidth, setWidth] = useState(props.width ? props.width : 1350); //
-  const [svgHeight, setHeight] = useState(props.height ? props.height : 650); //
-  const plotStartX = 0;
-  const plotStartY = 0;
+  const [svgWidth,setWidth] = useState(props.width ? props.width : 1350); // 
+  const [svgHeight,setHeight] = useState(props.height ? props.height : 650); // 
+  const plotStartX = 100;
+  const plotStartY = 50;
   const py1 = 25;
 
   // graph parameter
-  const [frameTimespan, setFrameTimespan] = useState(53200000); // 1フレームの時間（6時間分）
-  const [gHeight, setGHeight] = useState(parseInt(20));
-  const [fontSize, setFontSize] = useState(parseInt(gHeight));
-  const [fontColor, setFontColor] = useState(
-    props.fontColor ? props.fontColor : "Black"
-  );
-  const [fontBackColor, setFontBackColor] = useState(
-    props.fontBackColor ? props.fontBackColor : "White"
-  );
+  const [frameTimespan,setFrameTimespan] = useState(53200000); // 1フレームの時間（6時間分）
+  const [gHeight,setGHeight] = useState(parseInt(20));
+  const [fontSize,setFontSize] = useState(parseInt(gHeight));
+  const [fontColor,setFontColor] = useState(props.fontColor ? props.fontColor : "Black");
 
   const gMargin = gHeight / 4;
   const xAxisTimespan = frameTimespan / 6; // x軸の1目盛りの時間（1時間分）
@@ -135,18 +122,6 @@ export default function PlotArea(props) {
       setFontColor(props.fontColor);
     }
   }, [props.fontColor]);
-
-  useEffect(() => {
-    if (props.width) {
-      setWidth(props.width);
-    }
-  }, [props.width]);
-
-  useEffect(() => {
-    if (props.height) {
-      setHeight(props.height);
-    }
-  }, [props.height]);
 
   const minTimeStamp =
     Math.floor(
@@ -197,7 +172,9 @@ export default function PlotArea(props) {
       return {
         key: index,
         coord: "xAxis",
-        cx: (currentTime - minTimeStamp) * scaleFactor + cordinate.x,
+        cx:
+          (currentTime - minTimeStamp) * scaleFactor +
+          cordinate.x,
         cy: 25,
         labelD: `${dates}`,
         labelT: `${hours}`,
@@ -240,6 +217,108 @@ export default function PlotArea(props) {
     <div>
       {/* <svg width={svgWidth} height={svgHeight} fill="#5FC2C0"> */}
       <svg width={svgWidth} height={svgHeight} fill="#5FC2C0">
+        <g id="yAxis-group" transform={`translate(0,${plotStartY})`}>
+          <defs>
+            <clipPath id="yAxis-clip">
+              <rect
+                x="0"
+                y="0"
+                width={plotStartX}
+                height={svgHeight - plotStartY}
+              ></rect>
+            </clipPath>
+          </defs>
+          <rect
+            className="yAxis drag-handler"
+            x="0"
+            y="0"
+            width={plotStartX}
+            height={svgHeight - plotStartY}
+            onMouseDown={onMouseDown}
+            onMouseUp={onMouseUp}
+            onMouseMove={onMouseMove}
+            onMouseOut={onMouseUp}
+          ></rect>
+          <g className="clipped-group" clipPath="url(#yAxis-clip)">
+            {yAxisArray.map((item) => {
+              return (
+                <Line
+                  key={item.key}
+                  x1="0"
+                  y1={item.cy}
+                  x2={svgWidth}
+                  y2={item.cy}
+                  stroke="green"
+                />
+              );
+            })}
+            {yAxisArray.map((item) => {
+              return (
+                <text
+                  key={item.key}
+                  className="yAxis marker-label"
+                  x="0"
+                  y={item.cy + fontSize}
+                  fill={fontColor}
+                  style={{ fontSize: fontSize }}
+                >
+                  {item.group}
+                </text>
+              );
+            })}
+          </g>
+        </g>
+        <g id="xAxis1-group" transform={`translate(${plotStartX},0)`}>
+          <defs>
+            <clipPath id="xAxis1-clip">
+              <rect
+                x="0"
+                y="0"
+                width={svgWidth - plotStartX}
+                height={plotStartY}
+              ></rect>
+            </clipPath>
+          </defs>
+          <rect
+            className="xAxis1 drag-handler"
+            x="0"
+            y="0"
+            width={svgWidth - plotStartX}
+            height={plotStartY}
+            onMouseDown={onMouseDown}
+            onMouseUp={onMouseUp}
+            onMouseMove={onMouseMove}
+            onMouseOut={onMouseUp}
+          ></rect>
+          <g className="clipped-group" clipPath="url(#xAxis1-clip)">
+            {xAxisArray.map((item) => {
+              return (
+                <Line
+                  key={item.key}
+                  x1={item.cx}
+                  y1="0"
+                  x2={item.cx}
+                  y2={svgHeight}
+                  stroke="green"
+                />
+              );
+            })}
+            {xAxisArray.map((item) => {
+              return (
+                <text
+                  key={item.key}
+                  className="xAxis1 marker-label "
+                  x={item.cx}
+                  y="25"
+                  fill={fontColor}
+                  style={{ fontSize: fontSize }}
+                >
+                  {item.labelT}
+                </text>
+              );
+            })}
+          </g>
+        </g>
         <g
           id="plotArea-group"
           transform={`translate(${plotStartX},${plotStartY})`}
@@ -298,6 +377,7 @@ export default function PlotArea(props) {
                 />
               );
             })}
+
             {plotArray.map((item) => {
               return (
                 <Rect
@@ -315,54 +395,21 @@ export default function PlotArea(props) {
                 />
               );
             })}
-            <rect x="0" y="0" height="50" width={svgWidth} fill="white" fillOpacity="0.5"></rect>
-            <rect x="0" y="0" height={svgHeight} width="100" fill="white" fillOpacity="0.5"></rect>
-            {xAxisArray.map((item) => {
-              return (
-                <text
-                  key={item.key}
-                  className="xAxis1 marker-label "
-                  x={item.cx}
-                  y={item.cy}
-                  fill={fontColor}
-                  style={{ fontSize: fontSize, fontWeight: "bold" }}
-                >
-                  {item.labelT}
-                </text>
-              );
-            })}
-            {yAxisArray.map((item) => {
-              return (
-                <text
-                  key={item.key}
-                  className="yAxis marker-label"
-                  x={item.cx}
-                  y={item.cy + fontSize}
-                  fill={fontColor}
-                  style={{ fontSize: fontSize, fontWeight: "bold" }}
-                >
-                  {item.group}
-                </text>
-              );
-            })}
           </g>
         </g>
       </svg>
       {tooltipPos.visible && (
-        <div
-          className="tooltip"
-          style={{ top: tooltipPos.y + "px", left: tooltipPos.x + "px" }}
-        >
-          {tooltipText.start && "START:" + tooltipText.start}
-          {tooltipText.start && <br />}
-          {tooltipText.end && "END:" + tooltipText.end}
-          {tooltipText.end && <br />}
-          {tooltipText.name && "NAME:" + tooltipText.name}
-          {tooltipText.name && <br />}
-          {tooltipText.desc && "DESC:" + tooltipText.desc}
-          {tooltipText.desc && <br />}
-        </div>
-      )}
+      <div className="tooltip" style={{ top: tooltipPos.y + "px" , left: tooltipPos.x + "px" }}>
+        {tooltipText.start && (("START:" + tooltipText.start))} 
+        {tooltipText.start && <br /> }
+        {tooltipText.end && (("END:" + tooltipText.end))} 
+        {tooltipText.end && <br /> }
+        {tooltipText.name && (("NAME:" + tooltipText.name))} 
+        {tooltipText.name && <br /> }
+        {tooltipText.desc && (("DESC:" + tooltipText.desc))} 
+        {tooltipText.desc && <br /> }
+      </div>
+    )}
     </div>
   );
 }

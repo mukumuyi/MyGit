@@ -1,454 +1,125 @@
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+import React, { useState ,useEffect} from "react";
+import PlotArea from "./PlotArea";
+import Radiobutton from "./Radiobutton";
 
-function Timeline(csvArray,frameTimespan,g_height) {
+// 実装したいこと　～Googleマップ風のTimelineチャートを作る。～
+// 1.SVGを一枚にする。
+// 3.線幅、描画期間
+// 4.色選択、検索ウィンドウ、フィルタ
+// 5.軸変更
+// 
+// 3.コンポーネントの分割をする。
+// 4.データ選択画面を追加する。（読込形式と指定、カラムの紐づけ、）
+// 5.画面遷移を実装する。
+// データ選択画面
+// 　-> Timeline画面
+// 
+// 機能拡張
+// 2.画面の表示設定メニューを追加する。
+// 6.ズームスライダーの実装
 
-  function makexAxisArray(startingTime, endingTime, span, scale) { //横軸のラベル用データ作成 
-    const recordsArray = [];
-    let currentTime = startingTime;
-    let record
-    while (currentTime <= endingTime) {// 時間と分を取得
-      const currentTimeD = new Date(currentTime);
-      const dates = currentTimeD.toLocaleDateString("ja-JP",{month: "numeric",day: "numeric"});
-      const hours = currentTimeD.getHours();
-      const minutes = currentTimeD.getMinutes();
-      // スパンごとにループ
-      if((hours * 60 + minutes) % (xAxisTimespan/10000) == 0 || currentTime == startingTime){
-        record = {
-          // レコードを作成
-          coord: "xAxis0",
-          cx: (currentTime - startingTime) * scale + tx,
-          cy: 25,
-          r: 10,
-          label: formattedTime = `${dates}`,
-          labelX: function () {
-            return this.cx;
-          },
-          labelY: function () {
-            return this.cy ;
-          },
-        };
-        recordsArray.push(record); // レコードを配列に追加
-      }
-      
-      record = {
-        // レコードを作成
-        coord: "xAxis1",
-        cx: (currentTime - startingTime) * scale + tx,
-        cy: 25,
-        r: 10,
-        label: formattedTime = `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`,
-        labelX: function () {
-          return this.cx;
-        },
-        labelY: function () {
-          return this.cy ;
-        },
-        lineX1: function () {
-          return this.cx;
-        },
-        lineX2: function () {
-          return this.cx; 
-        },
-        lineY1: function () {
-          return 0;
-        },
-        lineY2: function () {
-          return height0;
-        },
-      };
-      recordsArray.push(record); // レコードを配列に追加
-      currentTime += span; // 次のスパンへ進める
-    }
-    return recordsArray;
-  }
+function Timeline(props) {
+  const [isParmPanelShow ,setIsParmPanelShow] = useState({TimeSpan:false,BarWidth:false,})
 
-
-  function makeyAxisArray(inputArray,g_margin,g_height) { //縦軸のラベル用データ作成 
-    const recordsArray = {};
-    for (const item of inputArray) {
-      // 配列をループ
-      const group = parseInt(item.group);
-      const lane = parseInt(item.lane);
-      const label = item[dynaParm.curGrpNameColumn];
-      if (!recordsArray[group] || lane < recordsArray[group].lane) {
-        // Groupごとに最小のkeyの値を更新
-        recordsArray[group] = {
-          group: group,
-          lane: lane,
-          label: label,
-          coord: "yAxis",
-          cx: 0,
-          cy: g_margin * group + g_height * (lane - 1) + ty,
-          r: 10,
-          labelX: function () {
-            return this.cx;
-          },
-          labelY: function () {
-            return this.cy + g_height;
-            // return this.cy + g_height;
-          },
-          lineX1: function () {
-            return 0;
-          },
-          lineX2: function () {
-            return width0;
-          },
-          lineY1: function () {
-            return this.group !== 1 ? this.cy - g_margin / 2: 0; 
-          },
-          lineY2: function () {
-            return this.group !== 1 ? this.cy - g_margin / 2: 0; 
-          },
-        };
-      }
-    }
-    const resultArray = Object.values(recordsArray); // 結果を配列に変換
-    return resultArray;
-  }
+  const [screenWidth, setScreenWidth] = useState(document.documentElement.clientWidth);
+  const [screenHeight, setScreenHeight] = useState(document.documentElement.clientHeight);
   
-  console.log("=== DRAW TIMELINE START  :", new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
+  const [timeSelected, setTimeSelected] = useState("43200000");
+  const [widthSelected, setWidthSelected] = useState("12");
 
-  // basic parameters
-  const width0 = 1350;
-  const height0 = 650;
-  const px0 = 100;
-  const py1 = 25;
-  const py0 = 50;
-
-  // part-group parameters
-  const width1 = width0 - px0;
-  const height1 = height0 - py0;
-  const graphData = [
-    {
-      area: "xAxis0",px: px0,py: 0,clipPath: {
-        x: 0,y: 0,width: width1,height: py1,
-      },
-    },
-    {
-      area: "xAxis1",px: px0,py: py1,clipPath: {
-        x: 0,y: 0,width: width1,height: py0 - py1,
-      },
-    },
-    {
-      area: "yAxis",px: 0,py: py0,clipPath: {
-        x: 0,y: 0,width: px0,height: height1,
-      },
-    },
-    {
-      area: "plotArea",px: px0,py: py0,clipPath: {
-        x: 0,y: 0,width: width1,height: height1,
-      },
-    },
+  const timeSpan = [
+    { id: 1, name: "Span1h", value: "3600000", label: "1時間" },
+    { id: 2, name: "Span2h", value: "7200000", label: "2時間" },
+    { id: 3, name: "Span6h", value: "21600000", label: "6時間" },
+    { id: 4, name: "Span12h", value: "43200000", label: "12時間" },
+    { id: 5, name: "Span1d", value: "86400000", label: "1日" },
+    { id: 6, name: "Span2d", value: "172800000", label: "2日" },
   ];
 
-  // graph parameter
-  if (!frameTimespan) {
-    frameTimespan = 21600000; // 1フレームの時間（6時間分）
-  }
-  if (!g_height) {
-    g_height = 20; // 1フレームの時間（6時間分）
-  }
-  if (!csvArray) {
-    csvArray = [
-      {
-          "label": "person_a",
-          "class": "a",
-          "name": "test1",
-          "color": "green",
-          "group": "1",
-          "lane": "1",
-          "starting_time": "1703808000000",
-          "ending_time": "1703814500000"
-      },
-      {
-          "label": "person_a",
-          "class": "a",
-          "name": "test2",
-          "color": "blue",
-          "group": "1",
-          "lane": "1",
-          "starting_time": "1703850510000",
-          "ending_time": "1703870010000"
-      },
-      {
-          "label": "person_a",
-          "class": "a",
-          "name": "test5",
-          "color": "red",
-          "group": "1",
-          "lane": "2",
-          "starting_time": "1703809000000",
-          "ending_time": "1703819900000"
-      },
-      {
-          "label": "person_b",
-          "class": "b",
-          "name": "test3",
-          "color": "pink",
-          "group": "2",
-          "lane": "3",
-          "starting_time": "1703807000000",
-          "ending_time": "1703808990000"
-      },
-      {
-          "label": "person_c",
-          "class": "c",
-          "name": "test4",
-          "color": "yellow",
-          "group": "3",
-          "lane": "4",
-          "starting_time": "1703808000000",
-          "ending_time": "1703810000000"
-      }
-  ]
-  }
+  const barWidth = [
+    { id: 1, name: "BarThick", value: "40", label: "太" },
+    { id: 2, name: "BarRegular", value: "20", label: "標準" },
+    { id: 3, name: "BarThin", value: "12", label: "細" },
+    { id: 4, name: "BarThinest", value: "8", label: "超細" },
+  ];
 
-  console.log(csvArray);
-
-
-  let g_margin = g_height / 4; 
-  let xAxisTimespan = frameTimespan / 6 ; // x軸の1目盛りの時間（1時間分）
-  let scaleFactor = (1 / frameTimespan) * width0;
-
-  // append SVG
-  const svg = d3.select("div#graph").append("svg").attr("width", width0).attr("height", height0);
-
-  // append tooltip
-  const tooltip = d3.select("div#graph").append("div").attr("class", "tooltip");
-
-  // append part-groups
-  const groups = svg.selectAll("g").data(graphData).enter()
-    .append("g").attr("id", (d) => `${d.area}-group`).attr("transform", (d) => `translate(${d.px},${d.py})`);
-
-  const selectGroup = (key) => d3.select(`g#${key}-group`);
-  const selectClippedGroup = (key) => selectGroup(key).select("g");
-
-  // drag event handler
-  const dragCoord = (coord, dx, dy) => {
-    const cg = selectClippedGroup(coord);
-    // update cx/cy in binded data
-    // (d) => (d.cx += dx);
-    // (d) => (d.cy += dy);
-    cg.selectAll("circle.marker-circle")
-      .attr("cx", (d) => (d.cx += dx))
-      .attr("cy", (d) => (d.cy += dy));
-    // rewrite attributes with updated cx/cy
-    cg.selectAll("rect.marker-rect")
-      .attr("x", (d) => d.barX())
-      .attr("y", (d) => d.barY());
-    cg.selectAll("text.marker-label")
-      .attr("x", (d) => d.labelX())
-      .attr("y", (d) => d.labelY());
-    cg.selectAll("line.marker-line")
-      .attr("x1", (d) => d.lineX1())
-      .attr("x2", (d) => d.lineX2())
-      .attr("y1", (d) => d.lineY1())
-      .attr("y2", (d) => d.lineY2());
-  };
-
-  const dragAllMarker = (dx, dy) => {
-    if(tx + dx > 0 && dx >0 ){dx = 0}
-    if(ty + dy > 0 && dy >0 ){dy = 0}
-    dragCoord("xAxis0", dx, 0); // move horizontal
-    dragCoord("xAxis1", dx, 0); // move horizontal
-    dragCoord("yAxis", 0, dy); // move vertical
-    dragCoord("plotArea", dx, dy);
-    tx += dx; // 画面を開いてからのトータルの移動量
-    ty += dy; // 画面を開いてからのトータルの移動量
-    $("#xTotalMove").val(tx)
-    $("#yTotalMove").val(ty)
-  };
-
-  const dragHandlerOf = {
-    xAxis0: () => dragAllMarker(d3.event.dx, 0),
-    xAxis1: () => dragAllMarker(d3.event.dx, 0),
-    yAxis: () => dragAllMarker(0, d3.event.dy),
-    plotArea: () => dragAllMarker(d3.event.dx, d3.event.dy),
+  const onChangeTime = (e) => {
+    setTimeSelected(e.target.value);
   };
   
-  const minTimeStamp =
-    Math.floor(
-      Math.min(
-        ...csvArray
-          .map((item) => parseInt(item.starting_time))
-          .filter((value) => !isNaN(value))
-      ) / 3600000
-    ) * 3600000;
-    
-  const maxTimeStamp =
-    Math.ceil(
-      Math.max(
-        ...csvArray
-          .map((item) => parseInt(item.ending_time))
-          .filter((value) => !isNaN(value))
-      ) / 3600000
-    ) * 3600000;
+  const onChangeWidth = (e) => {  
+    setWidthSelected(e.target.value);
+  };
 
-  const plotArray = csvArray.map((item) => ({
-    ...item,
-    coord: "plotArea",
-    length: (item.ending_time - item.starting_time) * scaleFactor,
-    cx: (item.starting_time - minTimeStamp) * scaleFactor + tx,
-    cy: g_margin * item.group + g_height * (item.lane - 1) + ty,
-    r: 10, // constant: radius of marker circle
-    barX: function () {
-      return this.cx;
-    },
-    barY: function () {
-      return this.cy;
-    },
-    barColor: (item[dynaParm.curSearchColumn].match(RegExp("^" + dynaParm.curSearchText.replace(/\*/g, ".*") + "$")) ? "red" : $("#" + $("#ColorPallette > ." + item[dynaParm.curColorColumn]).get(0).id).get(0).value), 
-    labelX: function () {
-      return this.cx;
-    },
-    labelY: function () {
-      return this.cy;
-    },
-  }));
-  console.log("=== PREPARE DATASET START  :", new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(), "===");
-  const xAxis0Array = makexAxisArray(minTimeStamp,maxTimeStamp,xAxisTimespan,scaleFactor);
-  const yAxisArray = makeyAxisArray(plotArray,g_margin,g_height);
-  const mergedArray = [...plotArray, ...xAxis0Array, ...yAxisArray];
-
-  
-  // console.log(g_height);
-  // console.log(g_margin);
-  // console.log(yAxisArray);
-
-  groups
-    .append("defs")
-    .append("SVG:clipPath")
-    .attr("id", (d) => `${d.area}-clip`)
-    .append("rect")
-    .attr("x", (d) => d.clipPath.x)
-    .attr("y", (d) => d.clipPath.y)
-    .attr("width", (d) => d.clipPath.width)
-    .attr("height", (d) => d.clipPath.height);
-
-  // Add rect to catch drag-event with drag event handler
-  // * size of drag-handler is same as clipPath rect.
-  // * drag-handler is fixed: out of clipped-group.
-  groups
-    .append("rect")
-    .attr("class", (d) => `${d.area} drag-handler`)
-    .attr("x", (d) => d.clipPath.x)
-    .attr("y", (d) => d.clipPath.y)
-    .attr("width", (d) => d.clipPath.width)
-    .attr("height", (d) => d.clipPath.height);
-
-  groups
-    .append("g")
-    .attr("class", "clipped-group")
-    .attr("clip-path", (d) => `url(#${d.area}-clip)`);
-
-  // draw markers
-  for (const coord of ["svg", "xAxis0", "xAxis1", "yAxis", "plotArea"]) {
-    const coordMarkers = mergedArray.filter((d) => d.coord === coord);
-    const g = coord === "svg" ? svg : selectClippedGroup(coord);
-    console.log(`=== ${coord} START  :`, new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(), "===");
-    g.selectAll("circle.marker-circle")
-      .data(coordMarkers)
-      .enter()
-      .append("circle")
-      .attr("class", (d) => `${d.coord} marker-circle`)
-      .attr("cx", (d) => d.cx)
-      .attr("cy", (d) => d.cy)
-      .attr("r", (d) => d.r)
-      .attr("stroke", "none")
-      .attr("fill", "none");
-    
-      if (coord === "xAxis1" || coord === "yAxis") {
-        g.selectAll("line.marker-line")
-        .data(coordMarkers)
-        .enter()
-        .append("line")
-        .attr("class", (d) => `${d.coord} marker-line `)
-        .attr("x1", (d) => d.lineX1()) // 始点の x 座標
-        .attr("y1", (d) => d.lineY1()) // 始点の y 座標
-        .attr("x2", (d) => d.lineX2()) // 終点の x 座標
-        .attr("y2", (d) => d.lineY2()) // 終点の y 座標
-        .attr("stroke",dynaParm.curSepLineColor);
-      }   
-    if (coord === "plotArea") {
-      g.selectAll("line.marker-line")
-        .data(mergedArray.filter((d) => d.coord === "yAxis" || d.coord === "xAxis1"))
-        .enter()
-        .append("line")
-        .attr("class", (d) => `plotArea marker-line `)
-        .attr("x1", (d) => d.lineX1()) // 始点の x 座標
-        .attr("y1", (d) => d.lineY1()) // 始点の y 座標
-        .attr("x2", (d) => d.lineX2()) // 終点の x 座標
-        .attr("y2", (d) => d.lineY2()) // 終点の y 座標
-        .attr("stroke",dynaParm.curSepLineColor);
-
-      g.selectAll("rect.marker-rect")
-        .data(coordMarkers)
-        .enter()
-        .append("rect")
-        .attr("class", (d) => `${d.coord} marker-rect`)
-        .attr("x", (d) => d.barX())
-        .attr("y", (d) => d.barY())
-        .attr("height", g_height)
-        .attr("width", (d) => d.length)
-        .attr("fill", (d) => d.barColor)
-        .attr("stroke",dynaParm.curBarFlameColor)
-        // tooltipを表示内容の制御。for tooltip002
-        .on("mouseover", function (d) {
-          starting_time = new Date(parseInt(d.starting_time));
-          ending_time = new Date(parseInt(d.ending_time));
-          tooltip
-            .style("visibility", "visible")
-            .html(
-              "start : " +
-                starting_time.toLocaleDateString() +
-                " " +
-                starting_time.toLocaleTimeString("it-IT") +
-                "<br>end : " +
-                ending_time.toLocaleDateString() +
-                " " +
-                ending_time.toLocaleTimeString("it-IT") +
-                "<br>" + dynaParm.curGrpNameColumn + " : " +
-                d[dynaParm.curGrpNameColumn] +
-                "<br>" + dynaParm.curRecNameColumn + " : " +
-                d[dynaParm.curRecNameColumn] +
-                "<br>" + dynaParm.curColorColumn + " : " +
-                d[dynaParm.curColorColumn] +
-                "<br>" + dynaParm.curCommentColumn + " : " +
-                d[dynaParm.curCommentColumn] 
-            );
-        })
-        .on("mousemove", function (d) {
-          tooltip
-            .style("top", d3.event.pageY - 20 + "px")
-            .style("left", d3.event.pageX + 10 + "px");
-        })
-        .on("mouseout", function (d) {
-          tooltip.style("visibility", "hidden");
-        })
-        ;
-    }
-    if (coord === "xAxis0" || coord === "xAxis1" || coord === "yAxis") {
-      g.selectAll("text.marker-label")
-        .data(coordMarkers)
-        .enter()
-        .append("text")
-        .attr("class", (d) => `${d.coord} marker-label `)
-        .attr("x", (d) => d.labelX())
-        .attr("y", (d) => d.labelY())
-        .text((d) => d.label);
-    }
+  function overTimeSpan() {
+    setIsParmPanelShow({TimeSpan:true,BarWidth:false,});
   }
 
-  console.log(`=== MAKE DRAG HUNDLER START  :`, new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(), "===");
-  
-  Object.keys(dragHandlerOf).forEach((area) => {
-    selectGroup(area)
-      .select("rect.drag-handler")
-      .call(d3.drag().on("drag", dragHandlerOf[area]));
-  });
-  
-  console.log("=== DRAW TIMELINE END   :", new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(), "===");
+  function overBarWidth() {
+    setIsParmPanelShow({TimeSpan:false,BarWidth:true,});
+  }
+
+  function outParmPanel() {
+    setIsParmPanelShow({TimeSpan:false,BarWidth:false,});
+  };
+
+function handleResize(){
+  console.log("Resize to ",document.documentElement.clientWidth);
+  setScreenWidth(document.documentElement.clientWidth);
+  setScreenHeight(document.documentElement.clientHeight);
 }
 
+  window.addEventListener('resize', handleResize);
 
-export default Timeline
+  return (
+        <div>
+          <div className="param-panel" style={{position:"absolute"}}>
+            <div className="inline-header">
+              <label onMouseOver={overTimeSpan}>表示期間</label>
+              <label onMouseOver={overBarWidth}>バーの幅</label>
+            </div>
+            {isParmPanelShow.TimeSpan && (
+              <div className="container8">
+                <form className="inline-radio">
+                  {timeSpan.map((item) => {
+                    return (
+                      <Radiobutton
+                        key={item.id}
+                        item={item}
+                        onChange={onChangeTime}
+                        selected={timeSelected}
+                      />
+                    );
+                  })}
+                </form>
+              </div>
+            )}
+            {isParmPanelShow.BarWidth && (
+              <div className="container8">
+                <form className="inline-radio">
+                  {barWidth.map((item) => {
+                    return (
+                      <Radiobutton
+                        key={item.id}
+                        item={item}
+                        onChange={onChangeWidth}
+                        selected={widthSelected}
+                      />
+                    );
+                  })}
+                </form>
+              </div>
+            )}
+          </div>
+          <PlotArea
+            width={screenWidth}
+            height={screenHeight}
+            fontSize="20"
+            gHeight={widthSelected}
+            frameTimespan={timeSelected}
+            style={{position: "absolute" ,left:"0" ,top:"0"}}
+          />
+        </div>
+      )}
+
+export default Timeline;
