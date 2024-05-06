@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Rect from "./Rect";
 import Line from "./Line";
-import csvArray from "../csvArray";
+// import csvArray from "../csvArray.json";
 
 export default function PlotArea(props) {
   // eventHandle
@@ -13,7 +13,10 @@ export default function PlotArea(props) {
     start: "1983/12/30",
     end: "2099/12/31",
     name: "muku",
-    desc: null,
+    grpname: "muku",
+    color: "test",
+    desc: "test",
+    id: "id",
   });
   const [tooltipPos, setTooltipPos] = useState({
     x: 0,
@@ -52,15 +55,19 @@ export default function PlotArea(props) {
     }
   }
 
-  // マウス通過時 idを取得して、csvArrayの値をtooltipのテキストに渡す。
+  // マウス通過時 idを取得して、props.inputArrayの値をtooltipのテキストに渡す。
   function onMouseOver(e) {
-    const targetItem = csvArray.filter(
+    const targetItem = props.inputArray.filter(
       (item) => item.id == e.target.getAttribute("id")
     )[0];
     setTooltipText({
       start: new Date(targetItem.starting_time).toLocaleString("jp-JP"),
       end: new Date(targetItem.ending_time).toLocaleString("jp-JP"),
       name: targetItem.name,
+      grpname: targetItem.grpname,
+      color: targetItem.color,
+      desc: targetItem.desc,
+      id: targetItem.id,
     });
     setTooltipPos({
       x: e.pageX + 10,
@@ -92,8 +99,8 @@ export default function PlotArea(props) {
   // basic parameters
   const [svgWidth, setWidth] = useState(props.width ? props.width : 1350); //
   const [svgHeight, setHeight] = useState(props.height ? props.height : 650); //
-  const plotStartX = 0;
-  const plotStartY = 0;
+  const plotStartX = 150;
+  const plotStartY = 60;
   const py1 = 25;
 
   // graph parameter
@@ -148,42 +155,62 @@ export default function PlotArea(props) {
     }
   }, [props.height]);
 
+  // 先にplotArrayにしてデータを絞りたいけど、データ生成に必要なので、ここは断念。
   const minTimeStamp =
     Math.floor(
       Math.min(
-        ...csvArray
+        ...props.inputArray
           .map((item) => parseInt(item.starting_time))
           .filter((value) => !isNaN(value))
       ) / 3600000
     ) * 3600000;
 
+  // filerを先にかませてデータを絞る。
+  const plotArray = props.inputArray
+    .filter((item) =>
+      (item.starting_time - minTimeStamp) * scaleFactor + cordinate.x <
+        svgWidth &&
+      (item.ending_time - minTimeStamp) * scaleFactor + cordinate.x > 0 &&
+      gMargin * (parseInt(item.group) - 1 / 2) +
+        gHeight * (parseInt(item.lane) - 1) +
+        cordinate.y <
+        svgHeight - plotStartY &&
+      gMargin * (parseInt(item.group) - 1 / 2) +
+        gHeight * parseInt(item.lane) +
+        cordinate.y >
+        0 &&
+      props.filterText.text
+        ? item[props.filterText.item] === props.filterText.text
+        : true
+    )
+    .map((item) => ({
+      key: item.id,
+      length: (item.ending_time - item.starting_time) * scaleFactor,
+      cx:
+        (item.starting_time - minTimeStamp) * scaleFactor +
+        plotStartX +
+        cordinate.x,
+      cy:
+        gMargin * (parseInt(item.group) - 1 / 2) +
+        gHeight * (parseInt(item.lane) - 1) +
+        plotStartY +
+        cordinate.y,
+      barColor: 
+        item[props.searchText.item] === props.searchText.text
+          ? "Red"
+          : props.colorPalette.find((color) => color.name == item.color).value,
+      ending_time: item.ending_time,
+    }));
+
+  // 先にplotArrayにしてデータを絞ることでパフォーマンスを上げたい
   const maxTimeStamp =
     Math.ceil(
       Math.max(
-        ...csvArray
+        ...plotArray
           .map((item) => parseInt(item.ending_time))
           .filter((value) => !isNaN(value))
       ) / 3600000
     ) * 3600000;
-
-  const plotArray = csvArray
-    .map((item) => ({
-      key: item.id,
-      length: (item.ending_time - item.starting_time) * scaleFactor,
-      cx: (item.starting_time - minTimeStamp) * scaleFactor + cordinate.x,
-      cy:
-        gMargin * (parseInt(item.group) - 1 / 2) +
-        gHeight * (parseInt(item.lane) - 1) +
-        cordinate.y,
-      barColor: "blue",
-    }))
-    .filter(
-      (item) =>
-        item.cx < svgWidth - plotStartX &&
-        item.cx + item.length > 0 &&
-        item.cy < svgHeight - plotStartY &&
-        item.cy + gHeight > 0
-    );
 
   const xAxisArray = Array.from(
     { length: Math.ceil((maxTimeStamp - minTimeStamp) / xAxisTimespan) + 1 },
@@ -197,7 +224,8 @@ export default function PlotArea(props) {
       return {
         key: index,
         coord: "xAxis",
-        cx: (currentTime - minTimeStamp) * scaleFactor + cordinate.x,
+        cx:
+          (currentTime - minTimeStamp) * scaleFactor + plotStartX + cordinate.x,
         cy: 25,
         labelD: `${dates}`,
         labelT: `${hours}`,
@@ -211,14 +239,20 @@ export default function PlotArea(props) {
       item.cy > 0
   );
 
-  function makeyAxisArray(inputArray, g_margin, g_height, ty) {
+  function makeyAxisArray(inputArray, g_margin, g_height, plotStartY, ty) {
     //縦軸のラベル用データ作成
     const recordsArray = {};
     for (const item of inputArray) {
       // 配列をループ
       const group = parseInt(item.group);
       const lane = parseInt(item.lane);
-      if (!recordsArray[group] || lane < recordsArray[group].lane) {
+      if (
+        !recordsArray[group] ||
+        (lane < recordsArray[group].lane &&
+          g_margin * (group - 1) + g_height(lane - 1) + ty <
+            svgHeight - plotStartY &&
+          g_margin * (group - 1) + g_height(lane - 1) + ty >= 0)
+      ) {
         // Groupごとに最小のkeyの値を更新
         recordsArray[group] = {
           key: group,
@@ -226,7 +260,7 @@ export default function PlotArea(props) {
           lane: lane,
           coord: "yAxis",
           cx: 0,
-          cy: g_margin * (group - 1) + g_height * (lane - 1) + ty,
+          cy: g_margin * (group - 1) + g_height * (lane - 1) + plotStartY + ty,
         };
       }
     }
@@ -234,118 +268,121 @@ export default function PlotArea(props) {
     return resultArray;
   }
 
-  const yAxisArray = makeyAxisArray(csvArray, gMargin, gHeight, cordinate.y);
-  // .filter((item)=>item.cx < svgWidth - plotStartX && item.cx > 0 && item.cy < svgHeight - plotStartY && item.cy > 0)
+  const yAxisArray = makeyAxisArray(
+    props.inputArray,
+    gMargin,
+    gHeight,
+    plotStartY,
+    cordinate.y
+  );
+
   return (
     <div>
       {/* <svg width={svgWidth} height={svgHeight} fill="#5FC2C0"> */}
       <svg width={svgWidth} height={svgHeight} fill="#5FC2C0">
-        <g
-          id="plotArea-group"
-          transform={`translate(${plotStartX},${plotStartY})`}
-        >
+        <g id="plotArea-group" transform={`translate(0,0)`}>
           <defs>
             <clipPath id="plotArea-clip">
-              <rect
-                x="0"
-                y="0"
-                width={svgWidth - plotStartX}
-                height={svgHeight - plotStartY}
-              ></rect>
+              <rect x="0" y="0" width={svgWidth} height={svgHeight}></rect>
             </clipPath>
           </defs>
           <rect
             className="plotArea drag-handler"
             x="0"
             y="0"
-            width={svgWidth - plotStartX}
-            height={svgHeight - plotStartY}
+            width={svgWidth}
+            height={svgHeight}
             onMouseDown={onMouseDown}
             onMouseUp={onMouseUp}
             onMouseMove={onMouseMove}
             onMouseOut={onMouseUp}
           />
-          <g
-            className="clipped-group"
-            clipPath="url(#plotArea-clip)"
-            onMouseDown={onMouseDown}
-            onMouseUp={onMouseUp}
-            onMouseMove={onMouseMove}
-            onMouseOut={onMouseUp}
-          >
-            {xAxisArray.map((item) => {
-              return (
-                <Line
-                  key={item.key}
-                  x1={item.cx}
-                  y1="0"
-                  x2={item.cx}
-                  y2={svgHeight}
-                  stroke="green"
-                />
-              );
-            })}
+          {xAxisArray.map((item) => {
+            return (
+              <Line
+                key={item.key}
+                x1={item.cx}
+                y1="0"
+                x2={item.cx}
+                y2={svgHeight}
+                stroke="green"
+              />
+            );
+          })}
 
-            {yAxisArray.map((item) => {
-              return (
-                <Line
-                  key={item.key}
-                  x1="0"
-                  y1={item.cy}
-                  x2={svgWidth}
-                  y2={item.cy}
-                  stroke="green"
-                />
-              );
-            })}
-            {plotArray.map((item) => {
-              return (
-                <Rect
-                  key={item.key}
-                  id={item.key}
-                  x={item.cx}
-                  y={item.cy}
-                  height={gHeight}
-                  width={item.length}
-                  fill={item.barColor}
-                  stroke="green"
-                  onMouseOver={onMouseOver}
-                  onMouseOut={onMouseOut}
-                  onDbClick={onDbClick}
-                />
-              );
-            })}
-            <rect x="0" y="0" height="50" width={svgWidth} fill="white" fillOpacity="0.5"></rect>
-            <rect x="0" y="0" height={svgHeight} width="100" fill="white" fillOpacity="0.5"></rect>
-            {xAxisArray.map((item) => {
-              return (
-                <text
-                  key={item.key}
-                  className="xAxis1 marker-label "
-                  x={item.cx}
-                  y={item.cy}
-                  fill={fontColor}
-                  style={{ fontSize: fontSize, fontWeight: "bold" }}
-                >
-                  {item.labelT}
-                </text>
-              );
-            })}
-            {yAxisArray.map((item) => {
-              return (
-                <text
-                  key={item.key}
-                  className="yAxis marker-label"
-                  x={item.cx}
-                  y={item.cy + fontSize}
-                  fill={fontColor}
-                  style={{ fontSize: fontSize, fontWeight: "bold" }}
-                >
-                  {item.group}
-                </text>
-              );
-            })}
-          </g>
+          {yAxisArray.map((item) => {
+            return (
+              <Line
+                key={item.key}
+                x1="0"
+                y1={item.cy}
+                x2={svgWidth}
+                y2={item.cy}
+                stroke="green"
+              />
+            );
+          })}
+          {plotArray.map((item) => {
+            return (
+              <Rect
+                key={item.key}
+                id={item.key}
+                x={item.cx}
+                y={item.cy}
+                height={gHeight}
+                width={item.length}
+                fill={item.barColor}
+                stroke="green"
+                onMouseOver={onMouseOver}
+                onMouseOut={onMouseOut}
+                onDbClick={onDbClick}
+              />
+            );
+          })}
+          <rect
+            x="0"
+            y="0"
+            height={plotStartY}
+            width={svgWidth}
+            fill={fontBackColor}
+            fillOpacity="0.5"
+          ></rect>
+          <rect
+            x="0"
+            y="0"
+            height={svgHeight}
+            width={plotStartX}
+            fill={fontBackColor}
+            fillOpacity="0.5"
+          ></rect>
+          {xAxisArray.map((item) => {
+            return (
+              <text
+                key={item.key}
+                className="xAxis1 marker-label "
+                x={item.cx}
+                y={item.cy}
+                fill={fontColor}
+                style={{ fontSize: fontSize, fontWeight: "bold" }}
+              >
+                {item.labelT}
+              </text>
+            );
+          })}
+          {yAxisArray.map((item) => {
+            return (
+              <text
+                key={item.key}
+                className="yAxis marker-label"
+                x={item.cx}
+                y={item.cy + fontSize}
+                fill={fontColor}
+                style={{ fontSize: fontSize, fontWeight: "bold" }}
+              >
+                {item.group}
+              </text>
+            );
+          })}
         </g>
       </svg>
       {tooltipPos.visible && (
@@ -359,8 +396,14 @@ export default function PlotArea(props) {
           {tooltipText.end && <br />}
           {tooltipText.name && "NAME:" + tooltipText.name}
           {tooltipText.name && <br />}
+          {tooltipText.grpname && "GRPNAME:" + tooltipText.grpname}
+          {tooltipText.grpname && <br />}
+          {tooltipText.color && "COLOR:" + tooltipText.color}
+          {tooltipText.color && <br />}
           {tooltipText.desc && "DESC:" + tooltipText.desc}
           {tooltipText.desc && <br />}
+          {tooltipText.id && "ID:" + tooltipText.id}
+          {tooltipText.id && <br />}
         </div>
       )}
     </div>

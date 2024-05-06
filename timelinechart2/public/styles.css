@@ -3,48 +3,20 @@
   margin: 0;
   padding: 0;
   font-weight: 300;
+  font-size: 16px;
 }
 
 body {
-  font-family: "Source Sans Pro", sans-serif;
+  /* font-family: "Source Sans Pro", sans-serif; */
   color: white;
-  font-weight: 300;
   background: #50a3a2;
   width: 100%;
   height: 100%;
   overflow: hidden;
 }
 
-.container {
-  margin: 10% auto;
-  padding: 80px 0;
-  text-align: center;
-}
-
-.container8 {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  grid-template-rows: 2fr;
-}
-
-.container h1 {
-  font-size: 40px;
-  font-weight: 200;
-}
-
-input {
-  border: 1px solid rgba(252, 252, 252, 0.4);
-  background-color: rgba(252, 252, 252, 0.2);
-  width: 250px;
-  border-radius: 3px;
-  font-family: "Source Sans Pro", sans-serif;
-  padding: 10px 15px;
-  margin: 0 auto 10px auto;
-  display: block;
-  text-align: center;
-  font-size: 18px;
-  color: white;
-  font-weight: 300;
+.control-panel {  
+  width: 1000pt;
 }
 
 button {
@@ -58,7 +30,6 @@ button {
   width: 250px;
   font-size: 18px;
 }
-
 
 svg {
   cursor : grab;
@@ -82,6 +53,30 @@ svg:active {
   /* visibility: hidden; */
 }
 
+.container4 {  
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  label {
+    position: relative;
+    top: 0; left: 0;
+    color: #50a3a2;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid #b6b6b6;
+  }
+}
+
+.container2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+
 
 .inline-radio {
   display: flex;
@@ -96,7 +91,7 @@ svg:active {
 
   input {
     width: 100%;
-    height: 20px;
+    height: 15pt;
     opacity: 0;
   }
 
@@ -104,7 +99,6 @@ svg:active {
     position: absolute;
     top: 0; left: 0;
     color: #50a3a2;
-    font-size: 18px;
     width: 100%;
     height: 100%;
     background: #fff;
@@ -127,21 +121,36 @@ svg:active {
 }
 
 
-.inline-header {  
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr;
-  label {
+.inline-color {
+  display: flex;
+  border-radius: 3px;
+  border: 1px solid #b6b6b6;
+
+  div {
     position: relative;
-    top: 0; left: 0;
-    color: #50a3a2;
-    font-size: 18px;
+    flex: 1;
+  }
+
+  input {
     width: 100%;
     height: 100%;
-    background: #fff;
+    opacity: 0;
+  }
+
+  label {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    pointer-events: none;
     border-right: 1px solid #b6b6b6;
   }
+
+  div:last-child label {
+    border-right: 0;
+  }
+
 }

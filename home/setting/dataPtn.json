@@ -1,0 +1,20 @@
+{
+    "types":["Schedule","LITHO01","LITHO02"],
+    "targets":[
+        {"type":"Schedule","index":"20230316000000"},
+        {"type":"Schedule","index":"20230316010000"},
+        {"type":"Schedule","index":"20230316020000"},
+        {"type":"Schedule","index":"20230316030000"},
+        {"type":"Schedule","index":"20230316040000"},
+        {"type":"LITHO01","index":"20230317000000"},
+        {"type":"LITHO01","index":"20230317010000"},
+        {"type":"LITHO01","index":"20230317020000"},
+        {"type":"LITHO01","index":"20230317030000"},
+        {"type":"LITHO01","index":"20230317040000"},
+        {"type":"LITHO02","index":"20230318000000"},
+        {"type":"LITHO02","index":"20230318010000"},
+        {"type":"LITHO02","index":"20230318020000"},
+        {"type":"LITHO02","index":"20230318030000"},
+        {"type":"LITHO02","index":"20230318040000"}
+    ]
+}

@@ -27,18 +27,13 @@ const settingFile = JSON.parse(fs.readFileSync(settingDir));
 const dataPtnDir = "./setting/dataPtn.json";
 const dataPtnFile = JSON.parse(fs.readFileSync(dataPtnDir));
 
-app.use(express.static("public"));
+// 静的ファイルの提供
+app.use(express.static(path.join(__dirname, 'dist')));
 app.use(bodyParser.urlencoded({extended: false}));
 
-app.get("/", async (req, res) => { 
-  const result = await db.query('select * from timeline')
-  const inputData = result.rows;
-  // console.log(inputData);
-  console.log('MAIN GET START:',new Date().toLocaleTimeString("it-IT"));
-  res.render("timeline.ejs", { settingfile: settingFile,dataPtnFile:dataPtnFile,inputData:inputData });
-
-  console.log('MAIN GET END:',new Date().toLocaleTimeString("it-IT"));
-});
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dest', 'index.html'));
+  });
 
 app.get("/setting", (req, res) => {
   res.download(__dirname + "/setting/default_setting.json");

@@ -9,7 +9,8 @@ function parseDateTime(dateTimeString, type) {
       const hours = dateTimeString.slice(8, 10);
       const minutes = dateTimeString.slice(10, 12);
       const seconds = dateTimeString.slice(12, 14);
-      return new Date(year, month - 1, day, hours, minutes, seconds);
+      const date = new Date(year, month - 1, day, hours, minutes, seconds);
+      return Date.parse(date);
     } else if (type === "UNIX") {
       return parseInt(dateTimeString);
     } else if (type === "YYYY/MM/DD HH:mm:SS") {
@@ -84,6 +85,7 @@ const csv2json = async (inputCsvPath, outputJsonPath,colStart,colEnd,colGrp,date
     // ここで配列を加工してもOK
     // console.log(jsonArray);
     const jsonArrayWithIds = jsonArray
+    .filter((item) => item[colStart] != item[colEnd])
     // .filter((item) => item.length > 1)
     .map((item, index) => {
         item.starting_time = parseDateTime(
@@ -94,7 +96,7 @@ const csv2json = async (inputCsvPath, outputJsonPath,colStart,colEnd,colGrp,date
               item[colEnd],
               dateType
             );
-        return { ...item, id: index + 1 ,grpname:item[colGrp] };
+        return { ...item, id: index + 1 ,name:item[colName],grpname:item[colGrp] ,desc:item[colDesc],color:item[colColor]};
     });
 
     const jsonArrayWithIds2 = convertTimelineData(jsonArrayWithIds,colStart,colEnd,colGrp)
@@ -105,7 +107,7 @@ const csv2json = async (inputCsvPath, outputJsonPath,colStart,colEnd,colGrp,date
   
     // console.log("const csvArray = " + jsonStr + "; \n export default csvArray");
     // ファイルに出力
-    fs.writeFileSync(outputJsonPath, "const csvArray = " + jsonStr + "; \n export default csvArray");
+    fs.writeFileSync(outputJsonPath, jsonStr);
   }
   
   /* メイン処理 */
@@ -113,10 +115,13 @@ const csv2json = async (inputCsvPath, outputJsonPath,colStart,colEnd,colGrp,date
   // 基本定義
   const dir = "../../data/";
   const file = "TEST_DATA.csv";
-  const targetJsonPath = "./csvArray.js";
+  const targetJsonPath = "./csvArray.json";
   const colStart = "starting_time";
   const colEnd = "ending_time";
+  const colName = "name";
   const colGrp = "label";
+  const colColor = "status";
+  const colDesc = "label";
   const dateType = "YYYY/MM/DD HH:mm:SS";
   
   // 実行
