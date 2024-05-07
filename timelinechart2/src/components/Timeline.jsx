@@ -24,7 +24,8 @@ import { DrawFromLocalFile, DrawNewProperty } from "./DataInput";
 //   b.DBの場合はDBMS選択、接続DB情報、クエリ作成
 //   c.web上のファイルの場合、URLを入力
 //  (3)ヘッダー情報を取得して、項目の定義をする。 -> 完了
-//  (4)色領域の項目を取得して、色設定を定義 をする。
+// 
+//  (4)色領域の項目を取得して、色設定を定義できるようにする。
 // Timeline画面
 //
 // 機能拡張
@@ -197,7 +198,7 @@ function Timeline(props) {
   }
 
   function drawFromLocalFile(e) {
-    DrawFromLocalFile(e, convDef, setInputData);
+    DrawFromLocalFile(e, convDef, setInputData,setColSelector);
   }
 
   window.addEventListener("resize", handleResize);

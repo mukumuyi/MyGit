@@ -56,7 +56,8 @@ export const DrawGraph = async function drawGraph(
 export const DrawFromLocalFile = async function drawFromLocalFile(
   evt,
   convDef,
-  setInputData
+  setInputData,
+  setColSelector
 ) {
   console.log(
     "=== DRAW FROM LOCAL FILE START  :",
@@ -67,6 +68,16 @@ export const DrawFromLocalFile = async function drawFromLocalFile(
   try {
     const inputData = await OpenLocalFile(evt);
     const parseData = await ParseCSV(inputData);
+
+    setColSelector(
+      Object.keys(parseData[0]).map((item, index) => ({
+        id: index + 1,
+        name: item,
+        value: item,
+        label: item,
+      }))
+    );
+
     const parseDateData = await ParseDateCol(parseData, convDef);
     const convertData = await ConvertData(parseDateData, convDef);
     const timelineData = await ConvertTimelineData(convertData, convDef);
