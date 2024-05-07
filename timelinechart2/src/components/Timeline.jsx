@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ImportArea from "./ImportArea";
 import PlotArea from "./PlotArea";
 import ControlPanel from "./ContolPanel";
+import Form from "./Form";
 import { DrawFromLocalFile, DrawNewProperty } from "./DataInput";
 
 // 実装したいこと　～Googleマップ風のTimelineチャートを作る。～
@@ -17,13 +18,13 @@ import { DrawFromLocalFile, DrawNewProperty } from "./DataInput";
 // パラメータを外部入力にする。
 // 5.画面遷移を実装する。
 // データ選択画面
-//  (1)データの形式を選ぶ
+//  (1)データの形式を選ぶ -> 完了
 //  (2)対象データの指定
-//   a.ローカルファイルの場合、選択
+//   a.ローカルファイルの場合、選択 -> 完了
 //   b.DBの場合はDBMS選択、接続DB情報、クエリ作成
 //   c.web上のファイルの場合、URLを入力
-//  (3)ヘッダー情報を取得して、項目の定義をする。（）
-//  (4)色領域の項目を取得して、色設定を定義 をする。
+//  (3)ヘッダー情報を取得して、項目の定義をする。 -> 完了
+//  (4)色領域の項目を取得して、色設定を定義 をする。 
 // Timeline画面
 //
 // 機能拡張
@@ -38,16 +39,12 @@ import { DrawFromLocalFile, DrawNewProperty } from "./DataInput";
 // スクロールによる画面の表示変更。
 
 function Timeline(props) {
-  const [dispType, setDispType] = useState("Draw");
-  const [screenWidth, setScreenWidth] = useState(
-    document.documentElement.clientWidth
-  );
+  const [dispType, setDispType] = useState("Import");
 
-  const [screenHeight, setScreenHeight] = useState(
-    document.documentElement.clientHeight
-  );
-
-  // const [screenSize,setScreenSize] = useState({screenWidth:document.documentElement.clientWidth,screenHeight:document.documentElement.clientHeight})
+  const [screenSize, setScreenSize] = useState({
+    screenWidth: document.documentElement.clientWidth,
+    screenHeight: document.documentElement.clientHeight,
+  });
 
   const [timeSelected, setTimeSelected] = useState("172800000");
   const [widthSelected, setWidthSelected] = useState("8");
@@ -59,15 +56,24 @@ function Timeline(props) {
 
   const [searchText, setSearchText] = useState({ item: "name", text: null });
   const [filterText, setFilterText] = useState({ item: "name", text: null });
-  
 
-  const [colSelector,setColSelector] = useState( [
-    { id: 1, name:"label",value: "label" , label: "label"},
-    { id: 2, name:"class",value: "class" , label:"class"  },
-    { id: 3, name:"name",value: "name", label:  "name"},
-    { id: 4, name:"status",value: "status", label:  "status"},
-    { id: 5, name:"starting_time",value: "starting_time", label:  "starting_time"},
-    { id: 6, name:"ending_time",value: "ending_time", label:  "ending_time  "},
+  const [colSelector, setColSelector] = useState([
+    { id: 1, name: "label", value: "label", label: "label" },
+    { id: 2, name: "class", value: "class", label: "class" },
+    { id: 3, name: "name", value: "name", label: "name" },
+    { id: 4, name: "status", value: "status", label: "status" },
+    {
+      id: 5,
+      name: "starting_time",
+      value: "starting_time",
+      label: "starting_time",
+    },
+    {
+      id: 6,
+      name: "ending_time",
+      value: "ending_time",
+      label: "ending_time  ",
+    },
   ]);
 
   const [convDef, setConvDef] = useState({
@@ -80,7 +86,18 @@ function Timeline(props) {
     dateType: "YYYY/MM/DD HH:mm:SS",
   });
 
-  const [inputData,setInputData] = useState([]);
+  const [inputData, setInputData] = useState([
+    {
+      label: "PERSON_B",
+      class: "H",
+      name: "NAME_43",
+      time1: "1703808000000 ",
+      time2: "1703814500000 ",
+      status: "Fix",
+      starting_time: "2023/12/29 0:00",
+      ending_time: "2023/12/29 0:16",
+    },
+  ]);
 
   const colorPalette = [
     { id: 1, name: "Wait", value: colorWaitSelected, label: "Wait" },
@@ -90,11 +107,11 @@ function Timeline(props) {
   ];
 
   const itemSelector = [
-    { id: 1, name:"name",value: "name" , label: "name"},
-    { id: 2, name:"grpname",value: "grpname" , label:"grpname"  },
-    { id: 3, name:"color",value: "color", label:  "color"},
-    { id: 4, name:"desc",value: "desc" , label: "desc" },
-    { id: 5, name:"id",value: "id" , label: "id" },
+    { id: 1, name: "name", value: "name", label: "name" },
+    { id: 2, name: "grpname", value: "grpname", label: "grpname" },
+    { id: 3, name: "color", value: "color", label: "color" },
+    { id: 4, name: "desc", value: "desc", label: "desc" },
+    { id: 5, name: "id", value: "id", label: "id" },
   ];
 
   const changeDispState = () => {
@@ -113,32 +130,21 @@ function Timeline(props) {
     setWidthSelected(e.target.value);
   };
 
-  const onChangeCol = (e,col) => {
-    setConvDef({ ...convDef, colGrp: e.target.value });
-  };
-
-  const onChangeColGrp = (e,col) => {
-    setConvDef({ ...convDef, colGrp: e.target.value });
-  };
-
-  const onChangeColColor = (e,col) => {
-    setConvDef({ ...convDef, colColor: e.target.value });
-  };
-
-  const onChangeColStart = (e,col) => {
-    setConvDef({ ...convDef, colStart: e.target.value });
-  };
-
-  const onChangeColEnd = (e,col) => {
-    setConvDef({ ...convDef, colEnd: e.target.value });
-  };
-
-  const onChangeColName = (e,col) => {
-    setConvDef({ ...convDef, colName: e.target.value });
-  };
-
-  const onChangeColDesc = (e,col) => {
-    setConvDef({ ...convDef, colDesc: e.target.value });
+  const onChangeCol = (e) => {
+    // console.log(e.target.id)
+    if (e.target.id === "colGrp") {
+      setConvDef({ ...convDef, colGrp: e.target.value });
+    } else if (e.target.id === "colColor") {
+      setConvDef({ ...convDef, colColor: e.target.value });
+    } else if (e.target.id === "colStart") {
+      setConvDef({ ...convDef, colStart: e.target.value });
+    } else if (e.target.id === "colEnd") {
+      setConvDef({ ...convDef, colEnd: e.target.value });
+    } else if (e.target.id === "colName") {
+      setConvDef({ ...convDef, colName: e.target.value });
+    } else if (e.target.id === "colDesc") {
+      setConvDef({ ...convDef, colDesc: e.target.value });
+    }
   };
 
   function onChangeColor(e) {
@@ -167,8 +173,12 @@ function Timeline(props) {
   }
 
   function handleResize() {
-    setScreenWidth(document.documentElement.clientWidth);
-    setScreenHeight(document.documentElement.clientHeight);
+    // setScreenWidth(document.documentElement.clientWidth);
+    // setScreenHeight(document.documentElement.clientHeight);
+    setScreenSize({
+      screenWidth: document.documentElement.clientWidth,
+      screenHeight: document.documentElement.clientHeight,
+    });
   }
 
   function drawFromLocalFile(e) {
@@ -178,57 +188,49 @@ function Timeline(props) {
   window.addEventListener("resize", handleResize);
 
   useEffect(() => {
-    if(dispType === "Draw"){
+    if (dispType === "Draw") {
       DrawNewProperty(convDef, inputData, setInputData);
     }
   }, [convDef]); // convDefが変更されたときだけこのuseEffectが実行される
 
-  // const tempArray = DrawNewProperty(inputData,convDef);
-  // setInputData(tempArray);
+  // useEffect (() => {
+  //   console.log(inputData)
+  // },[inputData])
 
   return (
     <div>
       {dispType === "Import" && (
-        <ImportArea changeDispState={changeDispState} 
-        setColSelector={setColSelector}
-        setInputData={setInputData}
-        convDef={convDef}
-        colSelector={colSelector}
-        onChangeColGrp={onChangeColGrp}
-        colSelectedGrp={convDef.colGrp}
-        onChangeColColor={onChangeColColor}
-        colSelectedColor={convDef.colColor}
-        onChangeColStart={onChangeColStart}
-        colSelectedStart={convDef.colStart}
-        onChangeColEnd={onChangeColEnd}
-        colSelectedEnd={convDef.colEnd}
-        onChangeColName={onChangeColName}
-        colSelectedName={convDef.colName}
-        onChangeColDesc={onChangeColDesc}
-        colSelectedDesc={convDef.colDesc}
+        <ImportArea
+          setColSelector={setColSelector}
+          changeDispState={changeDispState}
+          colSelector={colSelector}
+          onChangeCol={onChangeCol}
+          convDef={convDef}
+          inputData={inputData}
+          setInputData={setInputData}
         />
       )}
       {dispType === "Draw" && (
         <>
           <ControlPanel
-            handleSubmitSerch={handleSubmitSerch}
-            handleSubmitFilter={handleSubmitFilter}
+            changeDispState={changeDispState}
             colSelector={colSelector}
+            onChangeCol={onChangeCol}
+            convDef={convDef}
             onChangeTime={onChangeTime}
             timeSelected={timeSelected}
             onChangeWidth={onChangeWidth}
             widthSelected={widthSelected}
-            onChangeCol={onChangeCol}
-            colSelected={convDef.colGrp}
-            colorPalette={colorPalette}
             onChangeColor={onChangeColor}
+            colorPalette={colorPalette}
             selectFile={drawFromLocalFile}
-            changeDispState={changeDispState}
             itemSelector={itemSelector}
+            handleSubmitSerch={handleSubmitSerch}
+            handleSubmitFilter={handleSubmitFilter}
           />
           <PlotArea
-            width={screenWidth}
-            height={screenHeight}
+            width={screenSize.screenWidth}
+            height={screenSize.screenHeight}
             fontSize="10"
             gHeight={widthSelected}
             frameTimespan={timeSelected}

@@ -47,10 +47,8 @@ export const DrawGraph = async function drawGraph(
     new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
     "==="
   );
-
   const parseData = await ParseDateCol(inputData, convDef);
   const convertData = await ConvertData(parseData, convDef);
-  // filterData = FilterTimelineData(parseData);
   const timelineData = await ConvertTimelineData(convertData, convDef);
   setInputData(timelineData);
 };
@@ -68,7 +66,7 @@ export const DrawFromLocalFile = async function drawFromLocalFile(
 
   try {
     const inputData = await OpenLocalFile(evt);
-    const parseData = await ParseCSV(inputData, convDef);
+    const parseData = await ParseCSV(inputData);
     const parseDateData = await ParseDateCol(parseData, convDef);
     const convertData = await ConvertData(parseDateData, convDef);
     const timelineData = await ConvertTimelineData(convertData, convDef);

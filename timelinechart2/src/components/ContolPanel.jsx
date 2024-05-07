@@ -1,10 +1,12 @@
 import { useState } from "react";
 import Form from "./Form";
-import { File,Cross, Humberger } from "./Svg";
+import { File, Cross, Humberger, Home, Sunna, Graph } from "./Svg";
+import FormInputFile from "./FormInputFile";
+import FormColumnSelector from "./FormColumnSelector";
 
-export default function ControlPanel(props){
-    const [opacityParmPanel, setOpacityParmPanel] = useState(0);
-    
+export default function ControlPanel(props) {
+  const [opacityParmPanel, setOpacityParmPanel] = useState(0);
+
   const timeSpan = [
     { id: 1, name: "Span1h", value: "3600000", label: "1時間" },
     { id: 2, name: "Span2h", value: "7200000", label: "2時間" },
@@ -21,44 +23,79 @@ export default function ControlPanel(props){
     { id: 4, name: "BarThinest", value: "8", label: "超細" },
   ];
 
-    function changeParmPanel() {
-      if (opacityParmPanel === 1) {
-        setOpacityParmPanel(0);
-      } else {
-        setOpacityParmPanel(1);
-      }
+  function changeParmPanel() {
+    if (opacityParmPanel === 1) {
+      setOpacityParmPanel(0);
+    } else {
+      setOpacityParmPanel(1);
     }
-    
-    return (<>     
-    {/* <div className="menu-buttom" style={{ position: "absolute", top: "5pt", left: "5pt" }}
+  }
+
+  return (
+    <>
+      {/* <div className="menu-buttom" style={{ position: "absolute", top: "5pt", left: "5pt" }}
     onClick={props.changeDispState} >
       <File x="0pt" y="0pt" width="30pt" height="30pt" color="#50a3a2" />      
   </div> */}
-    <div className="menu-buttom" style={{ position: "absolute", top: "5pt", left: "5pt" }}
-        onClick={changeParmPanel} >
-        {opacityParmPanel === 1 || (<Humberger x="0pt" y="0pt" width="30pt" height="30pt" color="#50a3a2" />)}
-        {opacityParmPanel === 1 && (<Cross x="0pt" y="0pt" width="30pt" height="30pt" color="#50a3a2" />)}
-      </div>
-      <div className="control-panel"
-        style={{ position: "absolute",
+      <div
+        className="menu-buttom"
+        style={{
+          position: "absolute",
           top: "5pt",
+          left: "5pt",
+          display: "inline-flex",
+          flexFlow: "row wrap",
+          gap: "5pt 10pt",
+        }}
+      >
+        <div onClick={changeParmPanel}>
+          {opacityParmPanel === 1 || (
+            <Humberger
+              x="0pt"
+              y="0pt"
+              width="30pt"
+              height="30pt"
+              color="#50a3a2"
+            />
+          )}
+          {opacityParmPanel === 1 && (
+            <Cross x="0pt" y="0pt" width="30pt" height="30pt" color="#50a3a2" />
+          )}
+        </div>
+        <div
+          onClick={props.changeDispState}
+          style={{ opacity: opacityParmPanel }}
+        >
+          <Home x="0pt" y="0pt" width="30pt" height="30pt" color="#50a3a2" />
+        </div>
+        <FormInputFile
+          opacityParmPanel={opacityParmPanel}
+          selectFile={props.selectFile}
+        >
+          <File x="0pt" y="0pt" width="30pt" height="30pt" color="#50a3a2" />
+        </FormInputFile>
+      </div>
+      <div
+        className="control-panel"
+        style={{
+          position: "absolute",
+          top: "45pt",
           left: "45pt",
           opacity: opacityParmPanel,
         }}
       >
-        <input type="file" accept=".csv" onChange={props.selectFile}></input>
-        <Form
-            type="inline-radio"
-            array={props.colSelector}
-            onChange={props.onChangeCol}
-            selected={props.colSelected}
-          />
+        <FormColumnSelector
+          colSelector={props.colSelector}
+          onChangeCol={props.onChangeCol}
+          convDef={props.convDef}
+        />
         <div className="container4">
           <label>表示期間</label>
           <label>バーの幅</label>
           <label>項目の色</label>
           <Form
             type="inline-text"
+            id="Search"
             array={props.itemSelector}
             onChange={props.handleSubmitSerch}
             placeHolder="Search on timeline"
@@ -84,6 +121,7 @@ export default function ControlPanel(props){
           />
           <Form
             type="inline-text"
+            id="Filter"
             array={props.itemSelector}
             onChange={props.handleSubmitFilter}
             placeHolder="Filter on timeline"
@@ -91,5 +129,5 @@ export default function ControlPanel(props){
         </div>
       </div>
     </>
-    )
+  );
 }

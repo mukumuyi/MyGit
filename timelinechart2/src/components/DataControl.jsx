@@ -8,7 +8,7 @@ function parseDateTime(dateTimeString, dateType) {
     const seconds = dateTimeString.slice(12, 14);
     const date = new Date(year, month - 1, day, hours, minutes, seconds);
     return Date.parse(date);
-  } else if (dateType === "UNIX") {
+  } else if (dateType === "UNIX"  || !isNaN(dateTimeString) ) {
     return parseInt(dateTimeString);
   } else if (dateType === "YYYY/MM/DD HH:mm:SS") {
     const parts = dateTimeString.split(" ");

@@ -149,6 +149,7 @@ export default function PlotArea(props) {
     }
   }, [props.height]);
 
+
   // 先にplotArrayにしてデータを絞りたいけど、データ生成に必要なので、ここは断念。
   const minTimeStamp =
     Math.floor(

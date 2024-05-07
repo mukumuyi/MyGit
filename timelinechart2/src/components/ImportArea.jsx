@@ -1,7 +1,9 @@
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import Form from "./Form";
 import { File, Cross, Humberger, Graph } from "./Svg";
-import { HeaderFromLocalFile,DrawGraph } from "./DataInput";
+import { HeaderFromLocalFile, DrawGraph } from "./DataInput";
+import FormInputFile from "./FormInputFile";
+import FormColumnSelector from "./FormColumnSelector";
 
 // 画面の表示・非表示ボタンの実装
 // 入力タイプの実装（LOCAL、DB、SITE）
@@ -15,10 +17,10 @@ function ImportArea(props) {
   ];
 
   const [inputTypeSelected, setInputTypeSelected] = useState("LOCAL");
-  const [inputData,setInputData] = useState([]);
+  // const [inputData,setInputData] = useState([]);
 
-  const onStartDraw = (e) => {
-    DrawGraph(props.convDef,inputData,props.setInputData)
+  const onStartDraw = async function (e) {
+    await DrawGraph(props.convDef, props.inputData, props.setInputData);
     props.changeDispState();
   };
 
@@ -27,17 +29,18 @@ function ImportArea(props) {
   };
 
   function selectFile(e) {
-    HeaderFromLocalFile(e,props.setColSelector,setInputData);
+    HeaderFromLocalFile(e, props.setColSelector, props.setInputData);
   }
-  
-  useEffect(() => {
-    console.log(inputData)
-  },[inputData])
 
-  useEffect(() => {
-    console.log(props.colSelector)
-  },[props.colSelector])
-  
+  // useEffect(() => {
+  //   console.log(props.inputData);
+  //   console.log(props.convDef);
+  // }, [props.inputData]);
+
+  // useEffect(() => {
+  //   console.log(props.colSelector);
+  // }, [props.colSelector]);
+
   return (
     <>
       <div
@@ -64,66 +67,32 @@ function ImportArea(props) {
       </div>
 
       {inputTypeSelected === "LOCAL" && (
-        <div>
-          <input
-            type="file"
-            accept=".csv"
-            onChange={selectFile}
-            style={{ position: "absolute", top: "85pt", left: "5pt" }}
-          ></input>
+        <div
+          style={{
+            position: "absolute",
+            top: "75pt",
+            left: "5pt",
+          }}
+        >
+          <FormInputFile selectFile={selectFile}>
+            <File x="0pt" y="5pt" width="30pt" height="30pt" color="white" />
+          </FormInputFile>
         </div>
       )}
-      {/* <div
+      <div
         style={{
           position: "absolute",
           top: "45pt",
           left: "300pt",
-          width: "500pt",
+          width: "600pt",
         }}
       >
-        GrpNameカラムの選択
-        <Form
-          type="inline-radio"
-          array={props.colSelector}
-          onChange={props.onChangeColGrp}
-          selected={props.colSelectedGrp}
+        <FormColumnSelector
+          colSelector={props.colSelector}
+          onChangeCol={props.onChangeCol}
+          convDef={props.convDef}
         />
-        色カラムの選択
-        <Form
-          type="inline-radio"
-          array={props.colSelector}
-          onChange={props.onChangeColColor}
-          selected={props.colSelectedColor}
-        />
-        開始カラムの選択
-        <Form
-          type="inline-radio"
-          array={props.colSelector}
-          onChange={props.onChangeColStart}
-          selected={props.colSelectedStart}
-        />
-        終了カラムの選択
-        <Form
-          type="inline-radio"
-          array={props.colSelector}
-          onChange={props.onChangeColEnd}
-          selected={props.colSelectedEnd}
-        />
-        名前カラムの選択
-        <Form
-          type="inline-radio"
-          array={props.colSelector}
-          onChange={props.onChangeColName}
-          selected={props.colSelectedName}
-        />
-        コメントカラムの選択
-        <Form
-          type="inline-radio"
-          array={props.colSelector}
-          onChange={props.onChangeColDesc}
-          selected={props.colSelectedDesc}
-        />        
-      </div> */}
+      </div>
     </>
   );
 }
