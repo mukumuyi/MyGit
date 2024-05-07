@@ -38,7 +38,7 @@ export default function Form(props) {
       )}
       {props.type == "inline-select" && (
         <>
-          
+          <label htmlFor={props.id}>{props.name}</label>
           <select
             onChange={props.onChange}
             value={props.selected}
