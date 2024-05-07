@@ -1,7 +1,7 @@
 import { useState, useEffect} from "react";
 import Form from "./Form";
 import { File, Cross, Humberger, Graph } from "./Svg";
-import { GetHeaderFromLocalFile,DrawGraph } from "./DataInput";
+import { HeaderFromLocalFile,DrawGraph } from "./DataInput";
 
 // 画面の表示・非表示ボタンの実装
 // 入力タイプの実装（LOCAL、DB、SITE）
@@ -18,7 +18,7 @@ function ImportArea(props) {
   const [inputData,setInputData] = useState([]);
 
   const onStartDraw = (e) => {
-    DrawGraph(props.convDef,inputData,props.setInputArray)
+    DrawGraph(props.convDef,inputData,props.setInputData)
     props.changeDispState();
   };
 
@@ -27,7 +27,7 @@ function ImportArea(props) {
   };
 
   function selectFile(e) {
-    GetHeaderFromLocalFile(e,props.setColSelector,setInputData);
+    HeaderFromLocalFile(e,props.setColSelector,setInputData);
   }
   
   useEffect(() => {

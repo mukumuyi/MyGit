@@ -28,8 +28,29 @@ function parseDateTime(dateTimeString, dateType) {
   }
 }
 
+export const OpenLocalFile = async function openLocalFile (
+  evt) {
+    console.log(
+      "=== OPEN LOCAL FILE START  :",
+      new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
+      "==="
+    );
 
-export const ParseCSV2 = function parseCSV2(inputData) {
+    const inputData = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        resolve(e.target.result);
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+      reader.readAsText(evt.target.files[0]);
+    });
+
+    return inputData
+}
+
+export const ParseCSV = function parseCSV(inputData) {
   console.log(
     "=== PARSE CSV START  :",
     new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
@@ -55,9 +76,8 @@ export const ParseCSV2 = function parseCSV2(inputData) {
 
 export const ParseDateCol = function parseDateCol(inputData,convDef){
   console.log(
-    "=== PARSE CSV START  :",
+    "=== PARSE DATE COLUMN   START  :",
     new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
-    console.log(convDef)
   return inputData
     .map((item) => {
       item.starting_time = parseDateTime(
@@ -70,38 +90,6 @@ export const ParseDateCol = function parseDateCol(inputData,convDef){
       );  
       return item
     })
-}
-
-export const ParseCSV = function parseCSV(inputData,convDef) {
-  console.log(
-    "=== PARSE CSV START  :",
-    new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
-  // CSVデータを行ごとに分割し、各行をカンマで分割して配列に格納する
-  const lines = inputData.split(/\r\n|\n/);
-  const header = lines[0].split(","); // 先頭行をヘッダとして格納
-  lines.shift(); // 先頭行の削除
-  return lines
-    .filter((line) => line.length > 1 ) // 空白行を除外
-    .map((item) => {
-      let datas = item.split(",");
-      let result = {};
-      let key ;
-      if (datas.length > 1) {
-        for (const index in datas) {
-          key = header[index];
-          result[key] = datas[index];
-        };
-        result.starting_time = parseDateTime(
-          result[convDef.colStart],
-          convDef.dateType
-        );
-        result.ending_time = parseDateTime(
-          result[convDef.colEnd],
-          convDef.dateType
-        );  
-      }
-      return result;
-    });
 }
 
 export const ConvertData = function convertDate(inputData, convDef) {

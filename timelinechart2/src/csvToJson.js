@@ -113,8 +113,8 @@ const csv2json = async (inputCsvPath, outputJsonPath,colStart,colEnd,colGrp,date
   /* メイン処理 */
   
   // 基本定義
-  const dir = "../../data/";
-  const file = "TEST_DATA.csv";
+  const dir = "../../90_data/";
+  const file = "TEST_DATA3.csv";
   const targetJsonPath = "./csvArray.json";
   const colStart = "starting_time";
   const colEnd = "ending_time";

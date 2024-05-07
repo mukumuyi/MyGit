@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Rect from "./Rect";
 import Line from "./Line";
+import { ParseDateCol } from "./DataControl";
 // import csvArray from "../csvArray.json";
 
 export default function PlotArea(props) {
@@ -10,13 +11,6 @@ export default function PlotArea(props) {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const svgRef = useRef(null);
   const [tooltipText, setTooltipText] = useState({
-    start: "1983/12/30",
-    end: "2099/12/31",
-    name: "muku",
-    grpname: "muku",
-    color: "test",
-    desc: "test",
-    id: "id",
   });
   const [tooltipPos, setTooltipPos] = useState({
     x: 0,
@@ -55,9 +49,9 @@ export default function PlotArea(props) {
     }
   }
 
-  // マウス通過時 idを取得して、props.inputArrayの値をtooltipのテキストに渡す。
+  // マウス通過時 idを取得して、props.inputDataの値をtooltipのテキストに渡す。
   function onMouseOver(e) {
-    const targetItem = props.inputArray.filter(
+    const targetItem = props.inputData.filter(
       (item) => item.id == e.target.getAttribute("id")
     )[0];
     setTooltipText({
@@ -159,14 +153,14 @@ export default function PlotArea(props) {
   const minTimeStamp =
     Math.floor(
       Math.min(
-        ...props.inputArray
+        ...props.inputData
           .map((item) => parseInt(item.starting_time))
           .filter((value) => !isNaN(value))
       ) / 3600000
     ) * 3600000;
 
   // filerを先にかませてデータを絞る。
-  const plotArray = props.inputArray
+  const plotArray = props.inputData
     .filter((item) =>
       (item.starting_time - minTimeStamp) * scaleFactor + cordinate.x <
         svgWidth &&
@@ -179,9 +173,9 @@ export default function PlotArea(props) {
         gHeight * parseInt(item.lane) +
         cordinate.y >
         0 &&
-      props.filterText.text
+      (props.filterText.text
         ? item[props.filterText.item] === props.filterText.text
-        : true
+        : true)
     )
     .map((item) => ({
       key: item.id,
@@ -212,6 +206,11 @@ export default function PlotArea(props) {
       ) / 3600000
     ) * 3600000;
 
+    // console.log(plotArray)
+    // console.log(new Date(minTimeStamp).toLocaleString("ja-JP"))
+    // console.log(new Date(maxTimeStamp).toLocaleString("ja-JP"))
+    // console.log(Math.ceil((maxTimeStamp - minTimeStamp) / xAxisTimespan) )
+
   const xAxisArray = Array.from(
     { length: Math.ceil((maxTimeStamp - minTimeStamp) / xAxisTimespan) + 1 },
     (_, index) => {
@@ -231,7 +230,8 @@ export default function PlotArea(props) {
         labelT: `${hours}`,
       };
     }
-  ).filter(
+  )
+  .filter(
     (item) =>
       item.cx < svgWidth - plotStartX &&
       item.cx > 0 &&
@@ -239,10 +239,10 @@ export default function PlotArea(props) {
       item.cy > 0
   );
 
-  function makeyAxisArray(inputArray, g_margin, g_height, plotStartY, ty) {
+  function makeyAxisArray(inputData, g_margin, g_height, plotStartY, ty) {
     //縦軸のラベル用データ作成
     const recordsArray = {};
-    for (const item of inputArray) {
+    for (const item of inputData) {
       // 配列をループ
       const group = parseInt(item.group);
       const lane = parseInt(item.lane);
@@ -269,7 +269,7 @@ export default function PlotArea(props) {
   }
 
   const yAxisArray = makeyAxisArray(
-    props.inputArray,
+    props.inputData,
     gMargin,
     gHeight,
     plotStartY,

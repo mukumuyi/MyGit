@@ -80,7 +80,7 @@ function Timeline(props) {
     dateType: "YYYY/MM/DD HH:mm:SS",
   });
 
-  const [inputArray, setInputArray] = useState([]);
+  const [inputData,setInputData] = useState([]);
 
   const colorPalette = [
     { id: 1, name: "Wait", value: colorWaitSelected, label: "Wait" },
@@ -172,26 +172,26 @@ function Timeline(props) {
   }
 
   function drawFromLocalFile(e) {
-    DrawFromLocalFile(e, convDef, setInputArray);
+    DrawFromLocalFile(e, convDef, setInputData);
   }
 
   window.addEventListener("resize", handleResize);
 
   useEffect(() => {
     if(dispType === "Draw"){
-      DrawNewProperty(convDef, inputArray, setInputArray);
+      DrawNewProperty(convDef, inputData, setInputData);
     }
   }, [convDef]); // convDefが変更されたときだけこのuseEffectが実行される
 
-  // const tempArray = DrawNewProperty(inputArray,convDef);
-  // setInputArray(tempArray);
+  // const tempArray = DrawNewProperty(inputData,convDef);
+  // setInputData(tempArray);
 
   return (
     <div>
       {dispType === "Import" && (
         <ImportArea changeDispState={changeDispState} 
         setColSelector={setColSelector}
-        setInputArray={setInputArray}
+        setInputData={setInputData}
         convDef={convDef}
         colSelector={colSelector}
         onChangeColGrp={onChangeColGrp}
@@ -229,14 +229,14 @@ function Timeline(props) {
           <PlotArea
             width={screenWidth}
             height={screenHeight}
-            fontSize="20"
+            fontSize="10"
             gHeight={widthSelected}
             frameTimespan={timeSelected}
             style={{ position: "absolute", left: "0", top: "0" }}
             searchText={searchText}
             filterText={filterText}
             colorPalette={colorPalette}
-            inputArray={inputArray}
+            inputData={inputData}
           />
         </>
       )}
