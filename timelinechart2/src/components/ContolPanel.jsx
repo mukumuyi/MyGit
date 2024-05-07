@@ -4,7 +4,6 @@ import FormInputFile from "./FormInputFile";
 import FormColumnSelector from "./FormColumnSelector";
 
 export default function ControlPanel(props) {
-
   const timeSpan = [
     { id: 1, name: "Span1h", value: "3600000", label: "1時間" },
     { id: 2, name: "Span2h", value: "7200000", label: "2時間" },
@@ -39,7 +38,7 @@ export default function ControlPanel(props) {
         }}
       >
         <div onClick={props.changeDispControlPanelState}>
-        {/* <div onClick={changeParmPanel}> */}
+          {/* <div onClick={changeParmPanel}> */}
           {props.dispControlPanel === 1 || (
             <Humberger
               x="0pt"
@@ -53,72 +52,90 @@ export default function ControlPanel(props) {
             <Cross x="0pt" y="0pt" width="30pt" height="30pt" color="#50a3a2" />
           )}
         </div>
+        {props.dispControlPanel === 1 && (
+          <>
+            <div
+              onClick={props.changeDispState}
+              style={{ opacity: props.dispControlPanel }}
+            >
+              <Home
+                x="0pt"
+                y="0pt"
+                width="30pt"
+                height="30pt"
+                color="#50a3a2"
+              />
+            </div>
+            <FormInputFile
+              opacityParmPanel={props.dispControlPanel}
+              selectFile={props.selectFile}
+            >
+              <File
+                x="0pt"
+                y="0pt"
+                width="30pt"
+                height="30pt"
+                color="#50a3a2"
+              />
+            </FormInputFile>
+          </>
+        )}
+      </div>
+      {props.dispControlPanel === 1 && (
         <div
-          onClick={props.changeDispState}
-          style={{ opacity: props.dispControlPanel }}
+          className="control-panel"
+          style={{
+            position: "absolute",
+            top: "45pt",
+            left: "45pt",
+            opacity: props.dispControlPanel,
+          }}
         >
-          <Home x="0pt" y="0pt" width="30pt" height="30pt" color="#50a3a2" />
+          <FormColumnSelector
+            colSelector={props.colSelector}
+            onChangeCol={props.onChangeCol}
+            convDef={props.convDef}
+          />
+          <div className="container4">
+            <label>表示期間</label>
+            <label>バーの幅</label>
+            <label>項目の色</label>
+            <Form
+              type="inline-text"
+              id="Search"
+              array={props.itemSelector}
+              onChange={props.handleSubmitSerch}
+              placeHolder="Search on timeline"
+            />
+          </div>
+          <div className="container2">
+            <Form
+              type="inline-radio"
+              array={timeSpan}
+              onChange={props.onChangeTime}
+              selected={props.timeSelected}
+            />
+            <Form
+              type="inline-radio"
+              array={barWidth}
+              onChange={props.onChangeWidth}
+              selected={props.widthSelected}
+            />
+            <Form
+              type="inline-color"
+              array={props.colorPalette}
+              onChange={props.onChangeColor}
+            />
+            <Form
+              type="inline-text"
+              id="Filter"
+              array={props.itemSelector}
+              onChange={props.handleSubmitFilter}
+              placeHolder="Filter on timeline"
+            />
+          </div>
         </div>
-        <FormInputFile
-          opacityParmPanel={props.dispControlPanel}
-          selectFile={props.selectFile}
-        >
-          <File x="0pt" y="0pt" width="30pt" height="30pt" color="#50a3a2" />
-        </FormInputFile>
-      </div>
-      <div
-        className="control-panel"
-        style={{
-          position: "absolute",
-          top: "45pt",
-          left: "45pt",
-          opacity: props.dispControlPanel,
-        }}
-      >
-        <FormColumnSelector
-          colSelector={props.colSelector}
-          onChangeCol={props.onChangeCol}
-          convDef={props.convDef}
-        />
-        <div className="container4">
-          <label>表示期間</label>
-          <label>バーの幅</label>
-          <label>項目の色</label>
-          <Form
-            type="inline-text"
-            id="Search"
-            array={props.itemSelector}
-            onChange={props.handleSubmitSerch}
-            placeHolder="Search on timeline"
-          />
-        </div>
-        <div className="container2">
-          <Form
-            type="inline-radio"
-            array={timeSpan}
-            onChange={props.onChangeTime}
-            selected={props.timeSelected}
-          />
-          <Form
-            type="inline-radio"
-            array={barWidth}
-            onChange={props.onChangeWidth}
-            selected={props.widthSelected}
-          />
-          <Form
-            type="inline-color"
-            array={props.colorPalette}
-            onChange={props.onChangeColor}
-          />
-          <Form
-            type="inline-text"
-            id="Filter"
-            array={props.itemSelector}
-            onChange={props.handleSubmitFilter}
-            placeHolder="Filter on timeline"
-          />
-        </div>
-      </div>
+      )}
     </>
   );
 }

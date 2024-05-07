@@ -24,7 +24,7 @@ import { DrawFromLocalFile, DrawNewProperty } from "./DataInput";
 //   b.DBの場合はDBMS選択、接続DB情報、クエリ作成
 //   c.web上のファイルの場合、URLを入力
 //  (3)ヘッダー情報を取得して、項目の定義をする。 -> 完了
-//  (4)色領域の項目を取得して、色設定を定義 をする。 
+//  (4)色領域の項目を取得して、色設定を定義 をする。
 // Timeline画面
 //
 // 機能拡張
@@ -39,7 +39,7 @@ import { DrawFromLocalFile, DrawNewProperty } from "./DataInput";
 // スクロールによる画面の表示変更。
 
 function Timeline(props) {
-  const [dispType, setDispType] = useState("Import");
+  const [dispType, setDispType] = useState("Draw");
   const [dispControlPanel, setDispControlPanel] = useState(0);
 
   const [screenSize, setScreenSize] = useState({
@@ -95,8 +95,14 @@ function Timeline(props) {
       time1: "1703808000000 ",
       time2: "1703814500000 ",
       status: "Fix",
-      starting_time: "2023/12/29 0:00",
-      ending_time: "2023/12/29 0:16",
+      starting_time: 1703775600000,
+      ending_time: 1703776560000,
+      id: 0,
+      grpname: "PERSON_B",
+      desc: "PERSON_B",
+      color: "Fix",
+      group: 1,
+      lane: 1,
     },
   ]);
 
@@ -202,9 +208,9 @@ function Timeline(props) {
     }
   }, [convDef]); // convDefが変更されたときだけこのuseEffectが実行される
 
-  // useEffect (() => {
-  //   console.log(inputData)
-  // },[inputData])
+  useEffect(() => {
+    console.log(inputData);
+  }, [inputData]);
 
   return (
     <div>

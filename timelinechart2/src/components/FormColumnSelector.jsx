@@ -3,7 +3,7 @@ import Form from "./Form"
 export default function FormColumnSelector(props){
     return (
         
-    <div style={{ display: "flex", flexWrap: "wrap" }}>
+    <div style={{ display: "flex", flexWrap: "wrap"}}>
     <Form
       type="inline-select"
       id="colGrp"
