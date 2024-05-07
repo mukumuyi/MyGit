@@ -1,11 +1,9 @@
-import { useState } from "react";
 import Form from "./Form";
 import { File, Cross, Humberger, Home, Sunna, Graph } from "./Svg";
 import FormInputFile from "./FormInputFile";
 import FormColumnSelector from "./FormColumnSelector";
 
 export default function ControlPanel(props) {
-  const [opacityParmPanel, setOpacityParmPanel] = useState(0);
 
   const timeSpan = [
     { id: 1, name: "Span1h", value: "3600000", label: "1時間" },
@@ -22,14 +20,6 @@ export default function ControlPanel(props) {
     { id: 3, name: "BarThin", value: "12", label: "細" },
     { id: 4, name: "BarThinest", value: "8", label: "超細" },
   ];
-
-  function changeParmPanel() {
-    if (opacityParmPanel === 1) {
-      setOpacityParmPanel(0);
-    } else {
-      setOpacityParmPanel(1);
-    }
-  }
 
   return (
     <>
@@ -48,8 +38,9 @@ export default function ControlPanel(props) {
           gap: "5pt 10pt",
         }}
       >
-        <div onClick={changeParmPanel}>
-          {opacityParmPanel === 1 || (
+        <div onClick={props.changeDispControlPanelState}>
+        {/* <div onClick={changeParmPanel}> */}
+          {props.dispControlPanel === 1 || (
             <Humberger
               x="0pt"
               y="0pt"
@@ -58,18 +49,18 @@ export default function ControlPanel(props) {
               color="#50a3a2"
             />
           )}
-          {opacityParmPanel === 1 && (
+          {props.dispControlPanel === 1 && (
             <Cross x="0pt" y="0pt" width="30pt" height="30pt" color="#50a3a2" />
           )}
         </div>
         <div
           onClick={props.changeDispState}
-          style={{ opacity: opacityParmPanel }}
+          style={{ opacity: props.dispControlPanel }}
         >
           <Home x="0pt" y="0pt" width="30pt" height="30pt" color="#50a3a2" />
         </div>
         <FormInputFile
-          opacityParmPanel={opacityParmPanel}
+          opacityParmPanel={props.dispControlPanel}
           selectFile={props.selectFile}
         >
           <File x="0pt" y="0pt" width="30pt" height="30pt" color="#50a3a2" />
@@ -81,7 +72,7 @@ export default function ControlPanel(props) {
           position: "absolute",
           top: "45pt",
           left: "45pt",
-          opacity: opacityParmPanel,
+          opacity: props.dispControlPanel,
         }}
       >
         <FormColumnSelector

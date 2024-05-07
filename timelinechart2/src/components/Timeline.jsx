@@ -40,6 +40,7 @@ import { DrawFromLocalFile, DrawNewProperty } from "./DataInput";
 
 function Timeline(props) {
   const [dispType, setDispType] = useState("Import");
+  const [dispControlPanel, setDispControlPanel] = useState(0);
 
   const [screenSize, setScreenSize] = useState({
     screenWidth: document.documentElement.clientWidth,
@@ -119,6 +120,14 @@ function Timeline(props) {
       setDispType("Draw");
     } else {
       setDispType("Import");
+    }
+  };
+
+  const changeDispControlPanelState = () => {
+    if (dispControlPanel === 1) {
+      setDispControlPanel(0);
+    } else {
+      setDispControlPanel(1);
     }
   };
 
@@ -214,6 +223,8 @@ function Timeline(props) {
         <>
           <ControlPanel
             changeDispState={changeDispState}
+            dispControlPanel={dispControlPanel}
+            changeDispControlPanelState={changeDispControlPanelState}
             colSelector={colSelector}
             onChangeCol={onChangeCol}
             convDef={convDef}
