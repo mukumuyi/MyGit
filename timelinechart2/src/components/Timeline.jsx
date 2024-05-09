@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,memo } from "react";
 import ImportArea from "./ImportArea";
-import PlotArea from "./PlotArea";
+import {PlotArea} from "./PlotArea";
 import ControlPanel from "./ContolPanel";
-import Form from "./Form";
 import { DrawFromLocalFile, DrawNewProperty } from "./DataInput";
 
 // 実装したいこと　～Googleマップ風のTimelineチャートを作る。～
@@ -25,10 +24,13 @@ import { DrawFromLocalFile, DrawNewProperty } from "./DataInput";
 //   c.web上のファイルの場合、URLを入力
 //  (3)ヘッダー情報を取得して、項目の定義をする。 -> 完了
 // 
-//  (4)色領域の項目を取得して、色設定を定義できるようにする。
+//  (4)色領域の項目を取得して、色設定を定義できるようにする。 -> 完了
 // Timeline画面
 //
 // 機能拡張
+// コメントを残す機能。
+// フォームやCSSの精査
+// レンダー回数の減少対応
 // ファイル読み込み系の処理の整理
 // 大量データ向けの対応（JsonまではcsvToJsonで作って、そこから描画をする形式？）
 // 最初の表示に戻すボタン リターンボタン。
@@ -39,7 +41,7 @@ import { DrawFromLocalFile, DrawNewProperty } from "./DataInput";
 // 検索した場合それを画面の中心に持っていく動きを追加する。
 // スクロールによる画面の表示変更。
 
-function Timeline(props) {
+export const Timeline = ((props) => {
   const [dispType, setDispType] = useState("Draw");
   const [dispControlPanel, setDispControlPanel] = useState(0);
 
@@ -48,16 +50,29 @@ function Timeline(props) {
     screenHeight: document.documentElement.clientHeight,
   });
 
+  // inputDate更新前に描画を行うとエラーが発生するため、描画処理を停止するフラグ
+  const [drawFlag,setDrawFlag] = useState(true);
+
   const [timeSelected, setTimeSelected] = useState("172800000");
   const [widthSelected, setWidthSelected] = useState("8");
 
-  const [colorWaitSelected, setColorWaitSelected] = useState("#c7cacc");
-  const [colorFixSelected, setColorFixSelected] = useState("#7f8b94");
-  const [colorRunSelected, setColorRunSelected] = useState("#203b4c");
-  const [colorMenteSelected, setColorMenteSelected] = useState("#e66465");
+  const [colorSelected,setColorSelected] = useState([
+    { id: 1, name: "Wait", value: "#c7cacc", label: "Wait" },
+    { id: 2, name: "Fix", value: "#7f8b94", label: "Fix" },
+    { id: 3, name: "Run", value: "#203b4c", label: "Run" }, 
+    { id: 4, name: "Mente", value: "#e66465", label: "Mente" },
+  ])
+
+  const [sampleDate,setSampleDate] = useState("");
 
   const [searchText, setSearchText] = useState({ item: "name", text: null });
   const [filterText, setFilterText] = useState({ item: "name", text: null });
+
+  const dateTypeSel = [
+    { id: 1, name: "ISO8601_BASE", value: "YYYYMMDDHHmmSS", label: "YYYYMMDDHHmmSS" },
+    { id: 2, name: "DATETIME_UNIX", value: "UNIX", label: "UNIX" },
+    { id: 3, name: "DATETIME001", value: "YYYY/MM/DD HH:mm:SS", label: "YYYY/MM/DD HH:mm:SS" },
+  ] 
 
   const [colSelector, setColSelector] = useState([
     { id: 1, name: "label", value: "label", label: "label" },
@@ -107,13 +122,6 @@ function Timeline(props) {
     },
   ]);
 
-  const colorPalette = [
-    { id: 1, name: "Wait", value: colorWaitSelected, label: "Wait" },
-    { id: 2, name: "Fix", value: colorFixSelected, label: "Fix" },
-    { id: 3, name: "Run", value: colorRunSelected, label: "Run" },
-    { id: 4, name: "Mente", value: colorMenteSelected, label: "Mente" },
-  ];
-
   const itemSelector = [
     { id: 1, name: "name", value: "name", label: "name" },
     { id: 2, name: "grpname", value: "grpname", label: "grpname" },
@@ -148,34 +156,54 @@ function Timeline(props) {
 
   const onChangeCol = (e) => {
     // console.log(e.target.id)
+    // console.log(e.target.value)
+    setDrawFlag(false);
     if (e.target.id === "colGrp") {
       setConvDef({ ...convDef, colGrp: e.target.value });
     } else if (e.target.id === "colColor") {
       setConvDef({ ...convDef, colColor: e.target.value });
+  
+      const uniqueStatusList = [...new Set(inputData.map(item => item[e.target.value]))];
+      const assignColor = (index, length) => {
+        const hex = Math.floor((index + 1) * 0xFFFFFF / length).toString(16).padStart(6, '0'); // インデックスに応じて色を計算
+        return `#${hex.toUpperCase()}`; // #FFFFFF 形式の色コードを返す
+      };
+
+      setColorSelected(
+        uniqueStatusList.map((item, index) => ({
+          id: index + 1,
+          name: item,
+          value: assignColor(index, uniqueStatusList.length),
+          label: item,
+        }))
+      );
+
     } else if (e.target.id === "colStart") {
       setConvDef({ ...convDef, colStart: e.target.value });
+      setSampleDate(inputData[1][e.target.value])
     } else if (e.target.id === "colEnd") {
       setConvDef({ ...convDef, colEnd: e.target.value });
     } else if (e.target.id === "colName") {
       setConvDef({ ...convDef, colName: e.target.value });
     } else if (e.target.id === "colDesc") {
       setConvDef({ ...convDef, colDesc: e.target.value });
+    } else if (e.target.id === "ISO8601_BASE" || e.target.id === "DATETIME_UNIX" || e.target.id === "DATETIME001") {
+      setConvDef({ ...convDef, dateType: e.target.value });
     }
   };
 
   function onChangeColor(e) {
-    if (e.target.id === "Wait") {
-      setColorWaitSelected(e.target.value);
-    }
-    if (e.target.id === "Fix") {
-      setColorFixSelected(e.target.value);
-    }
-    if (e.target.id === "Run") {
-      setColorRunSelected(e.target.value);
-    }
-    if (e.target.id === "Mente") {
-      setColorMenteSelected(e.target.value);
-    }
+    const updatedColors = colorSelected.map(color => {
+      if (color.name === e.target.id) {
+        // "Wait"の場合は新しい値に更新
+        return { ...color, value: e.target.value };
+      }
+      return color;
+    });
+  
+    // 更新された配列をセット
+    setColorSelected(updatedColors);
+
   }
 
   function handleSubmitSerch(e) {
@@ -205,13 +233,15 @@ function Timeline(props) {
 
   useEffect(() => {
     if (dispType === "Draw") {
-      DrawNewProperty(convDef, inputData, setInputData);
+      DrawNewProperty(convDef, inputData, setInputData,setDrawFlag);
     }
   }, [convDef]); // convDefが変更されたときだけこのuseEffectが実行される
 
-  useEffect(() => {
-    console.log(inputData);
-  }, [inputData]);
+  // useEffect(() => {
+  //   console.log(inputData);
+  // }, [inputData]);
+
+  console.log("Render Timeline")
 
   return (
     <div>
@@ -222,12 +252,16 @@ function Timeline(props) {
           colSelector={colSelector}
           onChangeCol={onChangeCol}
           convDef={convDef}
+          dateTypeSel={dateTypeSel}
+          onChangeColor={onChangeColor}
+          colorSelected={colorSelected}
           inputData={inputData}
           setInputData={setInputData}
+          sampleDate={sampleDate}
         />
       )}
       {dispType === "Draw" && (
-        <>
+        
           <ControlPanel
             changeDispState={changeDispState}
             dispControlPanel={dispControlPanel}
@@ -235,17 +269,21 @@ function Timeline(props) {
             colSelector={colSelector}
             onChangeCol={onChangeCol}
             convDef={convDef}
+            dateTypeSel={dateTypeSel}
             onChangeTime={onChangeTime}
             timeSelected={timeSelected}
             onChangeWidth={onChangeWidth}
             widthSelected={widthSelected}
             onChangeColor={onChangeColor}
-            colorPalette={colorPalette}
+            colorSelected={colorSelected}
             selectFile={drawFromLocalFile}
             itemSelector={itemSelector}
             handleSubmitSerch={handleSubmitSerch}
             handleSubmitFilter={handleSubmitFilter}
+            sampleDate={sampleDate}
           />
+          )}
+          {dispType === "Draw" && drawFlag && (
           <PlotArea
             width={screenSize.screenWidth}
             height={screenSize.screenHeight}
@@ -255,13 +293,11 @@ function Timeline(props) {
             style={{ position: "absolute", left: "0", top: "0" }}
             searchText={searchText}
             filterText={filterText}
-            colorPalette={colorPalette}
+            colorSelected={colorSelected}
             inputData={inputData}
           />
-        </>
       )}
     </div>
   );
 }
-
-export default Timeline;
+)

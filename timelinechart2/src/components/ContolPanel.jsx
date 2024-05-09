@@ -20,6 +20,7 @@ export default function ControlPanel(props) {
     { id: 4, name: "BarThinest", value: "8", label: "超細" },
   ];
 
+  console.log("Render ContolPanel");
   return (
     <>
       {/* <div className="menu-buttom" style={{ position: "absolute", top: "5pt", left: "5pt" }}
@@ -97,9 +98,25 @@ export default function ControlPanel(props) {
             convDef={props.convDef}
           />
           <div className="container4">
+            <label>日付型 {props.sampleDate}</label>
+            <label>項目の色</label>
+          </div>
+          <div className="container2">
+            <Form
+              type="inline-radio"
+              array={props.dateTypeSel}
+              onChange={props.onChangeCol}
+              selected={props.convDef.dateType}
+            />
+            <Form
+              type="inline-color"
+              array={props.colorSelected}
+              onChange={props.onChangeColor}
+            />
+          </div>
+          <div className="container4">
             <label>表示期間</label>
             <label>バーの幅</label>
-            <label>項目の色</label>
             <Form
               type="inline-text"
               id="Search"
@@ -120,11 +137,6 @@ export default function ControlPanel(props) {
               array={barWidth}
               onChange={props.onChangeWidth}
               selected={props.widthSelected}
-            />
-            <Form
-              type="inline-color"
-              array={props.colorPalette}
-              onChange={props.onChangeColor}
             />
             <Form
               type="inline-text"

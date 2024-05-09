@@ -41,6 +41,7 @@ function ImportArea(props) {
   //   console.log(props.colSelector);
   // }, [props.colSelector]);
 
+  console.log("Render ImportArea");
   return (
     <>
       <div
@@ -92,6 +93,23 @@ function ImportArea(props) {
           onChangeCol={props.onChangeCol}
           convDef={props.convDef}
         />
+        <div className="container4">
+            <label>日付型 {props.sampleDate}</label>
+            <label>項目の色</label>
+          </div>
+          <div className="container2">
+            <Form
+              type="inline-radio"
+              array={props.dateTypeSel}
+              onChange={props.onChangeCol}
+              selected={props.convDef.dateType}
+            />
+            <Form
+              type="inline-color"
+              array={props.colorSelected}
+              onChange={props.onChangeColor}
+            />
+          </div>
       </div>
     </>
   );

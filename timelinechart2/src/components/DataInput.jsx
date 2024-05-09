@@ -90,7 +90,8 @@ export const DrawFromLocalFile = async function drawFromLocalFile(
 export const DrawNewProperty = async function drawNewProperty(
   convDef,
   inputData,
-  setInputData
+  setInputData,
+  setDrawFlag
 ) {
   console.log(
     "=== CHANGE GROUP COL START  :",
@@ -102,6 +103,7 @@ export const DrawNewProperty = async function drawNewProperty(
     const convertData = await ConvertData(inputData, convDef);
     const timelineData = await ConvertTimelineData(convertData, convDef);
     setInputData(timelineData);
+    setDrawFlag(true)
     // return timelineData
   } catch (error) {
     console.error("項目変更エラー：", error);

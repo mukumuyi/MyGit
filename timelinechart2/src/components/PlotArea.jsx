@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect ,memo} from "react";
 import Rect from "./Rect";
 import Line from "./Line";
 import { ParseDateCol } from "./DataControl";
 // import csvArray from "../csvArray.json";
 
-export default function PlotArea(props) {
+export const PlotArea = memo ((props) => {
   // eventHandle
   const [cordinate, setCordinate] = useState({ x: 0, y: 0 });
   const [gap, setGap] = useState({ x: 0, y: 0 });
@@ -160,6 +160,9 @@ export default function PlotArea(props) {
       ) / 3600000
     ) * 3600000;
 
+    console.log("Render PlotArea");
+    // console.log(props.inputData)
+    // console.log(props.colorSelected)
   // filerを先にかませてデータを絞る。
   const plotArray = props.inputData
     .filter((item) =>
@@ -193,7 +196,7 @@ export default function PlotArea(props) {
       barColor: 
         item[props.searchText.item] === props.searchText.text
           ? "Red"
-          : props.colorPalette.find((color) => color.name == item.color).value,
+          : props.colorSelected.find((color) => color.name == item.color).value,
       ending_time: item.ending_time,
     }));
 
@@ -409,4 +412,4 @@ export default function PlotArea(props) {
       )}
     </div>
   );
-}
+})
