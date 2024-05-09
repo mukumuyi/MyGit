@@ -37,7 +37,17 @@ export default function ControlPanel(props) {
           flexFlow: "row wrap",
           gap: "5pt 10pt",
         }}
-      >
+      ><div
+      onClick={props.changeDispState}
+    >
+      <Home
+        x="0pt"
+        y="0pt"
+        width="30pt"
+        height="30pt"
+        color="#50a3a2"
+      />
+    </div>
         <div onClick={props.changeDispControlPanelState}>
           {/* <div onClick={changeParmPanel}> */}
           {props.dispControlPanel === 1 || (
@@ -53,34 +63,6 @@ export default function ControlPanel(props) {
             <Cross x="0pt" y="0pt" width="30pt" height="30pt" color="#50a3a2" />
           )}
         </div>
-        {props.dispControlPanel === 1 && (
-          <>
-            <div
-              onClick={props.changeDispState}
-              style={{ opacity: props.dispControlPanel }}
-            >
-              <Home
-                x="0pt"
-                y="0pt"
-                width="30pt"
-                height="30pt"
-                color="#50a3a2"
-              />
-            </div>
-            <FormInputFile
-              opacityParmPanel={props.dispControlPanel}
-              selectFile={props.selectFile}
-            >
-              <File
-                x="0pt"
-                y="0pt"
-                width="30pt"
-                height="30pt"
-                color="#50a3a2"
-              />
-            </FormInputFile>
-          </>
-        )}
       </div>
       {props.dispControlPanel === 1 && (
         <div
