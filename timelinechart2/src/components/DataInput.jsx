@@ -40,7 +40,8 @@ export const HeaderFromLocalFile = async function HeaderFromLocalFile(
 export const DrawGraph = async function drawGraph(
   convDef,
   inputData,
-  setInputData
+  setInputData,
+  setDrawFlag
 ) {
   console.log(
     "=== DRAW GRAPH START  :",
@@ -51,6 +52,7 @@ export const DrawGraph = async function drawGraph(
   const convertData = await ConvertData(parseData, convDef);
   const timelineData = await ConvertTimelineData(convertData, convDef);
   setInputData(timelineData);
+  setDrawFlag(true);
 };
 
 export const DrawFromLocalFile = async function drawFromLocalFile(
@@ -103,7 +105,7 @@ export const DrawNewProperty = async function drawNewProperty(
     const convertData = await ConvertData(inputData, convDef);
     const timelineData = await ConvertTimelineData(convertData, convDef);
     setInputData(timelineData);
-    setDrawFlag(true)
+    setDrawFlag(true);
     // return timelineData
   } catch (error) {
     console.error("項目変更エラー：", error);

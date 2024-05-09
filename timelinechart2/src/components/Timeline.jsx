@@ -26,6 +26,8 @@ import { DrawFromLocalFile, DrawNewProperty } from "./DataInput";
 // 
 //  (4)色領域の項目を取得して、色設定を定義できるようにする。 -> 完了
 // Timeline画面
+// 不具合
+// ImportAreaで色カラム選択後、画面切り替えをすると描画されない。
 //
 // 機能拡張
 // コメントを残す機能。
@@ -258,6 +260,7 @@ export const Timeline = ((props) => {
           inputData={inputData}
           setInputData={setInputData}
           sampleDate={sampleDate}
+          setDrawFlag={setDrawFlag}
         />
       )}
       {dispType === "Draw" && (

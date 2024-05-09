@@ -20,7 +20,7 @@ function ImportArea(props) {
   // const [inputData,setInputData] = useState([]);
 
   const onStartDraw = async function (e) {
-    await DrawGraph(props.convDef, props.inputData, props.setInputData);
+    await DrawGraph(props.convDef, props.inputData, props.setInputData,props.setDrawFlag);
     props.changeDispState();
   };
 

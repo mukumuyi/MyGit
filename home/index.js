@@ -32,7 +32,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dest', 'index.html'));
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
   });
 
 app.get("/setting", (req, res) => {
