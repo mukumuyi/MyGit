@@ -3,6 +3,7 @@ import ImportArea from "./ImportArea";
 import {PlotArea} from "./PlotArea";
 import ControlPanel from "./ContolPanel";
 import { DrawFromLocalFile, DrawNewProperty } from "./DataInput";
+import Trial from "./Trial";
 
 // 実装したいこと　～Googleマップ風のTimelineチャートを作る。～
 // 1.SVGを一枚にする。 -> 完了
@@ -44,7 +45,7 @@ import { DrawFromLocalFile, DrawNewProperty } from "./DataInput";
 // スクロールによる画面の表示変更。
 
 export const Timeline = ((props) => {
-  const [dispType, setDispType] = useState("Draw");
+  const [dispType, setDispType] = useState("Trial");
   const [dispControlPanel, setDispControlPanel] = useState(0);
 
   const [screenSize, setScreenSize] = useState({
@@ -247,6 +248,9 @@ export const Timeline = ((props) => {
 
   return (
     <div>
+      {dispType === "Trial" && (
+        <Trial />
+      )}
       {dispType === "Import" && (
         <ImportArea
           setColSelector={setColSelector}
@@ -263,8 +267,7 @@ export const Timeline = ((props) => {
           setDrawFlag={setDrawFlag}
         />
       )}
-      {dispType === "Draw" && (
-        
+      {dispType === "Draw" && (        
           <ControlPanel
             changeDispState={changeDispState}
             dispControlPanel={dispControlPanel}
