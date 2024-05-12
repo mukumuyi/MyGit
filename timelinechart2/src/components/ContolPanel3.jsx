@@ -1,31 +1,9 @@
 import Form from "./Form";
-import FormSelect from "./FormSelect";
-import FormColor from "./FormColor";
-import { FaFolderOpen } from "react-icons/fa";
-import { IoCloseSharp,IoMenuSharp } from "react-icons/io5";
+import { File, Cross, Humberger, Home, Sunna, Graph } from "./Svg";
+import FormInputFile from "./FormInputFile";
+import FormColumnSelector from "./FormColumnSelector";
 
 export default function ControlPanel(props) {
-  const {
-    changeDispState,
-    dispControlPanel,
-    changeDispControlPanelState,
-    colSelector,
-    onChangeCol,
-    convDef,
-    dateTypeSel,
-    onChangeTime,
-    timeSelected,
-    onChangeWidth,
-    widthSelected,
-    onChangeColor,
-    colorSelected,
-    selectFile,
-    itemSelector,
-    handleSubmitSerch,
-    handleSubmitFilter,
-    sampleDate,
-  } = props;
-
   const timeSpan = [
     { id: 1, name: "Span1h", value: "3600000", label: "1時間" },
     { id: 2, name: "Span2h", value: "7200000", label: "2時間" },
@@ -53,62 +31,70 @@ export default function ControlPanel(props) {
         className="menu-buttom"
         style={{
           position: "absolute",
-          margin: "5pt",
+          top: "5pt",
+          left: "5pt",
           display: "inline-flex",
           flexFlow: "row wrap",
           gap: "5pt 10pt",
         }}
-      >
-        <div onClick={changeDispState}>
-          <FaFolderOpen
-          size="30pt"
-          color="#50a3a2"
-          />
-        </div>
-        <div onClick={changeDispControlPanelState}>
+      ><div
+      onClick={props.changeDispState}
+    >
+      <Home
+        x="0pt"
+        y="0pt"
+        width="30pt"
+        height="30pt"
+        color="#50a3a2"
+      />
+    </div>
+        <div onClick={props.changeDispControlPanelState}>
           {/* <div onClick={changeParmPanel}> */}
-          {dispControlPanel === 1 || (
-            <IoMenuSharp
-            size="30pt"
-            color="#50a3a2"
+          {props.dispControlPanel === 1 || (
+            <Humberger
+              x="0pt"
+              y="0pt"
+              width="30pt"
+              height="30pt"
+              color="#50a3a2"
             />
           )}
-          {dispControlPanel === 1 && (
-            <IoCloseSharp
-            size="30pt"
-            color="#50a3a2"
-            />
+          {props.dispControlPanel === 1 && (
+            <Cross x="0pt" y="0pt" width="30pt" height="30pt" color="#50a3a2" />
           )}
         </div>
       </div>
-      {dispControlPanel === 1 && (
+      {props.dispControlPanel === 1 && (
         <div
           className="control-panel"
           style={{
             position: "absolute",
-            top: "10pt",
-            left: "90pt",
-            opacity: dispControlPanel,
+            top: "45pt",
+            left: "45pt",
+            opacity: props.dispControlPanel,
           }}
         >
-          <div
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr 3fr 7fr" }}
-          >
-            <FormSelect
-              id="colGrp"
-              label="縦軸選択"
-              value={convDef.colGrp}
-              onChangeCol={onChangeCol}
-              selectItem={colSelector}
+          <FormColumnSelector
+            colSelector={props.colSelector}
+            onChangeCol={props.onChangeCol}
+            convDef={props.convDef}
+          />
+          <div className="container4">
+            <label>日付型 {props.sampleDate}</label>
+            <label>項目の色</label>
+          </div>
+          <div className="container2">
+            <Form
+              type="inline-radio"
+              array={props.dateTypeSel}
+              onChange={props.onChangeCol}
+              selected={props.convDef.dateType}
             />
-            <FormSelect
-              id="colColor"
-              label="色選択"
-              value={convDef.colColor}
-              onChangeCol={onChangeCol}
-              selectItem={colSelector}
+            <Form
+              type="inline-color"
+              array={props.colorSelected}
+              onChange={props.onChangeColor}
             />
-            <FormColor array={colorSelected} onChange={onChangeColor} />
           </div>
           <div className="container4">
             <label>表示期間</label>
@@ -116,8 +102,8 @@ export default function ControlPanel(props) {
             <Form
               type="inline-text"
               id="Search"
-              array={itemSelector}
-              onChange={handleSubmitSerch}
+              array={props.itemSelector}
+              onChange={props.handleSubmitSerch}
               placeHolder="Search on timeline"
             />
           </div>
@@ -125,20 +111,20 @@ export default function ControlPanel(props) {
             <Form
               type="inline-radio"
               array={timeSpan}
-              onChange={onChangeTime}
-              selected={timeSelected}
+              onChange={props.onChangeTime}
+              selected={props.timeSelected}
             />
             <Form
               type="inline-radio"
               array={barWidth}
-              onChange={onChangeWidth}
-              selected={widthSelected}
+              onChange={props.onChangeWidth}
+              selected={props.widthSelected}
             />
             <Form
               type="inline-text"
               id="Filter"
-              array={itemSelector}
-              onChange={handleSubmitFilter}
+              array={props.itemSelector}
+              onChange={props.handleSubmitFilter}
               placeHolder="Filter on timeline"
             />
           </div>

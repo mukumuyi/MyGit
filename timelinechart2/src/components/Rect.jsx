@@ -8,9 +8,11 @@ export default function Rect(props) {
         y={props.y}
         height={props.height}
         width={props.width}
-        style={{ fill: props.fill, stroke: props.stroke }}
+        style={{ fill: props.fill, stroke: props.stroke ,cursor: props.tooltipPos ? "pointer" : "default"}}
         onMouseOver={props.onMouseOver}
         onMouseOut={props.onMouseOut}
+        onClick={props.onClick}
+        onMouseDown={props.onMouseDown}
       />
     );
   }

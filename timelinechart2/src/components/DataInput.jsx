@@ -2,6 +2,7 @@ import {
   OpenLocalFile,
   ParseDateCol,
   ParseCSV,
+  FilterData,
   ConvertData,
   ConvertTimelineData,
 } from "./DataControl";
@@ -9,7 +10,8 @@ import {
 export const HeaderFromLocalFile = async function HeaderFromLocalFile(
   evt,
   setColSelector,
-  setInputData
+  setInputData,
+  setOriginData
 ) {
   console.log(
     "=== GET LOCAL FILE START  :",
@@ -30,6 +32,40 @@ export const HeaderFromLocalFile = async function HeaderFromLocalFile(
       }))
     );
 
+    setOriginData(parseData);
+    setInputData(parseData);
+
+  } catch (error) {
+    console.error("CSVファイルの読み込みエラー:", error);
+  }
+};
+
+
+export const HeaderFromData = async function HeaderFromData(
+  inputData,
+  setColSelector,
+  setInputData,
+  setOriginData
+) {
+  console.log(
+    "=== GET HEADER START  :",
+    new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
+    "==="
+  );
+
+  try { 
+    const parseData = await ParseCSV(inputData);
+    // 項目名からcolSelectorを作成する。（各種設定ファイル作成に利用する。）
+    setColSelector(
+      Object.keys(parseData[0]).map((item, index) => ({
+        id: index + 1,
+        name: item,
+        value: item,
+        label: item,
+      }))
+    );
+
+    setOriginData(parseData);
     setInputData(parseData);
 
   } catch (error) {
@@ -59,6 +95,7 @@ export const DrawFromLocalFile = async function drawFromLocalFile(
   evt,
   convDef,
   setInputData,
+  setOriginData,
   setColSelector
 ) {
   console.log(
@@ -83,6 +120,7 @@ export const DrawFromLocalFile = async function drawFromLocalFile(
     const parseDateData = await ParseDateCol(parseData, convDef);
     const convertData = await ConvertData(parseDateData, convDef);
     const timelineData = await ConvertTimelineData(convertData, convDef);
+    setOriginData(parseDateData);
     setInputData(timelineData);
   } catch (error) {
     console.error("CSVファイルの読み込みエラー:", error);
@@ -91,9 +129,10 @@ export const DrawFromLocalFile = async function drawFromLocalFile(
 
 export const DrawNewProperty = async function drawNewProperty(
   convDef,
-  inputData,
+  originData,
   setInputData,
-  setDrawFlag
+  setDrawFlag,
+  filterText
 ) {
   console.log(
     "=== CHANGE GROUP COL START  :",
@@ -102,8 +141,12 @@ export const DrawNewProperty = async function drawNewProperty(
   );
 
   try {
-    const convertData = await ConvertData(inputData, convDef);
-    const timelineData = await ConvertTimelineData(convertData, convDef);
+    const convertData = await ConvertData(originData, convDef);
+    // console.log("== convert ==",convertData)
+    
+    const filterData = await FilterData(convertData,filterText)
+    // console.log("== filter ==",filterData)
+    const timelineData = await ConvertTimelineData(filterData, convDef);
     setInputData(timelineData);
     setDrawFlag(true);
     // return timelineData

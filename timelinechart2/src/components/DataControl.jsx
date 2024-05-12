@@ -8,89 +8,88 @@ function parseDateTime(dateTimeString, dateType) {
     const seconds = dateTimeString.slice(12, 14);
     const date = new Date(year, month - 1, day, hours, minutes, seconds);
     return Date.parse(date);
-  } else if (dateType === "UNIX"  || !isNaN(dateTimeString) ) {
+  } else if (dateType === "UNIX" || !isNaN(dateTimeString)) {
     return parseInt(dateTimeString);
   } else if (dateType === "YYYY/MM/DD HH:mm:SS") {
     const parts = dateTimeString.split(" ");
     const datePart = parts[0].split("/");
-    const timePart = parts[1].split(":");    
+    const timePart = parts[1].split(":");
     // Dateオブジェクトを作成
     const date = new Date(
-        parseInt(datePart[0]), // 年
-        parseInt(datePart[1]) - 1, // 月 (0-11)
-        parseInt(datePart[2]), // 日
-        parseInt(timePart[0]), // 時
-        parseInt(timePart[1]) // 分
+      parseInt(datePart[0]), // 年
+      parseInt(datePart[1]) - 1, // 月 (0-11)
+      parseInt(datePart[2]), // 日
+      parseInt(timePart[0]), // 時
+      parseInt(timePart[1]) // 分
     );
     return Date.parse(date);
-  } else {  
+  } else {
     return Date.parse(dateTimeString); // デフォルトはISO 8601形式の日付文字列
   }
 }
 
-export const OpenLocalFile = async function openLocalFile (
-  evt) {
-    console.log(
-      "=== OPEN LOCAL FILE START  :",
-      new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
-      "==="
-    );
+export const OpenLocalFile = async function openLocalFile(evt) {
+  console.log(
+    "=== OPEN LOCAL FILE START  :",
+    new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
+    "==="
+  );
 
-    const inputData = await new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        resolve(e.target.result);
-      };
-      reader.onerror = (error) => {
-        reject(error);
-      };
-      reader.readAsText(evt.target.files[0]);
-    });
+  const inputData = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      resolve(e.target.result);
+    };
+    reader.onerror = (error) => {
+      reject(error);
+    };
+    reader.readAsText(evt.target.files[0]);
+  });
 
-    return inputData
-}
+  return inputData;
+};
 
 export const ParseCSV = function parseCSV(inputData) {
   console.log(
     "=== PARSE CSV START  :",
-    new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
+    new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
+    "==="
+  );
   // CSVデータを行ごとに分割し、各行をカンマで分割して配列に格納する
   const lines = inputData.split(/\r\n|\n/);
   const header = lines[0].split(","); // 先頭行をヘッダとして格納
   lines.shift(); // 先頭行の削除
   return lines
-    .filter((line) => line.length > 1 ) // 空白行を除外
+    .filter((line) => line.length > 1) // 空白行を除外
     .map((item) => {
       let datas = item.split(",");
       let result = {};
-      let key ;
+      let key;
       if (datas.length > 1) {
         for (const index in datas) {
           key = header[index];
           result[key] = datas[index];
-        };
+        }
       }
       return result;
     });
-}
+};
 
-export const ParseDateCol = function parseDateCol(inputData,convDef){
+export const ParseDateCol = function parseDateCol(inputData, convDef) {
   console.log(
     "=== PARSE DATE COLUMN   START  :",
-    new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
-  return inputData
-    .map((item) => {
-      item.starting_time = parseDateTime(
-        item[convDef.colStart],
-        convDef.dateType
-      );
-      item.ending_time = parseDateTime(
-        item[convDef.colEnd],
-        convDef.dateType
-      );  
-      return item
-    })
-}
+    new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
+    "==="
+  );
+  return inputData.map((item) => {
+    item.starting_time = parseDateTime(
+      item[convDef.colStart],
+      convDef.dateType
+    );
+    item.ending_time = parseDateTime(item[convDef.colEnd], convDef.dateType);
+    return item;
+  });
+};
 
 export const ConvertData = function convertDate(inputData, convDef) {
   console.log(
@@ -111,26 +110,38 @@ export const ConvertData = function convertDate(inputData, convDef) {
   });
 };
 
-export const FilterTimelineData = function filterTimelineData(inputData) {
+export const FilterData = function filterData(inputData, filterText) {
   console.log(
     "=== FILTER DATA START  :",
-    new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
-
-  let outData = inputData.filter((item) =>
-    item[dynaParm.curFilterColumn].match(
-      RegExp("^" + dynaParm.curFilterText.replace(/\*/g, ".*") + "$")
-    )
+    new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
+    "==="
   );
+
+  let outData = [];  
+
+  if (filterText.text) {
+    outData = inputData.filter((item) =>
+      item[filterText.item].match(
+        RegExp("^" + filterText.text.replace(/\*/g, ".*") + "$")
+      )
+    );
+  }
+
   if (outData.length === 0) {
     outData = inputData;
   }
   return outData;
 };
 
-export const ConvertTimelineData = function convertTimelineData(inputData,convDef) {
+export const ConvertTimelineData = function convertTimelineData(
+  inputData,
+  convDef
+) {
   console.log(
     "=== MAKE TIMELINE DATA START  :",
-    new Date().toLocaleTimeString("it-IT")+ "." + new Date().getMilliseconds(), "===");
+    new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
+    "==="
+  );
 
   // データを並び替える。（ソートキーはグループと"starting_time"）
   inputData.sort((a, b) => {
@@ -183,4 +194,4 @@ export const ConvertTimelineData = function convertTimelineData(inputData,convDe
   });
 
   return inputData;
-}
+};

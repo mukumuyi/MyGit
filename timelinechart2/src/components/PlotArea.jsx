@@ -1,17 +1,18 @@
-import React, { useState, useRef, useEffect ,memo} from "react";
+import React, { useState, useRef, useEffect, memo } from "react";
 import Rect from "./Rect";
 import Line from "./Line";
-import { ParseDateCol } from "./DataControl";
+// import { ParseDateCol } from "./DataControl";
 // import csvArray from "../csvArray.json";
 
-export const PlotArea = memo ((props) => {
+export const PlotArea = memo((props) => {
+  // props
+
+  
   // eventHandle
   const [cordinate, setCordinate] = useState({ x: 0, y: 0 });
   const [gap, setGap] = useState({ x: 0, y: 0 });
   const [isMouseDown, setIsMouseDown] = useState(false);
-  const svgRef = useRef(null);
-  const [tooltipText, setTooltipText] = useState({
-  });
+  const [tooltipText, setTooltipText] = useState({});
   const [tooltipPos, setTooltipPos] = useState({
     x: 0,
     y: 0,
@@ -49,8 +50,19 @@ export const PlotArea = memo ((props) => {
     }
   }
 
+
+
+  
+let mouseOverTimer = '';
+
   // マウス通過時 idを取得して、props.inputDataの値をtooltipのテキストに渡す。
   function onMouseOver(e) {
+    // console.log("Click Rect")
+    if (mouseOverTimer) {
+      clearTimeout(mouseOverTimer);
+    }
+    mouseOverTimer = setTimeout(() => {
+      
     const targetItem = props.inputData.filter(
       (item) => item.id == e.target.getAttribute("id")
     )[0];
@@ -68,6 +80,9 @@ export const PlotArea = memo ((props) => {
       y: e.pageY - 20,
       visible: true,
     });
+  
+    }, 500);
+
   }
 
   // マウス通過終了時
@@ -149,7 +164,6 @@ export const PlotArea = memo ((props) => {
     }
   }, [props.height]);
 
-
   // 先にplotArrayにしてデータを絞りたいけど、データ生成に必要なので、ここは断念。
   const minTimeStamp =
     Math.floor(
@@ -160,26 +174,27 @@ export const PlotArea = memo ((props) => {
       ) / 3600000
     ) * 3600000;
 
-    console.log("Render PlotArea");
-    // console.log(props.inputData)
-    // console.log(props.colorSelected)
+  console.log("Render PlotArea");
+  // console.log(props.inputData)
+  // console.log(props.colorSelected)
   // filerを先にかませてデータを絞る。
   const plotArray = props.inputData
-    .filter((item) =>
-      (item.starting_time - minTimeStamp) * scaleFactor + cordinate.x <
-        svgWidth &&
-      (item.ending_time - minTimeStamp) * scaleFactor + cordinate.x > 0 &&
-      gMargin * (parseInt(item.group) - 1 / 2) +
-        gHeight * (parseInt(item.lane) - 1) +
-        cordinate.y <
-        svgHeight - plotStartY &&
-      gMargin * (parseInt(item.group) - 1 / 2) +
-        gHeight * parseInt(item.lane) +
-        cordinate.y >
-        0 &&
-      (props.filterText.text
-        ? item[props.filterText.item] === props.filterText.text
-        : true)
+    .filter(
+      (item) =>
+      // (props.filterText.text
+      //   ? item[props.filterText.item] === props.filterText.text
+      //   : true) &&
+        (item.starting_time - minTimeStamp) * scaleFactor + cordinate.x <
+          svgWidth &&
+        (item.ending_time - minTimeStamp) * scaleFactor + cordinate.x > 0 &&
+        gMargin * (parseInt(item.group) - 1 / 2) +
+          gHeight * (parseInt(item.lane) - 1) +
+          cordinate.y <
+          svgHeight - plotStartY &&
+        gMargin * (parseInt(item.group) - 1 / 2) +
+          gHeight * parseInt(item.lane) +
+          cordinate.y >
+          0 
     )
     .map((item) => ({
       key: item.id,
@@ -193,11 +208,18 @@ export const PlotArea = memo ((props) => {
         gHeight * (parseInt(item.lane) - 1) +
         plotStartY +
         cordinate.y,
-      barColor: 
+      barColor:
         item[props.searchText.item] === props.searchText.text
           ? "Red"
           : props.colorSelected.find((color) => color.name == item.color).value,
+      name:item.name,
+      grpname:item.grpname,
+      color:item.color,
+      desc:item.desc,
+      starting_time: item.starting_time,
       ending_time: item.ending_time,
+      group:item.group,
+      lane:item.lane,
     }));
 
   // 先にplotArrayにしてデータを絞ることでパフォーマンスを上げたい
@@ -209,11 +231,6 @@ export const PlotArea = memo ((props) => {
           .filter((value) => !isNaN(value))
       ) / 3600000
     ) * 3600000;
-
-    // console.log(plotArray)
-    // console.log(new Date(minTimeStamp).toLocaleString("ja-JP"))
-    // console.log(new Date(maxTimeStamp).toLocaleString("ja-JP"))
-    // console.log(Math.ceil((maxTimeStamp - minTimeStamp) / xAxisTimespan) )
 
   const xAxisArray = Array.from(
     { length: Math.ceil((maxTimeStamp - minTimeStamp) / xAxisTimespan) + 1 },
@@ -234,8 +251,7 @@ export const PlotArea = memo ((props) => {
         labelT: `${hours}`,
       };
     }
-  )
-  .filter(
+  ).filter(
     (item) =>
       item.cx < svgWidth - plotStartX &&
       item.cx > 0 &&
@@ -253,9 +269,9 @@ export const PlotArea = memo ((props) => {
       if (
         !recordsArray[group] ||
         (lane < recordsArray[group].lane &&
-          g_margin * (group - 1) + g_height(lane - 1) + ty <
+          g_margin * (group - 1) + g_height * (lane - 1) + ty <
             svgHeight - plotStartY &&
-          g_margin * (group - 1) + g_height(lane - 1) + ty >= 0)
+          g_margin * (group - 1) + g_height * (lane - 1) + ty >= 0)
       ) {
         // Groupごとに最小のkeyの値を更新
         recordsArray[group] = {
@@ -273,17 +289,31 @@ export const PlotArea = memo ((props) => {
   }
 
   const yAxisArray = makeyAxisArray(
-    props.inputData,
+    plotArray,
     gMargin,
     gHeight,
     plotStartY,
     cordinate.y
   );
+  
+  // console.log(plotArray)
+  // console.log(new Date(minTimeStamp).toLocaleString("ja-JP"))
+  // console.log(new Date(maxTimeStamp).toLocaleString("ja-JP"))
+  // console.log(Math.ceil((maxTimeStamp - minTimeStamp) / xAxisTimespan) )
+  // console.log("PlotArray")
+  // console.log(plotArray)
+  // console.log("yAxisArray")
+  // console.log(yAxisArray)
 
   return (
     <div>
       {/* <svg width={svgWidth} height={svgHeight} fill="#5FC2C0"> */}
-      <svg width={svgWidth} height={svgHeight} fill="#5FC2C0">
+      <svg
+        width={svgWidth}
+        height={svgHeight}
+        fill="#5FC2C0"
+        style={{ cursor: isMouseDown ? 'all-scroll' : 'default', }}
+      >
         <g id="plotArea-group" transform={`translate(0,0)`}>
           <defs>
             <clipPath id="plotArea-clip">
@@ -339,7 +369,9 @@ export const PlotArea = memo ((props) => {
                 stroke="green"
                 onMouseOver={onMouseOver}
                 onMouseOut={onMouseOut}
-                onDbClick={onDbClick}
+                // onClick={onDbClick}
+                // onDbClick={onDbClick}
+                tooltipPos={tooltipPos}
               />
             );
           })}
@@ -412,4 +444,4 @@ export const PlotArea = memo ((props) => {
       )}
     </div>
   );
-})
+});
