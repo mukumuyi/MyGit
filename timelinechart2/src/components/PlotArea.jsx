@@ -1,15 +1,16 @@
 import React, { useState, useRef, useEffect, memo } from "react";
 import Rect from "./Rect";
 import Line from "./Line";
+// import TextField from '@mui/material/TextField';
 // import { ParseDateCol } from "./DataControl";
 // import csvArray from "../csvArray.json";
 
 export const PlotArea = memo((props) => {
   // props
 
-  
   // eventHandle
-  const [cordinate, setCordinate] = useState({ x: 0, y: 0 });
+  // const [cordinate, setCordinate] = useState({ x: 0, y: 0 });
+  const {cordinate, setCordinate} = props
   const [gap, setGap] = useState({ x: 0, y: 0 });
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [tooltipText, setTooltipText] = useState({});
@@ -23,6 +24,11 @@ export const PlotArea = memo((props) => {
   // マウス押下時
   function onMouseDown(e) {
     setIsMouseDown(true);
+    setTooltipPos({
+      x: tooltipPos.x,
+      y: tooltipPos.y,
+      visible: false,
+    });
     const mouseX = e.pageX;
     const mouseY = e.pageY;
     setGap({ x: mouseX - cordinate.x, y: mouseY - cordinate.y });
@@ -50,10 +56,7 @@ export const PlotArea = memo((props) => {
     }
   }
 
-
-
-  
-let mouseOverTimer = '';
+  let mouseOverTimer = "";
 
   // マウス通過時 idを取得して、props.inputDataの値をtooltipのテキストに渡す。
   function onMouseOver(e) {
@@ -62,27 +65,24 @@ let mouseOverTimer = '';
       clearTimeout(mouseOverTimer);
     }
     mouseOverTimer = setTimeout(() => {
-      
-    const targetItem = props.inputData.filter(
-      (item) => item.id == e.target.getAttribute("id")
-    )[0];
-    setTooltipText({
-      start: new Date(targetItem.starting_time).toLocaleString("jp-JP"),
-      end: new Date(targetItem.ending_time).toLocaleString("jp-JP"),
-      name: targetItem.name,
-      grpname: targetItem.grpname,
-      color: targetItem.color,
-      desc: targetItem.desc,
-      id: targetItem.id,
-    });
-    setTooltipPos({
-      x: e.pageX + 10,
-      y: e.pageY - 20,
-      visible: true,
-    });
-  
+      const targetItem = props.inputData.filter(
+        (item) => item.id == e.target.getAttribute("id")
+      )[0];
+      setTooltipText({
+        start: new Date(targetItem.starting_time).toLocaleString("jp-JP"),
+        end: new Date(targetItem.ending_time).toLocaleString("jp-JP"),
+        name: targetItem.name,
+        grpname: targetItem.grpname,
+        color: targetItem.color,
+        desc: targetItem.desc,
+        id: targetItem.id,
+      });
+      setTooltipPos({
+        x: e.pageX + 10,
+        y: e.pageY - 20,
+        visible: true,
+      });
     }, 500);
-
   }
 
   // マウス通過終了時
@@ -96,6 +96,35 @@ let mouseOverTimer = '';
     }
   }
 
+  function changeToolTipStatus (e) {
+    if(tooltipPos.visible){
+      setTooltipPos({
+        x: tooltipPos.x,
+        y: tooltipPos.y,
+        visible: false,
+      });
+    } else {
+      const targetItem = props.inputData.filter(
+        (item) => item.id == e.target.getAttribute("id")
+      )[0];
+      // console.log(targetItem)
+      setTooltipText({
+        start: new Date(targetItem.starting_time).toLocaleString("jp-JP"),
+        end: new Date(targetItem.ending_time).toLocaleString("jp-JP"),
+        name: targetItem.name,
+        grpname: targetItem.grpname,
+        color: targetItem.color,
+        desc: targetItem.desc,
+        id: targetItem.id,
+      });
+      setTooltipPos({
+        x: e.pageX + 10,
+        y: e.pageY - 20,
+        visible: true,
+      });
+    }
+  }
+
   function onDbClick(e) {
     console.log("DbClick!!");
     if (showTooltipAll) {
@@ -104,6 +133,15 @@ let mouseOverTimer = '';
       setShowTooltipAll(true);
     }
   }
+
+  function moveToCenter (e){
+    setCordinate({
+      x: cordinate.x + svgWidth / 2 - e.target.getAttribute("x") < 0 ? cordinate.x + svgWidth / 2 - e.target.getAttribute("x") : 0,
+      y: cordinate.y + svgHeight / 2 - e.target.getAttribute("y") < 0 ? cordinate.y + svgHeight / 2 - e.target.getAttribute("y") : 0,
+    });
+  }
+
+
 
   // basic parameters
   const [svgWidth, setWidth] = useState(props.width ? props.width : 1350); //
@@ -164,6 +202,16 @@ let mouseOverTimer = '';
     }
   }, [props.height]);
 
+  // useEffect(()=>{
+  //   if(props.searchText.text){
+  //     console.log("SerchChange")
+  //     console.log(props.searchText)
+  //     console.log(props.inputData.filter((item)=>item[props.searchText.item]===props.searchText.text)[0])
+  //     const searchResult = props.inputData.filter((item)=>item[props.searchText.item]===props.searchText.text)[0];
+  //     console.log(plotArray.filter((item)=>item.id===searchResult.id))
+  //   }
+  // },[props.searchText.text])
+
   // 先にplotArrayにしてデータを絞りたいけど、データ生成に必要なので、ここは断念。
   const minTimeStamp =
     Math.floor(
@@ -181,9 +229,9 @@ let mouseOverTimer = '';
   const plotArray = props.inputData
     .filter(
       (item) =>
-      // (props.filterText.text
-      //   ? item[props.filterText.item] === props.filterText.text
-      //   : true) &&
+        // (props.filterText.text
+        //   ? item[props.filterText.item] === props.filterText.text
+        //   : true) &&
         (item.starting_time - minTimeStamp) * scaleFactor + cordinate.x <
           svgWidth &&
         (item.ending_time - minTimeStamp) * scaleFactor + cordinate.x > 0 &&
@@ -194,7 +242,7 @@ let mouseOverTimer = '';
         gMargin * (parseInt(item.group) - 1 / 2) +
           gHeight * parseInt(item.lane) +
           cordinate.y >
-          0 
+          0
     )
     .map((item) => ({
       key: item.id,
@@ -212,14 +260,14 @@ let mouseOverTimer = '';
         item[props.searchText.item] === props.searchText.text
           ? "Red"
           : props.colorSelected.find((color) => color.name == item.color).value,
-      name:item.name,
-      grpname:item.grpname,
-      color:item.color,
-      desc:item.desc,
+      name: item.name,
+      grpname: item.grpname,
+      color: item.color,
+      desc: item.desc,
       starting_time: item.starting_time,
       ending_time: item.ending_time,
-      group:item.group,
-      lane:item.lane,
+      group: item.group,
+      lane: item.lane,
     }));
 
   // 先にplotArrayにしてデータを絞ることでパフォーマンスを上げたい
@@ -249,6 +297,7 @@ let mouseOverTimer = '';
         cy: 25,
         labelD: `${dates}`,
         labelT: `${hours}`,
+        hour:currentTime.getHours(),
       };
     }
   ).filter(
@@ -258,6 +307,11 @@ let mouseOverTimer = '';
       item.cy < svgHeight - plotStartY &&
       item.cy > 0
   );
+  const xAxisArrayMinKey = Math.min.apply(null,xAxisArray.map((item) => (item.key)));
+  const xAxisArrayMinHour = Math.min.apply(null,xAxisArray.map((item) => (item.hour)));
+  // console.log(xAxisArrayMinKey)
+  // console.log(xAxisArrayMinHour)
+
 
   function makeyAxisArray(inputData, g_margin, g_height, plotStartY, ty) {
     //縦軸のラベル用データ作成
@@ -279,7 +333,7 @@ let mouseOverTimer = '';
           group: item.grpname,
           lane: lane,
           coord: "yAxis",
-          cx: 0,
+          cx: 10,
           cy: g_margin * (group - 1) + g_height * (lane - 1) + plotStartY + ty,
         };
       }
@@ -295,7 +349,7 @@ let mouseOverTimer = '';
     plotStartY,
     cordinate.y
   );
-  
+
   // console.log(plotArray)
   // console.log(new Date(minTimeStamp).toLocaleString("ja-JP"))
   // console.log(new Date(maxTimeStamp).toLocaleString("ja-JP"))
@@ -303,6 +357,7 @@ let mouseOverTimer = '';
   // console.log("PlotArray")
   // console.log(plotArray)
   // console.log("yAxisArray")
+  // console.log(xAxisArray)
   // console.log(yAxisArray)
 
   return (
@@ -312,7 +367,7 @@ let mouseOverTimer = '';
         width={svgWidth}
         height={svgHeight}
         fill="#5FC2C0"
-        style={{ cursor: isMouseDown ? 'all-scroll' : 'default', }}
+        style={{ cursor: isMouseDown ? "all-scroll" : "default" }}
       >
         <g id="plotArea-group" transform={`translate(0,0)`}>
           <defs>
@@ -367,11 +422,12 @@ let mouseOverTimer = '';
                 width={item.length}
                 fill={item.barColor}
                 stroke="green"
-                onMouseOver={onMouseOver}
-                onMouseOut={onMouseOut}
-                // onClick={onDbClick}
-                // onDbClick={onDbClick}
-                tooltipPos={tooltipPos}
+                onClick={changeToolTipStatus}
+                // onClick={moveToCenter}
+                // onClick={onMouseOver}
+                // onMouseOver={onMouseOver}
+                // onMouseOut={onMouseOut}
+                // tooltipPos={tooltipPos}
               />
             );
           })}
@@ -393,11 +449,26 @@ let mouseOverTimer = '';
           ></rect>
           {xAxisArray.map((item) => {
             return (
+              (item.key === xAxisArrayMinKey || item.hour === xAxisArrayMinHour) &&
               <text
                 key={item.key}
                 className="xAxis1 marker-label "
                 x={item.cx}
                 y={item.cy}
+                fill={fontColor}
+                style={{ fontSize: fontSize, fontWeight: "bold" }}
+              >
+                {item.labelD}
+              </text>
+            );
+          })}
+          {xAxisArray.map((item) => {
+            return (
+              <text
+                key={item.key}
+                className="xAxis1 marker-label "
+                x={item.cx}
+                y={item.cy + fontSize}
                 fill={fontColor}
                 style={{ fontSize: fontSize, fontWeight: "bold" }}
               >

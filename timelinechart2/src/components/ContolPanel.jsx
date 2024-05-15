@@ -3,6 +3,8 @@ import FormSelect from "./FormSelect";
 import FormColor from "./FormColor";
 import { FaFolderOpen } from "react-icons/fa";
 import { IoCloseSharp,IoMenuSharp } from "react-icons/io5";
+import { RiArrowGoBackFill } from "react-icons/ri";
+
 
 export default function ControlPanel(props) {
   const {
@@ -24,6 +26,8 @@ export default function ControlPanel(props) {
     handleSubmitSerch,
     handleSubmitFilter,
     sampleDate,
+    cordinate, 
+    setCordinate,
   } = props;
 
   const timeSpan = [
@@ -56,11 +60,17 @@ export default function ControlPanel(props) {
           margin: "5pt",
           display: "inline-flex",
           flexFlow: "row wrap",
-          gap: "5pt 10pt",
+          gap: "5pt 5pt",
         }}
       >
         <div onClick={changeDispState}>
           <FaFolderOpen
+          size="30pt"
+          color="#50a3a2"
+          />
+        </div>
+        <div onClick={()=>{setCordinate({x:0,y:0})}}>
+          <RiArrowGoBackFill
           size="30pt"
           color="#50a3a2"
           />
@@ -86,8 +96,8 @@ export default function ControlPanel(props) {
           className="control-panel"
           style={{
             position: "absolute",
-            top: "10pt",
-            left: "90pt",
+            top: "5pt",
+            left: "110pt",
             opacity: dispControlPanel,
           }}
         >

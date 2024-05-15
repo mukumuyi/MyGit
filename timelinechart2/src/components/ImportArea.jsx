@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import Form from "./Form";
 import FormSelect from "./FormSelect";
 import FormColor from "./FormColor";
-import { HeaderFromLocalFile, DrawGraph ,HeaderFromData} from "./DataInput";
+import { HeaderFromLocalFile, DrawGraph, HeaderFromData } from "./DataInput";
 import FormInputFile from "./FormInputFile";
 import { FaDatabase, FaFolderOpen } from "react-icons/fa";
 import { FaChartGantt, FaEarthAsia } from "react-icons/fa6";
+import Box from "@mui/material/Box";
+import { DataGrid } from "@mui/x-data-grid";
 
 // 画面の表示・非表示ボタンの実装
 // 入力タイプの実装（LOCAL、DB、SITE）
@@ -24,6 +26,7 @@ function ImportArea(props) {
     inputData,
     setInputData,
     setOriginData,
+    originData,
     sampleDate,
     setDrawFlag,
   } = props;
@@ -72,7 +75,7 @@ function ImportArea(props) {
       const response = await fetch("http://localhost:3000/api/db", params);
       const data = await response.json();
       // console.log(data.rows);
-      HeaderFromData(data.rows, setColSelector, setInputData)
+      HeaderFromData(data.rows, setColSelector, setInputData);
     } catch (error) {
       console.error("エラー:", error);
     }
@@ -83,13 +86,9 @@ function ImportArea(props) {
       const response = await fetch(
         "http://localhost:3000/api/file/" + selectedFile
       );
-      // console.log(response)
-      // const data = await response.text();
       const data = await response.json();
       console.log(data);
-      // console.log(typeof data);
-      // setTasks(data.rows);
-      HeaderFromData(data, setColSelector, setInputData,setOriginData)   
+      HeaderFromData(data, setColSelector, setInputData, setOriginData);
     } catch (error) {
       console.error("エラー:", error);
     }
@@ -141,7 +140,7 @@ function ImportArea(props) {
   };
 
   function selectFile(e) {
-    HeaderFromLocalFile(e, setColSelector,setInputData, setOriginData);
+    HeaderFromLocalFile(e, setColSelector, setInputData, setOriginData);
   }
 
   // useEffect(() => {
@@ -154,6 +153,11 @@ function ImportArea(props) {
   // }, [colSelector]);
 
   console.log("Render ImportArea");
+  console.log(colSelector.map((item) => {
+    return {...item,field:item.name,headerName:item.name}
+  }
+  ));
+  console.log(originData)
   return (
     <>
       <div
@@ -228,7 +232,7 @@ function ImportArea(props) {
             <div
               style={{
                 marginTop: "5pt",
-                display:"grid" ,
+                display: "grid",
                 gridTemplateColumns: "1fr 1fr",
               }}
             >
@@ -316,6 +320,28 @@ function ImportArea(props) {
               selectItem={dateTypeSel}
             />
             <FormColor array={colorSelected} onChange={onChangeColor} />
+          </div>
+          <div>
+            <Box sx={{ height: 350, width: "100%" ,background: "white" }}>
+              <DataGrid
+                rows={originData}
+                columns={colSelector.map((item) => {
+                  return {...item,field:item.name,headerName:item.name}
+                }
+                )}
+                headerAlign="center"
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 5,
+                    },
+                  },
+                }}
+                pageSizeOptions={[5]}
+                // checkboxSelection
+                disableRowSelectionOnClick
+              />
+            </Box>
           </div>
         </div>
       </div>

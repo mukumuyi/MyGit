@@ -14,8 +14,8 @@ import Trial from "./Trial";
 // 5.軸変更機能 -> 完了
 //
 // 3.コンポーネントを分割する。
-// 4.データ選択画面を追加する。（読込形式と指定、カラムの紐づけ、）
-// パラメータを外部入力にする。
+// 4.データ選択画面を追加する。（読込形式と指定、カラムの紐づけ、） -> 完了
+// パラメータを外部入力にする。 -> 保留
 // 5.画面遷移を実装する。
 // データ選択画面
 //  (1)データの形式を選ぶ -> 完了
@@ -31,22 +31,30 @@ import Trial from "./Trial";
 // 002.Filter設定後に表示されていない領域のデータを描画できない。 -> 完了
 //
 // 機能拡張
+// サンプルデータの表示
+// エラーメッセージを出す。
+// コメントを残す機能。
+// 
 //   b.DBの場合はDBMS選択、接続DB情報、クエリ作成、データ取得からの処理
+// いくつか、イベントアクションを作っておく。
+//  ・画面の中心にクリックしたものを持ってくる。
+//  ・Tooltipを表示する。（メモもできる。）
+//  ・ToolTipの動き（クリックか？マウスオーバーか？）
+//  ・
+//  
+// 対象を数秒さわり続けたらtooltipが表示
+// 対象をクリックしてもtooptipを固定表示
+// 検索した場合それを画面の中心に持っていく動きを追加する。-> あまり需要なさそう保留
+// クリックしたら画面の真ん中に来て詳細を表示してくれる。 ->　着手
+// 
 // フォームやCSSの精査(cssファイルはなくしたい。) -> 着手
 // レンダー回数の減少対応 -> 着手
 // ファイル読み込み系の処理の整理 -> 着手
-// クリックしたら画面の真ん中に来て詳細を表示してくれる。
-// サンプルデータの表示
-// コメントを残す機能。
 // 大量データ向けの対応（JsonまではcsvToJsonで作って、そこから描画をする形式？）
-// 最初の表示に戻すボタン リターンボタン。
+// 最初の表示に戻すボタン リターンボタン。 ->　完了
 // 2.画面の表示設定メニューを追加する。
-// 対象を数秒さわり続けたらtooltipが表示
-// 対象をクリックしてもtooptipを固定表示
-// 6.ズームスライダーの実装
-// 検索した場合それを画面の中心に持っていく動きを追加する。
 // スクロールによる画面の表示変更。
-// エラーメッセージを出す。
+// 6.ズームスライダーの実装 -> イベントが多発しそうなので、一旦保留。
 
 export const Timeline = (props) => {
   const [dispType, setDispType] = useState("Import");
@@ -62,6 +70,7 @@ export const Timeline = (props) => {
 
   const [timeSelected, setTimeSelected] = useState("172800000");
   const [widthSelected, setWidthSelected] = useState("8");
+  const [cordinate, setCordinate] = useState({ x: 0, y: 0 });
 
   const [colorSelected, setColorSelected] = useState([
     { id: 1, name: "Wait", value: "#c7cacc", label: "Wait" },
@@ -238,23 +247,22 @@ export const Timeline = (props) => {
     setFilterText({ item: e.target[0].value, text: e.target[1].value });
   }
 
-let resizeTimer = '';
-window.onresize = () => {
-  if (resizeTimer) {
-    clearTimeout(resizeTimer);
-  }
-  resizeTimer = setTimeout(() => {
-    setScreenSize({
-          screenWidth: document.documentElement.clientWidth,
-          screenHeight: document.documentElement.clientHeight,
-      })
-  }, 200);
-};
+  let resizeTimer = "";
+  window.onresize = () => {
+    if (resizeTimer) {
+      clearTimeout(resizeTimer);
+    }
+    resizeTimer = setTimeout(() => {
+      setScreenSize({
+        screenWidth: document.documentElement.clientWidth,
+        screenHeight: document.documentElement.clientHeight,
+      });
+    }, );
+  };
 
   function drawFromLocalFile(e) {
     DrawFromLocalFile(e, convDef, setInputData, setOriginData, setColSelector);
   }
-
 
   useEffect(() => {
     if (dispType === "Draw") {
@@ -273,6 +281,7 @@ window.onresize = () => {
   // }, [inputData]);
 
   console.log("Render Timeline");
+  // console.log(originData)
 
   return (
     <div>
@@ -290,6 +299,7 @@ window.onresize = () => {
           inputData={inputData}
           setInputData={setInputData}
           setOriginData={setOriginData}
+          originData={originData}
           sampleDate={sampleDate}
           setDrawFlag={setDrawFlag}
         />
@@ -314,13 +324,15 @@ window.onresize = () => {
           handleSubmitSerch={handleSubmitSerch}
           handleSubmitFilter={handleSubmitFilter}
           sampleDate={sampleDate}
+          setCordinate={setCordinate}
+          cordinate={cordinate}
         />
       )}
       {dispType === "Draw" && drawFlag && (
         <PlotArea
           width={screenSize.screenWidth}
           height={screenSize.screenHeight}
-          fontSize="10"
+          fontSize="18"
           gHeight={widthSelected}
           frameTimespan={timeSelected}
           style={{ position: "absolute", left: "0", top: "0" }}
@@ -328,6 +340,8 @@ window.onresize = () => {
           filterText={filterText}
           colorSelected={colorSelected}
           inputData={inputData}
+          setCordinate={setCordinate}
+          cordinate={cordinate}
         />
       )}
     </div>

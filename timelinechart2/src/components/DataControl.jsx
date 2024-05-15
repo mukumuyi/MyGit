@@ -61,7 +61,7 @@ export const ParseCSV = function parseCSV(inputData) {
   lines.shift(); // 先頭行の削除
   return lines
     .filter((line) => line.length > 1) // 空白行を除外
-    .map((item) => {
+    .map((item,index) => {
       let datas = item.split(",");
       let result = {};
       let key;
@@ -70,6 +70,7 @@ export const ParseCSV = function parseCSV(inputData) {
           key = header[index];
           result[key] = datas[index];
         }
+        result.id = index + 1
       }
       return result;
     });
@@ -101,7 +102,7 @@ export const ConvertData = function convertDate(inputData, convDef) {
   return inputData.map((item, index) => {
     return {
       ...item,
-      id: index,
+      // id: index,
       name: item[convDef.colName],
       grpname: item[convDef.colGrp],
       desc: item[convDef.colDesc],
