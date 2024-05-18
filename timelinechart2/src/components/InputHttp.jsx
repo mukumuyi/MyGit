@@ -1,4 +1,5 @@
-import { FaEarthAsia } from "react-icons/fa6";
+import { FaPlay, FaRegWindowClose } from "react-icons/fa";
+
 import FormSelect from "./FormSelect";
 import { HeaderFromData } from "./DataInput";
 
@@ -9,9 +10,9 @@ const InputHttp = (props) => {
     setOriginData,
     selectedFile,
     onChangeSelectedFile,
+    onCloseClick,
     fileList,
   } = props;
-
 
   const readFileFromHttp = async () => {
     try {
@@ -22,18 +23,27 @@ const InputHttp = (props) => {
       HeaderFromData(data, setColSelector, setInputData, setOriginData);
     } catch (error) {
       console.error("エラー:", error);
+      alert("ファイル取得エラーが発生しました。\n" + error);
     }
   };
 
   return (
     <div
       style={{
+        display: "flex",
+        flexDirection: "column",
         marginTop: "5pt",
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr",
       }}
     >
-      <FaEarthAsia size="30pt" onClick={readFileFromHttp} />
+      <div style={{ display: "inline-flex",gap:"5pt" ,margin:"10pt"}}>
+        <FaPlay size="20pt" onClick={readFileFromHttp} />
+        <FaRegWindowClose
+          size="20pt"
+          onClick={() => {
+            onCloseClick("LOCAL");
+          }}
+        />
+      </div>
       <FormSelect
         id="httpFile"
         label="ファイル選択"

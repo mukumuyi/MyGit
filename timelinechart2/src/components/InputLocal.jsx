@@ -10,7 +10,7 @@ const InputLocal = (props) => {
       }}
     >
       <FormInputFile selectFile={selectFile}>
-        <FaFolderOpen size="30pt" />
+        <FaFolderOpen size="15pt" />
       </FormInputFile>
     </div>
   );

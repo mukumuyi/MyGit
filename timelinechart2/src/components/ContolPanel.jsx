@@ -15,19 +15,15 @@ export default function ControlPanel(props) {
     colSelector,
     onChangeCol,
     convDef,
-    dateTypeSel,
     onChangeTime,
     timeSelected,
     onChangeWidth,
     widthSelected,
     onChangeColor,
     colorSelected,
-    selectFile,
     itemSelector,
     handleSubmitSerch,
     handleSubmitFilter,
-    sampleDate,
-    cordinate, 
     setCordinate,
   } = props;
 
@@ -74,7 +70,7 @@ export default function ControlPanel(props) {
             />
           )}
         </div>
-      </div>
+        
       {dispControlPanel === 1 && (
         <div
           className="control-panel"
@@ -138,6 +134,7 @@ export default function ControlPanel(props) {
           </div>
         </div>
       )}
+      </div>
     </>
   );
 }

@@ -1,8 +1,6 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { createRoot } from 'react-dom/client';
-import Timeline from "./components/Timeline";
-import Trial from "./components/Trial"
+import Timeline from "./components/TimelineForLight";
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
