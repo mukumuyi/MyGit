@@ -4,6 +4,7 @@ import FormColor from "./FormColor";
 import { FaFolderOpen } from "react-icons/fa";
 import { IoCloseSharp,IoMenuSharp } from "react-icons/io5";
 import { RiArrowGoBackFill } from "react-icons/ri";
+import {BarWidthDef,TimeSpanDef} from "./Config"
 
 
 export default function ControlPanel(props) {
@@ -30,29 +31,12 @@ export default function ControlPanel(props) {
     setCordinate,
   } = props;
 
-  const timeSpan = [
-    { id: 1, name: "Span1h", value: "3600000", label: "1時間" },
-    { id: 2, name: "Span2h", value: "7200000", label: "2時間" },
-    { id: 3, name: "Span6h", value: "21600000", label: "6時間" },
-    { id: 4, name: "Span12h", value: "43200000", label: "12時間" },
-    { id: 5, name: "Span1d", value: "86400000", label: "1日" },
-    { id: 6, name: "Span2d", value: "172800000", label: "2日" },
-  ];
-
-  const barWidth = [
-    { id: 1, name: "BarThick", value: "40", label: "太" },
-    { id: 2, name: "BarRegular", value: "20", label: "標準" },
-    { id: 3, name: "BarThin", value: "12", label: "細" },
-    { id: 4, name: "BarThinest", value: "8", label: "超細" },
-  ];
+  const timeSpan = TimeSpanDef;
+  const barWidth = BarWidthDef;
 
   console.log("Render ContolPanel");
   return (
     <>
-      {/* <div className="menu-buttom" style={{ position: "absolute", top: "5pt", left: "5pt" }}
-    onClick={props.changeDispState} >
-      <File x="0pt" y="0pt" width="30pt" height="30pt" color="#50a3a2" />      
-  </div> */}
       <div
         className="menu-buttom"
         style={{

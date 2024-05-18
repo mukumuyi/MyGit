@@ -4,6 +4,7 @@ import { PlotArea } from "./PlotArea";
 import ControlPanel from "./ContolPanel";
 import { DrawFromLocalFile, DrawNewProperty } from "./DataInput";
 import Trial from "./Trial";
+import {BasicProperty,ColorSelectDef,ItemSelectDef,ColSelectDef,InputDataDef} from "./Config"
 
 // 実装したいこと　～Googleマップ風のTimelineチャートを作る。～
 // 1.SVGを一枚にする。 -> 完了
@@ -68,21 +69,16 @@ export const Timeline = (props) => {
   // inputDate更新前に描画を行うとエラーが発生するため、描画処理を停止するフラグ
   const [drawFlag, setDrawFlag] = useState(true);
 
-  const [timeSelected, setTimeSelected] = useState("172800000");
-  const [widthSelected, setWidthSelected] = useState("8");
+  const [timeSelected, setTimeSelected] = useState(BasicProperty.timeSeleced);
+  const [widthSelected, setWidthSelected] = useState(BasicProperty.widthSelected);
   const [cordinate, setCordinate] = useState({ x: 0, y: 0 });
 
-  const [colorSelected, setColorSelected] = useState([
-    { id: 1, name: "Wait", value: "#c7cacc", label: "Wait" },
-    { id: 2, name: "Fix", value: "#7f8b94", label: "Fix" },
-    { id: 3, name: "Run", value: "#203b4c", label: "Run" },
-    { id: 4, name: "Mente", value: "#e66465", label: "Mente" },
-  ]);
+  const [colorSelected, setColorSelected] = useState(ColorSelectDef);
 
   const [sampleDate, setSampleDate] = useState("");
 
-  const [searchText, setSearchText] = useState({ item: "name", text: null });
-  const [filterText, setFilterText] = useState({ item: "name", text: null });
+  const [searchText, setSearchText] = useState({ item: ItemSelectDef[0].name, text: null });
+  const [filterText, setFilterText] = useState({ item: ItemSelectDef[0].name, text: null });
 
   const dateTypeSel = [
     {
@@ -100,24 +96,7 @@ export const Timeline = (props) => {
     },
   ];
 
-  const [colSelector, setColSelector] = useState([
-    { id: 1, name: "label", value: "label", label: "label" },
-    { id: 2, name: "class", value: "class", label: "class" },
-    { id: 3, name: "name", value: "name", label: "name" },
-    { id: 4, name: "status", value: "status", label: "status" },
-    {
-      id: 5,
-      name: "starting_time",
-      value: "starting_time",
-      label: "starting_time",
-    },
-    {
-      id: 6,
-      name: "ending_time",
-      value: "ending_time",
-      label: "ending_time  ",
-    },
-  ]);
+  const [colSelector, setColSelector] = useState(ColSelectDef);
 
   const [convDef, setConvDef] = useState({
     colStart: "starting_time",
@@ -129,34 +108,11 @@ export const Timeline = (props) => {
     dateType: "YYYY/MM/DD HH:mm:SS",
   });
 
-  const [inputData, setInputData] = useState([
-    {
-      label: "PERSON_B",
-      class: "H",
-      name: "NAME_43",
-      time1: "1703808000000 ",
-      time2: "1703814500000 ",
-      status: "Fix",
-      starting_time: 1703775600000,
-      ending_time: 1703776560000,
-      id: 0,
-      grpname: "PERSON_B",
-      desc: "PERSON_B",
-      color: "Fix",
-      group: 1,
-      lane: 1,
-    },
-  ]);
+  const [inputData, setInputData] = useState(InputDataDef);
 
   const [originData, setOriginData] = useState([]);
 
-  const itemSelector = [
-    { id: 1, name: "name", value: "name", label: "name" },
-    { id: 2, name: "grpname", value: "grpname", label: "grpname" },
-    { id: 3, name: "color", value: "color", label: "color" },
-    { id: 4, name: "desc", value: "desc", label: "desc" },
-    { id: 5, name: "id", value: "id", label: "id" },
-  ];
+  const itemSelector = ItemSelectDef;
 
   const changeDispState = () => {
     if (dispType === "Import") {

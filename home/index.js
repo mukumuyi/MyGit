@@ -15,6 +15,7 @@ const app = express();
 const port = 3000;
 env.config();
 
+
 // 静的ファイルの提供
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -64,9 +65,10 @@ app.get("/api/file/:filename", (req, res) => {
   console.log("FILE GET START:", new Date().toLocaleTimeString("it-IT"));
 
   const filepath = path.join(datadir, req.params.filename);
+  // console.log(filepath)
 
   fs.readFile(filepath, { encoding: "utf8" }, (err, data) => {
-    console.log(data);
+    // console.log(data);
     if (err) {
       res.status(404).send("File not found");
     } else {

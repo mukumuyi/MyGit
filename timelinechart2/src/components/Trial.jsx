@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from "react";
 import GenerateColorRange from "./GenerateColorRange"
-import Card from "./Card";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
-import Contacts from "../contacts";
-import Tooltip from "./Tooltip";
-import Button from "@mui/material/Button";
-import ColorPalette from "./Colorpalette";
 
 function Trial() {
   const [sql, setSql] = useState("SELECT id, name FROM public.users");

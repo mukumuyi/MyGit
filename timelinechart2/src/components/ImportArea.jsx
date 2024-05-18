@@ -3,15 +3,18 @@ import Form from "./Form";
 import FormSelect from "./FormSelect";
 import FormColor from "./FormColor";
 import { HeaderFromLocalFile, DrawGraph, HeaderFromData } from "./DataInput";
-import FormInputFile from "./FormInputFile";
-import { FaDatabase, FaFolderOpen } from "react-icons/fa";
-import { FaChartGantt, FaEarthAsia } from "react-icons/fa6";
-import Box from "@mui/material/Box";
-import { DataGrid } from "@mui/x-data-grid";
+import { FaChartGantt } from "react-icons/fa6";
+import Datagrid from "./Datagrid";
+import InputLocal from "./InputLocal";
+import InputDB from "./InputDB";
+import InputHttp from "./InputHttp";
+import {InputTypeSelectDef,SqlDef,FileListDef} from "./Config"
 
 // 画面の表示・非表示ボタンの実装
-// 入力タイプの実装（LOCAL、DB、SITE）
+// 入力タイプの実装（LOCAL、DB、HTTP）
 // SQLエディタの実装
+// Gridデータの表示
+// 
 
 function ImportArea(props) {
   const {
@@ -31,29 +34,11 @@ function ImportArea(props) {
     setDrawFlag,
   } = props;
 
-  const inputTypeSelector = [
-    { id: 1, name: "LOCAL", value: "LOCAL", label: "LOCAL" },
-    { id: 2, name: "DB", value: "DB", label: "DB" },
-    { id: 3, name: "HTTP", value: "HTTP", label: "HTTP" },
-  ];
-
-  const [inputTypeSelected, setInputTypeSelected] = useState("LOCAL");
-  const [sql, setSql] = useState("SELECT id, name FROM public.users");
-  const [fileList, setFileList] = useState([
-    {
-      id: 0,
-      name: "input00.csv",
-      value: "input00.csv",
-      label: "input00.csv",
-    },
-    {
-      id: 1,
-      name: "input01.csv",
-      value: "input01.csv",
-      label: "input01.csv",
-    },
-  ]);
-  const [selectedFile, setSelectedFile] = useState("input00.csv");
+  const inputTypeSelector = InputTypeSelectDef
+  const [inputTypeSelected, setInputTypeSelected] = useState(InputTypeSelectDef[0].name);
+  const [sql, setSql] = useState(SqlDef);
+  const [fileList, setFileList] = useState(FileListDef);
+  const [selectedFile, setSelectedFile] = useState(FileListDef[0].name);
 
   const executeQuery = async () => {
     try {
@@ -81,19 +66,6 @@ function ImportArea(props) {
     }
   };
 
-  const readFileFromHttp = async (selectedFile) => {
-    try {
-      const response = await fetch(
-        "http://localhost:3000/api/file/" + selectedFile
-      );
-      const data = await response.json();
-      console.log(data);
-      HeaderFromData(data, setColSelector, setInputData, setOriginData);
-    } catch (error) {
-      console.error("エラー:", error);
-    }
-  };
-
   const makeFileList = async () => {
     try {
       const response = await fetch("http://localhost:3000/api/filelist");
@@ -104,10 +76,6 @@ function ImportArea(props) {
     }
   };
 
-  // useEffect(() => {
-  //   getIncompleteTasks();
-  // }, [sql]);
-
   // textareaの値が変更されたときに実行される関数
   const handleTextareaChange = (event) => {
     setSql(event.target.value);
@@ -117,22 +85,23 @@ function ImportArea(props) {
     executeQuery();
   };
 
-  const onHttpClick = () => {
-    readFileFromHttp(selectedFile);
-  };
-
   const onStartDraw = async function (e) {
     await DrawGraph(convDef, inputData, setInputData, setDrawFlag);
     changeDispState();
   };
 
   const onChangeInputType = (e) => {
+    // if (e.target.value === "HTTP") {
+    //   makeFileList();
+    // }
     setInputTypeSelected(e.target.value);
-    // console.log(e.target.value)
-    if (e.target.value === "HTTP") {
+  };
+
+  useEffect(() => {
+    if (inputTypeSelected === "HTTP") {
       makeFileList();
     }
-  };
+  }, [inputTypeSelected]); 
 
   const onChangeSelectedFile = (e) => {
     // console.log(e.target.value)
@@ -143,21 +112,12 @@ function ImportArea(props) {
     HeaderFromLocalFile(e, setColSelector, setInputData, setOriginData);
   }
 
-  // useEffect(() => {
-  //   console.log(inputData);
-  //   console.log(convDef);
-  // }, [inputData]);
-
-  // useEffect(() => {
-  //   console.log(colSelector);
-  // }, [colSelector]);
-
-  console.log("Render ImportArea");
-  console.log(colSelector.map((item) => {
-    return {...item,field:item.name,headerName:item.name}
-  }
-  ));
-  console.log(originData)
+  console.log(
+    "=== RENDER ImportArea START  :",
+    new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
+    "==="
+    );
+    
   return (
     <>
       <div
@@ -180,71 +140,33 @@ function ImportArea(props) {
             margin: "5pt",
           }}
         >
-          <div>
-            <Form
-              type="inline-radio"
-              array={inputTypeSelector}
-              onChange={onChangeInputType}
-              selected={inputTypeSelected}
-            />
-          </div>
+          <Form
+            type="inline-radio"
+            array={inputTypeSelector}
+            onChange={onChangeInputType}
+            selected={inputTypeSelected}
+          />
 
           {inputTypeSelected === "LOCAL" && (
-            <div
-              style={{
-                marginTop: "5pt",
-              }}
-            >
-              <FormInputFile selectFile={selectFile}>
-                <FaFolderOpen size="30pt" />
-                {/* <File x="0pt" y="5pt" width="30pt" height="30pt" color="white" /> */}
-              </FormInputFile>
-            </div>
+            <InputLocal selectFile={selectFile} />
           )}
           {inputTypeSelected === "DB" && (
-            <div>
-              <form
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  marginTop: "5pt",
-                }}
-              >
-                <FaDatabase size="30pt" onClick={onDbClick} />
-                <textarea
-                  name="sql"
-                  id="sqledit"
-                  cols="30"
-                  rows="10"
-                  placeholder="Please enter SQL & click DB icon"
-                  value={sql} // textareaの値をstateと紐付ける
-                  onChange={handleTextareaChange} // textareaの値が変更されたときに呼び出される関数を指定
-                  style={{
-                    // width: "200pt",
-                    margin: "5pt",
-                  }}
-                ></textarea>
-              </form>
-            </div>
+            <InputDB
+              onDbClick={onDbClick}
+              sql={sql}
+              handleTextareaChange={handleTextareaChange}
+            />
           )}
 
           {inputTypeSelected === "HTTP" && (
-            <div
-              style={{
-                marginTop: "5pt",
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-              }}
-            >
-              <FaEarthAsia size="30pt" onClick={onHttpClick} />
-              <FormSelect
-                id="httpFile"
-                label="ファイル選択"
-                value={selectedFile}
-                onChangeCol={onChangeSelectedFile}
-                selectItem={fileList}
-              />
-            </div>
+            <InputHttp
+              selectedFile={selectedFile}
+              onChangeSelectedFile={onChangeSelectedFile}
+              fileList={fileList}
+              setColSelector={setColSelector}
+              setInputData={setInputData}
+              setOriginData={setOriginData}
+            />
           )}
         </div>
         <div
@@ -322,26 +244,7 @@ function ImportArea(props) {
             <FormColor array={colorSelected} onChange={onChangeColor} />
           </div>
           <div>
-            <Box sx={{ height: 350, width: "100%" ,background: "white" }}>
-              <DataGrid
-                rows={originData}
-                columns={colSelector.map((item) => {
-                  return {...item,field:item.name,headerName:item.name}
-                }
-                )}
-                headerAlign="center"
-                initialState={{
-                  pagination: {
-                    paginationModel: {
-                      pageSize: 5,
-                    },
-                  },
-                }}
-                pageSizeOptions={[5]}
-                // checkboxSelection
-                disableRowSelectionOnClick
-              />
-            </Box>
+            <Datagrid originData={originData} colSelector={colSelector} />
           </div>
         </div>
       </div>
