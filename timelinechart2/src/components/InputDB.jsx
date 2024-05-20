@@ -1,7 +1,35 @@
 import { FaPlay, FaRegWindowClose } from "react-icons/fa";
+import {HeaderFromDB} from "./DataInput";
 
 const ImputDB = (props) => {
-  const { onDbClick, onCloseClick, sql, handleTextareaChange } = props;
+  const {onCloseClick, sql, handleTextareaChange , setColSelector, setInputData,setOriginData} = props;
+
+  const executeQuery = async () => {
+    try {
+      const params = {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json", // JSON形式のデータのヘッダー
+        },
+        body: JSON.stringify({
+          // 基本的にはDBの切り替えはサーバー側の処理で行う。
+          // host: "localhost",
+          // user: "postgres",
+          // database: "world",
+          // password: "XXXX",
+          // port: "5432",
+          sql: sql,
+        }),
+      };
+      const response = await fetch("http://localhost:3000/api/db", params);
+      const data = await response.json();
+      HeaderFromDB(data.rows, setColSelector, setInputData,setOriginData);
+    } catch (error) {
+      console.error("エラー:", error);
+      alert("データ取得エラーが発生しました。\n" + error);
+    }
+  };
+
   return (
     <div>
       <form
@@ -12,9 +40,9 @@ const ImputDB = (props) => {
         }}
       >
         <div style={{ display: "inline-flex", gap: "5pt"  ,margin:"10pt"}}>
-          <FaPlay size="20pt" onClick={onDbClick} />
+          <FaPlay size="15pt" onClick={executeQuery} />
           <FaRegWindowClose
-            size="20pt"
+            size="15pt"
             onClick={() => {
               onCloseClick("LOCAL");
             }}

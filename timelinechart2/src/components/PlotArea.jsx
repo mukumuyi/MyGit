@@ -223,7 +223,7 @@ export const PlotArea = memo((props) => {
       ) / 3600000
     ) * 3600000)
 
-  console.log("Render PlotArea");
+  // console.log("Render PlotArea");
   // console.log(props.inputData)
   // console.log(props.colorSelected)
   // filerを先にかませてデータを絞る。
@@ -349,6 +349,12 @@ export const PlotArea = memo((props) => {
     gHeight,
     plotStartY,
     cordinate.y
+  );
+
+  console.log(
+    "=== RENDER PLOT AREA START  :",
+    new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
+    "==="
   );
 
   // console.log(plotArray)

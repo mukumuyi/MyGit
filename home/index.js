@@ -79,7 +79,7 @@ app.get("/api/file/:filename", (req, res) => {
 
 app.post("/api/db", async (req, res) => {
   console.log("DB GET START:", new Date().toLocaleTimeString("it-IT"));
-  console.log(req.body);
+  // console.log(req.body);
   try {
     // const pgdb = new pg.Client({
     //   host:req.body.host,
@@ -103,6 +103,7 @@ app.post("/api/db", async (req, res) => {
     // );
 
     res.send(result);
+    // console.log(result);
   } catch (err) {
     console.error(err);
   }

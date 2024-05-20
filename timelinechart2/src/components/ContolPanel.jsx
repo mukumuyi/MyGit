@@ -1,7 +1,6 @@
 import Form from "./Form";
 import FormSelect from "./FormSelect";
 import FormColor from "./FormColor";
-import { FaFolderOpen } from "react-icons/fa";
 import { IoCloseSharp,IoMenuSharp } from "react-icons/io5";
 import { RiArrowGoBackFill } from "react-icons/ri";
 import {BarWidthDef,TimeSpanDef} from "./Config"
@@ -9,7 +8,6 @@ import {BarWidthDef,TimeSpanDef} from "./Config"
 
 export default function ControlPanel(props) {
   const {
-    changeDispState,
     dispControlPanel,
     changeDispControlPanelState,
     colSelector,
@@ -30,7 +28,12 @@ export default function ControlPanel(props) {
   const timeSpan = TimeSpanDef;
   const barWidth = BarWidthDef;
 
-  console.log("Render ContolPanel");
+  console.log(
+    "=== RENDER CONTOL PANEL START  :",
+    new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
+    "==="
+  );
+  
   return (
     <>
       <div
@@ -43,12 +46,12 @@ export default function ControlPanel(props) {
           gap: "5pt 5pt",
         }}
       >
-        <div onClick={changeDispState}>
+        {/* <div onClick={changeDispState}>
           <FaFolderOpen
           size="30pt"
           color="#50a3a2"
           />
-        </div>
+        </div> */}
         <div onClick={()=>{setCordinate({x:0,y:0})}}>
           <RiArrowGoBackFill
           size="30pt"

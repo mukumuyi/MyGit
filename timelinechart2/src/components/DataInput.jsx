@@ -74,6 +74,40 @@ export const HeaderFromData = async function HeaderFromData(
   }
 };
 
+
+export const HeaderFromDB = async function HeaderFromDB(
+  inputData,
+  setColSelector,
+  setInputData,
+  setOriginData
+) {
+  console.log(
+    "=== GET HEADER START  :",
+    new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
+    "==="
+  );
+
+  try { 
+    // const parseData = await ParseCSV(inputData);
+    // 項目名からcolSelectorを作成する。（各種設定ファイル作成に利用する。）
+    setColSelector(
+      Object.keys(inputData[0]).map((item, index) => ({
+        id: index + 1,
+        name: item,
+        value: item,
+        label: item,
+      }))
+    );
+
+    setOriginData(inputData);
+    setInputData(inputData);
+
+  } catch (error) {
+    console.error("CSVファイルの読み込みエラー:", error);
+  }
+};
+
+
 export const DrawGraph = async function drawGraph(
   convDef,
   inputData,

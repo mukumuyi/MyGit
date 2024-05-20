@@ -27,15 +27,11 @@ import FormColor from "./FormColor";
 import {
   HeaderFromLocalFile,
   DrawGraph,
-  HeaderFromData,
-  DrawFromLocalFile,
   DrawNewProperty,
 } from "./DataInput";
 import Datagrid from "./Datagrid";
-import InputLocal from "./InputLocal";
 import InputDB from "./InputDB";
 import InputHttp from "./InputHttp";
-import ImportArea from "./ImportArea";
 import ControlPanel from "./ContolPanel";
 import {
   BasicProperty,
@@ -85,13 +81,12 @@ import {
 //  ・画面の中心にクリックしたものを持ってくる。
 //  ・Tooltipを表示する。（メモもできる。）
 //  ・ToolTipの動き（クリックか？マウスオーバーか？）
-//  ・
-//
+
 // 対象を数秒さわり続けたらtooltipが表示
 // 対象をクリックしてもtooptipを固定表示
 // 検索した場合それを画面の中心に持っていく動きを追加する。-> あまり需要なさそう保留
 // クリックしたら画面の真ん中に来て詳細を表示してくれる。 ->　着手
-//
+
 // フォームやCSSの精査(cssファイルはなくしたい。) -> 着手
 // レンダー回数の減少対応 -> 着手
 // ファイル読み込み系の処理の整理 -> 着手
@@ -102,10 +97,9 @@ import {
 // 6.ズームスライダーの実装 -> イベントが多発しそうなので、一旦保留。
 
 // 画面の表示・非表示ボタンの実装
-// 入力タイプの実装（LOCAL、DB、HTTP）
-// SQLエディタの実装
-// Gridデータの表示
-//
+// 入力タイプの実装（LOCAL、DB、HTTP） -> 完了
+// SQLエディタの実装 -> 完了
+// Gridデータの表示 -> 完了
 
 const drawerWidth = 240;
 
@@ -174,7 +168,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-function Timeline(props) {
+function Timeline() {
   const [dispType, setDispType] = useState("Import");
   const [dispControlPanel, setDispControlPanel] = useState(0);
 
@@ -320,10 +314,48 @@ function Timeline(props) {
     });
   };
 
-  function drawFromLocalFile(e) {
-    DrawFromLocalFile(e, convDef, setInputData, setOriginData, setColSelector);
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
+  const makeFileList = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/filelist");
+      const tempList = await response.json();
+      setFileList(tempList);
+    } catch (error) {
+      console.error("エラー:", error);
+    }
+  };
+
+  // textareaの値が変更されたときに実行される関数
+  const handleTextareaChange = (event) => {
+    setSql(event.target.value);
+  };
+
+  const onStartDraw = async function (e) {
+    await DrawGraph(convDef, inputData, setInputData, setDrawFlag,setMinStart);
+    changeDispState();
+  };
+
+  const onChangeSelectedFile = (e) => {
+    setSelectedFile(e.target.value);
+  };
+
+  function selectFile(e) {
+    HeaderFromLocalFile(e, setColSelector, setInputData, setOriginData);
   }
 
+  useEffect(() => {
+    if (inputTypeSelected === "HTTP") {
+      makeFileList();
+    }
+  }, [inputTypeSelected]);
+  
   useEffect(() => {
     if (dispType === "Draw") {
       DrawNewProperty(
@@ -345,88 +377,8 @@ function Timeline(props) {
   //   alert("データ取得が完了しました。")
   // }, [originData]);
 
-  console.log("Render Timeline");
-  // console.log(originData)
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-
-  const executeQuery = async () => {
-    try {
-      const params = {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json", // JSON形式のデータのヘッダー
-        },
-        body: JSON.stringify({
-          // 基本的にはDBの切り替えはサーバー側の処理で行う。
-          // host: "localhost",
-          // user: "postgres",
-          // database: "world",
-          // password: "XXXX",
-          // port: "5432",
-          sql: sql,
-        }),
-      };
-      const response = await fetch("http://localhost:3000/api/db", params);
-      const data = await response.json();
-      // console.log(data.rows);
-      HeaderFromData(data.rows, setColSelector, setInputData);
-    } catch (error) {
-      console.error("エラー:", error);
-      alert("データ取得エラーが発生しました。\n" + error);
-    }
-  };
-
-  const makeFileList = async () => {
-    try {
-      const response = await fetch("http://localhost:3000/api/filelist");
-      const tempList = await response.json();
-      setFileList(tempList);
-    } catch (error) {
-      console.error("エラー:", error);
-    }
-  };
-
-  // textareaの値が変更されたときに実行される関数
-  const handleTextareaChange = (event) => {
-    setSql(event.target.value);
-  };
-
-  const onDbClick = () => {
-    executeQuery();
-  };
-
-  const onStartDraw = async function (e) {
-    await DrawGraph(convDef, inputData, setInputData, setDrawFlag,setMinStart);
-    changeDispState();
-  };
-
-  const onChangeInputType = (e) => {
-    setInputTypeSelected(e.target.value);
-  };
-
-  useEffect(() => {
-    if (inputTypeSelected === "HTTP") {
-      makeFileList();
-    }
-  }, [inputTypeSelected]);
-
-  const onChangeSelectedFile = (e) => {
-    setSelectedFile(e.target.value);
-  };
-
-  function selectFile(e) {
-    HeaderFromLocalFile(e, setColSelector, setInputData, setOriginData);
-  }
-
   console.log(
-    "=== RENDER ImportArea START  :",
+    "=== RENDER TIMELINE START  :",
     new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
     "==="
   );
@@ -502,8 +454,14 @@ function Timeline(props) {
                   sx={{ display: "block" }}
                 >
                   <ListItemButton
+                    
                     onClick={() => {
-                      setInputTypeSelected(item.name);
+                      if(item.name=="LOCAL"){
+                        document.getElementById('inputFileUpload').click();
+                        setInputTypeSelected(item.name);
+                      } else {
+                        setInputTypeSelected(item.name);
+                      }
                     }}
                     sx={{
                       minHeight: 48,
@@ -519,7 +477,11 @@ function Timeline(props) {
                       }}
                     >
                       {item.name === "LOCAL" ? (
-                        <InputLocal selectFile={selectFile} />
+                        // <InputLocal selectFile={selectFile} />
+                        <div>
+                        <FaFolderOpen size="15pt" />
+                        <input type="file" accept=".csv" onChange={selectFile} id="inputFileUpload" style={{ display: "none" }}></input>
+                        </div>
                       ) : item.name === "DB" ? (
                         <FaDatabase size="15pt" />
                       ) : (
@@ -535,11 +497,10 @@ function Timeline(props) {
               ))}
           </List>
         </Drawer>
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Box component="main" sx={{ flexGrow: 1, p: 1 }}>
           <DrawerHeader />
           {dispType === "Draw" && (
             <ControlPanel
-              changeDispState={changeDispState}
               dispControlPanel={dispControlPanel}
               changeDispControlPanelState={changeDispControlPanelState}
               colSelector={colSelector}
@@ -650,10 +611,12 @@ function Timeline(props) {
 
           {dispType === "Import" && inputTypeSelected === "DB" && (
             <InputDB
-              onDbClick={onDbClick}
               onCloseClick={setInputTypeSelected}
               sql={sql}
               handleTextareaChange={handleTextareaChange}
+              setColSelector={setColSelector}
+              setInputData={setInputData}
+              setOriginData={setOriginData}
             />
           )}
 

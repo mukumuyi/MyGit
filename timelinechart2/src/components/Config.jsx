@@ -23,7 +23,7 @@ export const InputTypeSelectDef = [
 // httpファイル名 初期値
 const httpFileList = ["input00.csv", "input01.csv"];
 // db向けSQL 初期値
-export const SqlDef = "SELECT id, name FROM public.users";
+export const SqlDef = "SELECT * from public.timeline001";
 // 色選択 初期値
 export const ColorSelectDef = [
   { id: 1, name: "Wait", value: "#c7cacc", label: "Wait" },

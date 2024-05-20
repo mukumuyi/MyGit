@@ -34,7 +34,6 @@ import Datagrid from "./Datagrid";
 import InputLocal from "./InputLocal";
 import InputDB from "./InputDB";
 import InputHttp from "./InputHttp";
-import ImportArea from "./ImportArea";
 import ControlPanel from "./ContolPanel";
 import {
   BasicProperty,

@@ -36,9 +36,9 @@ const InputHttp = (props) => {
       }}
     >
       <div style={{ display: "inline-flex",gap:"5pt" ,margin:"10pt"}}>
-        <FaPlay size="20pt" onClick={readFileFromHttp} />
+        <FaPlay size="15pt" onClick={readFileFromHttp} />
         <FaRegWindowClose
-          size="20pt"
+          size="15pt"
           onClick={() => {
             onCloseClick("LOCAL");
           }}
