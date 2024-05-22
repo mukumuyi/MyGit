@@ -2,6 +2,7 @@ import { FaPlay, FaRegWindowClose } from "react-icons/fa";
 
 import FormSelect from "./FormSelect";
 import { HeaderFromData } from "./DataInput";
+import { url } from "./Config";
 
 const InputHttp = (props) => {
   const {
@@ -17,7 +18,7 @@ const InputHttp = (props) => {
   const readFileFromHttp = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/api/file/" + selectedFile
+        url.file + selectedFile
       );
       const data = await response.json();
       HeaderFromData(data, setColSelector, setInputData, setOriginData);

@@ -1,7 +1,8 @@
 import { FaPlay, FaRegWindowClose } from "react-icons/fa";
 import {HeaderFromDB} from "./DataInput";
+import { url } from "./Config";
 
-const ImputDB = (props) => {
+const InputDB = (props) => {
   const {onCloseClick, sql, handleTextareaChange , setColSelector, setInputData,setOriginData} = props;
 
   const executeQuery = async () => {
@@ -21,7 +22,7 @@ const ImputDB = (props) => {
           sql: sql,
         }),
       };
-      const response = await fetch("http://localhost:3000/api/db", params);
+      const response = await fetch(url.db, params);
       const data = await response.json();
       HeaderFromDB(data.rows, setColSelector, setInputData,setOriginData);
     } catch (error) {
@@ -65,4 +66,4 @@ const ImputDB = (props) => {
   );
 };
 
-export default ImputDB;
+export default InputDB;

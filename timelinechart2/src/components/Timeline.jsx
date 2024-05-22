@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { styled, useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
@@ -44,37 +44,55 @@ import {
   InputTypeSelectDef,
   SqlDef,
   FileListDef,
+  url
 } from "./Config";
 
-// 実装したいこと　～Googleマップ風のTimelineチャートを作る。～
-// 1.SVGを一枚にする。 -> 完了
-// 3.線幅、描画期間 -> 完了
-// 4.色選択 -> 完了
-// 5.検索ウィンドウ、フィルタ -> 完了
-// 6.入力ファイルの選択、描画 -> 完了
-// 5.軸変更機能 -> 完了
+// 実装したいこと　～Googleマップ風のTimelineチャートを作る。
+// 機能要件
+// !済! 1.SVGを一枚にする。
+// !済! 3.線幅、描画期間
+// !済! 4.色選択
+// !済! 5.検索ウィンドウ、フィルタ
+// !済! 7.軸変更機能
+// 　　　軸を複数指定して階層化できる機能（レチクルとロットを合わせてみるため。）
+// !保! 8.パラメータを外部入力にする。 （コンパイル時に設定する）
+// 
+//      9.イベント実装
+//       (1)各種イベント
+// !済!    a.tooltipの表示（Click）
+// !済!    b.tooltipの表示（MouseOver）
+//         e.tooltipの表示（複数秒MouseOver）
+// !済!    c.Drug & Drop による画面移動
+//         d.サイドパネルのデータ表示機能
+//         e.画面の中心にクリックしたものを持ってくる。
+// 　　　(2)イベント切替機能
 //
-// 3.コンポーネントを分割する。
-// 4.データ選択画面を追加する。（読込形式と指定、カラムの紐づけ、） -> 完了
-// パラメータを外部入力にする。 -> 保留
-// 5.画面遷移を実装する。
-// データ選択画面
-//  (1)データの形式を選ぶ -> 完了
-//  (2)対象データの指定
-//   a.ローカルファイルの場合、選択 -> 完了
-//   c.web上のファイルの場合、URLは固定 -> 完了
-//  (3)ヘッダー情報を取得して、項目の定義をする。 -> 完了
+// !着! 10.データ選択画面を追加する。（読込形式と指定、カラムの紐づけ、） 
+// !済!  (1)データの形式を選ぶ -> 完了
+// !済!  (2)対象データの指定
+// !済!   a.ローカルファイルの場合、選択 -> 完了
+//        b.DBの場合はDBMS選択、接続DB情報、クエリ作成、データ取得からの処理
+// !済!　　　b-1.postgres
+// 　　　　　b-2.oracle
+// 　　　　　B-3.SQLServer
+// 　　　　　クエリの保存・読込機能
+// !済!   c.web上のファイルの場合、URLは固定 -> 完了
+// !済!  (3)ヘッダー情報を取得して、項目の定義をする。 -> 完了
+// !済!  (4)色領域の項目を取得して、色設定を定義できるようにする。 -> 完了
+// !済!  (5)サンプルデータの表示 -> 完了
+// 
+// !着!
+// !着!  エラーメッセージを出す。
+// !未!　コメントを残す機能。
 //
-//  (4)色領域の項目を取得して、色設定を定義できるようにする。 -> 完了
-//
+// 非機能要件
+// !着! 3.コンポーネントを分割する。 -> 着手
+// 
 // 不具合
 // 001.ImportAreaで色カラム選択後、画面切り替えをすると描画されない。 -> 完了
 // 002.Filter設定後に表示されていない領域のデータを描画できない。 -> 完了
+// 003.左端が早めに切れてしまう件 -> 未着手
 //
-// 機能拡張
-// サンプルデータの表示 -> 完了
-// エラーメッセージを出す。
-// コメントを残す機能。
 //
 //   b.DBの場合はDBMS選択、接続DB情報、クエリ作成、データ取得からの処理
 // いくつか、イベントアクションを作っておく。
@@ -83,9 +101,10 @@ import {
 //  ・ToolTipの動き（クリックか？マウスオーバーか？）
 
 // 対象を数秒さわり続けたらtooltipが表示
-// 対象をクリックしてもtooptipを固定表示
+// 対象をクリックしてtooptipを固定表示
 // 検索した場合それを画面の中心に持っていく動きを追加する。-> あまり需要なさそう保留
-// クリックしたら画面の真ん中に来て詳細を表示してくれる。 ->　着手
+// クリックしたら画面の真ん中に来て詳細を表示してくれる。 ->　一応実装はしたけど使いにくそう。
+
 
 // フォームやCSSの精査(cssファイルはなくしたい。) -> 着手
 // レンダー回数の減少対応 -> 着手
@@ -202,7 +221,7 @@ function Timeline() {
   const itemSelector = ItemSelectDef;
   const dateTypeSel = DateTypeDef;
 
-  const inputTypeSelector = InputTypeSelectDef;
+  // const inputTypeSelector = InputTypeSelectDef;
   const [inputTypeSelected, setInputTypeSelected] = useState(
     InputTypeSelectDef[0].name
   );
@@ -210,7 +229,7 @@ function Timeline() {
   const [fileList, setFileList] = useState(FileListDef);
   const [selectedFile, setSelectedFile] = useState(FileListDef[0].name);
 
-  const theme = useTheme();
+  // const theme = useTheme();
   const [open, setOpen] = useState(false);
 
   const changeDispState = () => {
@@ -311,7 +330,7 @@ function Timeline() {
         screenWidth: document.documentElement.clientWidth,
         screenHeight: document.documentElement.clientHeight,
       });
-    });
+    },100);
   };
 
   const handleDrawerOpen = () => {
@@ -324,7 +343,7 @@ function Timeline() {
 
   const makeFileList = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/filelist");
+      const response = await fetch(url.filelist);
       const tempList = await response.json();
       setFileList(tempList);
     } catch (error) {

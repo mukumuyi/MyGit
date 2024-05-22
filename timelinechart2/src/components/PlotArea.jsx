@@ -393,8 +393,7 @@ export const PlotArea = memo((props) => {
             onMouseMove={onMouseMove}
             onMouseOut={onMouseUp}
           />
-          {xAxisArray.map((item) => {
-            return (
+          {xAxisArray.map((item) => (
               <Line
                 key={item.key}
                 x1={item.cx}
@@ -403,11 +402,10 @@ export const PlotArea = memo((props) => {
                 y2={svgHeight}
                 stroke="green"
               />
-            );
-          })}
+            )
+          )}
 
-          {yAxisArray.map((item) => {
-            return (
+          {yAxisArray.map((item) => (
               <Line
                 key={item.key}
                 x1="0"
@@ -416,10 +414,9 @@ export const PlotArea = memo((props) => {
                 y2={item.cy}
                 stroke="green"
               />
-            );
-          })}
-          {plotArray.map((item) => {
-            return (
+            )
+            )}
+          {plotArray.map((item) => (
               <Rect
                 key={item.key}
                 id={item.key}
@@ -436,8 +433,8 @@ export const PlotArea = memo((props) => {
                 // onMouseOut={onMouseOut}
                 // tooltipPos={tooltipPos}
               />
-            );
-          })}
+            )
+          )}
           <rect
             x="0"
             y="0"
@@ -454,8 +451,7 @@ export const PlotArea = memo((props) => {
             fill={fontBackColor}
             fillOpacity="0.5"
           ></rect>
-          {xAxisArray.map((item) => {
-            return (
+          {xAxisArray.map((item) => (
               (item.key === xAxisArrayMinKey || item.hour === xAxisArrayMinHour) &&
               <text
                 key={item.key}
@@ -467,10 +463,9 @@ export const PlotArea = memo((props) => {
               >
                 {item.labelD}
               </text>
-            );
-          })}
-          {xAxisArray.map((item) => {
-            return (
+            )
+          )}
+          {xAxisArray.map((item) => (
               <text
                 key={item.key}
                 className="xAxis1 marker-label "
@@ -481,10 +476,9 @@ export const PlotArea = memo((props) => {
               >
                 {item.labelT}
               </text>
-            );
-          })}
-          {yAxisArray.map((item) => {
-            return (
+            )
+          )}
+          {yAxisArray.map((item) => (
               <text
                 key={item.key}
                 className="yAxis marker-label"
@@ -495,8 +489,8 @@ export const PlotArea = memo((props) => {
               >
                 {item.group}
               </text>
-            );
-          })}
+            )
+          )}
         </g>
       </svg>
       {tooltipPos.visible && (

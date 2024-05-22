@@ -20,6 +20,12 @@ export const InputTypeSelectDef = [
   { id: 2, name: "DB", value: "DB", label: "DB" },
   { id: 3, name: "HTTP", value: "HTTP", label: "HTTP" },
 ];
+// 各種URL設定
+export const url ={
+  db:"http://localhost:3000/api/db",
+  file:"http://localhost:3000/api/file/",
+  filelist:"http://localhost:3000/api/filelist",
+};
 // httpファイル名 初期値
 const httpFileList = ["input00.csv", "input01.csv"];
 // db向けSQL 初期値
