@@ -1,5 +1,5 @@
 import Radiobutton from "./Radiobutton";
-import Colorpalette from "./Colorpalette";
+import Colorpalette from "./molecules/Colorpalette";
 import FormSelectOption from "./FormSelectOption";
 
 export default function Form(props) {

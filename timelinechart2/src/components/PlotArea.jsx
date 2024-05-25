@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, memo } from "react";
-import Rect from "./Rect";
-import Line from "./Line";
+import Rect from "./atoms/Rect";
+import Line from "./atoms/Line";
 // import TextField from '@mui/material/TextField';
 // import { ParseDateCol } from "./DataControl";
 // import csvArray from "../csvArray.json";

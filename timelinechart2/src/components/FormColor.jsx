@@ -1,4 +1,4 @@
-import Colorpalette from "./Colorpalette";
+import Colorpalette from "./molecules/Colorpalette";
 
 export default function FormColor(props) {
   const { array, onChange } = props;
