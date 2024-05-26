@@ -1,9 +1,18 @@
+import React, { useState } from "react";
 import { FaPlay, FaRegWindowClose } from "react-icons/fa";
-import {HeaderFromDB} from "./DataInput";
-import { url } from "./Config";
+
+import { HeaderFromDB } from "../module/DataInput";
+import { url, SqlDef } from "../Config";
 
 const InputDB = (props) => {
-  const {onCloseClick, sql, handleTextareaChange , setColSelector, setInputData,setOriginData} = props;
+  const { onCloseClick, setColSelector, setInputData, setOriginData } = props;
+
+  const [sql, setSql] = useState(SqlDef);
+
+  // textareaの値が変更されたときに実行される関数
+  const handleTextareaChange = (event) => {
+    setSql(event.target.value);
+  };
 
   const executeQuery = async () => {
     try {
@@ -24,7 +33,7 @@ const InputDB = (props) => {
       };
       const response = await fetch(url.db, params);
       const data = await response.json();
-      HeaderFromDB(data.rows, setColSelector, setInputData,setOriginData);
+      HeaderFromDB(data.rows, setColSelector, setInputData, setOriginData);
     } catch (error) {
       console.error("エラー:", error);
       alert("データ取得エラーが発生しました。\n" + error);
@@ -40,12 +49,12 @@ const InputDB = (props) => {
           marginTop: "5pt",
         }}
       >
-        <div style={{ display: "inline-flex", gap: "5pt"  ,margin:"10pt"}}>
+        <div style={{ display: "inline-flex", gap: "5pt", margin: "10pt" }}>
           <FaPlay size="15pt" onClick={executeQuery} />
           <FaRegWindowClose
             size="15pt"
             onClick={() => {
-              onCloseClick("LOCAL");
+              onCloseClick("Import");
             }}
           />
         </div>

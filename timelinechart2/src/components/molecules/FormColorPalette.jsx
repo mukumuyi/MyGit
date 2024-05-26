@@ -1,6 +1,4 @@
-import BaseInput from "../atoms/input/BaseInput";
-
-export default function colorPalette(props) {
+export default function FormColorPalette(props) {
   const { item, onChange } = props;
 
   const r = 255 - parseInt(item.value.substr(1, 2), 16);
@@ -9,7 +7,15 @@ export default function colorPalette(props) {
 
   return (
     <div style={{ position: "relative", flex: "1" }}>
-      <BaseInput item={item} onChange={onChange} type="color" name="name"/>
+      {/* <BaseInput item={item} onChange={onChange} type="color" name="name"/> */}
+      <input
+        type="color"
+        name="name"
+        value={item.value}
+        id={item.name}
+        onChange={onChange}
+        style={{ width: "100%", height: "100%", opacity: "1" }}
+      />
       <label
         htmlFor={item.name}
         style={{

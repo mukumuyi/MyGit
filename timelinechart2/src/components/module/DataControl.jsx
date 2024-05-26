@@ -20,7 +20,7 @@ function parseDateTime(dateTimeString, dateType) {
       parseInt(datePart[1]) - 1, // 月 (0-11)
       parseInt(datePart[2]), // 日
       parseInt(timePart[0]), // 時
-      parseInt(timePart[1]) // 分
+      parseInt(timePart[1]), // 分
     );
     return Date.parse(date);
   } else {
@@ -32,7 +32,7 @@ export const OpenLocalFile = async function openLocalFile(evt) {
   console.log(
     "=== OPEN LOCAL FILE START  :",
     new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
-    "==="
+    "===",
   );
 
   const inputData = await new Promise((resolve, reject) => {
@@ -53,7 +53,7 @@ export const ParseCSV = function parseCSV(inputData) {
   console.log(
     "=== PARSE CSV START  :",
     new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
-    "==="
+    "===",
   );
   // CSVデータを行ごとに分割し、各行をカンマで分割して配列に格納する
   const lines = inputData.split(/\r\n|\n/);
@@ -61,7 +61,7 @@ export const ParseCSV = function parseCSV(inputData) {
   lines.shift(); // 先頭行の削除
   return lines
     .filter((line) => line.length > 1) // 空白行を除外
-    .map((item,index) => {
+    .map((item, index) => {
       let datas = item.split(",");
       let result = {};
       let key;
@@ -70,7 +70,7 @@ export const ParseCSV = function parseCSV(inputData) {
           key = header[index];
           result[key] = datas[index];
         }
-        result.id = index + 1
+        result.id = index + 1;
       }
       return result;
     });
@@ -80,27 +80,30 @@ export const ParseDateCol = function parseDateCol(inputData, convDef) {
   console.log(
     "=== PARSE DATE COLUMN   START  :",
     new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
-    "==="
+    "===",
   );
   let minStartingTime = null;
-  return [inputData.map((item) => {
-    item.starting_time = parseDateTime(
-      item[convDef.colStart],
-      convDef.dateType
-    );
-    item.ending_time = parseDateTime(item[convDef.colEnd], convDef.dateType);
-    if (minStartingTime === null || item.starting_time < minStartingTime) {
-      minStartingTime = item.starting_time;
-    }
-    return item;
-  }),minStartingTime]
+  return [
+    inputData.map((item) => {
+      item.starting_time = parseDateTime(
+        item[convDef.colStart],
+        convDef.dateType,
+      );
+      item.ending_time = parseDateTime(item[convDef.colEnd], convDef.dateType);
+      if (minStartingTime === null || item.starting_time < minStartingTime) {
+        minStartingTime = item.starting_time;
+      }
+      return item;
+    }),
+    minStartingTime,
+  ];
 };
 
 export const ConvertData = function convertDate(inputData, convDef) {
   console.log(
     "=== CONVERT DATA START  :",
     new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
-    "==="
+    "===",
   );
 
   return inputData.map((item, index) => {
@@ -119,16 +122,16 @@ export const FilterData = function filterData(inputData, filterText) {
   console.log(
     "=== FILTER DATA START  :",
     new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
-    "==="
+    "===",
   );
 
-  let outData = [];  
+  let outData = [];
 
   if (filterText.text) {
     outData = inputData.filter((item) =>
       item[filterText.item].match(
-        RegExp("^" + filterText.text.replace(/\*/g, ".*") + "$")
-      )
+        RegExp("^" + filterText.text.replace(/\*/g, ".*") + "$"),
+      ),
     );
   }
 
@@ -140,12 +143,12 @@ export const FilterData = function filterData(inputData, filterText) {
 
 export const ConvertTimelineData = function convertTimelineData(
   inputData,
-  convDef
+  convDef,
 ) {
   console.log(
     "=== MAKE TIMELINE DATA START  :",
     new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
-    "==="
+    "===",
   );
 
   // データを並び替える。（ソートキーはグループと"starting_time"）

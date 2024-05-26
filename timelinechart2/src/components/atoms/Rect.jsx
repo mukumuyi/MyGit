@@ -1,12 +1,13 @@
 export default function Rect(props) {
   const {
-    id,
-    x,
-    y,
-    height,
-    width,
-    fill,
-    stroke,
+    item,
+    id = item.key,
+    x = item.x,
+    y = item.y,
+    height = item.height,
+    width = item.width,
+    fill = item.fill,
+    stroke = "green",
     tooltipPos,
     onMouseOver,
     onMouseOut,
@@ -16,7 +17,6 @@ export default function Rect(props) {
 
   return (
     <rect
-      className="plotArea marker-rect"
       id={id}
       x={x}
       y={y}

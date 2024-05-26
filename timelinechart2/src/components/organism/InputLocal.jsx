@@ -1,8 +1,9 @@
-import FormInputFile from "./FormInputFile";
 import { FaFolderOpen } from "react-icons/fa";
 
+import FormInputFile from "../molecules/FormInputFile";
+
 const InputLocal = (props) => {
-    const {selectFile } = props;
+  const { selectFile } = props;
   return (
     <div
       style={{

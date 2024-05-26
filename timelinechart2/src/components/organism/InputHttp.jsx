@@ -1,25 +1,30 @@
+import React, { useState } from "react";
+
 import { FaPlay, FaRegWindowClose } from "react-icons/fa";
 
-import FormSelect from "./FormSelect";
-import { HeaderFromData } from "./DataInput";
-import { url } from "./Config";
+import FormSelect from "../molecules/FormSelect";
+import { HeaderFromData } from "../module/DataInput";
+import { FileListDef, url } from "../Config";
 
 const InputHttp = (props) => {
-  const {
-    setColSelector,
-    setInputData,
-    setOriginData,
-    selectedFile,
-    onChangeSelectedFile,
-    onCloseClick,
-    fileList,
-  } = props;
+  const { setColSelector, setInputData, setOriginData, onCloseClick } = props;
+
+  const [selectedFile, setSelectedFile] = useState(FileListDef[0].name);
+  const [fileList, setFileList] = useState(FileListDef);
+
+  const makeFileList = async () => {
+    try {
+      const response = await fetch(url.filelist);
+      const tempList = await response.json();
+      setFileList(tempList);
+    } catch (error) {
+      console.error("エラー:", error);
+    }
+  };
 
   const readFileFromHttp = async () => {
     try {
-      const response = await fetch(
-        url.file + selectedFile
-      );
+      const response = await fetch(url.file + selectedFile);
       const data = await response.json();
       HeaderFromData(data, setColSelector, setInputData, setOriginData);
     } catch (error) {
@@ -27,6 +32,12 @@ const InputHttp = (props) => {
       alert("ファイル取得エラーが発生しました。\n" + error);
     }
   };
+
+  const onChangeSelectedFile = (e) => {
+    setSelectedFile(e.target.value);
+  };
+
+  makeFileList();
 
   return (
     <div
@@ -36,12 +47,12 @@ const InputHttp = (props) => {
         marginTop: "5pt",
       }}
     >
-      <div style={{ display: "inline-flex",gap:"5pt" ,margin:"10pt"}}>
+      <div style={{ display: "inline-flex", gap: "5pt", margin: "10pt" }}>
         <FaPlay size="15pt" onClick={readFileFromHttp} />
         <FaRegWindowClose
           size="15pt"
           onClick={() => {
-            onCloseClick("LOCAL");
+            onCloseClick("Import");
           }}
         />
       </div>

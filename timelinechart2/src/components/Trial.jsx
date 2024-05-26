@@ -20,21 +20,24 @@ import ListItemText from "@mui/material/ListItemText";
 import { FaDatabase, FaFolderOpen } from "react-icons/fa";
 import { FaChartGantt, FaEarthAsia } from "react-icons/fa6";
 
-import { PlotArea } from "./PlotArea";
-import FormSelect from "./FormSelect";
-import FormColor from "./FormColor";
 import {
   HeaderFromLocalFile,
   DrawGraph,
   HeaderFromData,
   DrawFromLocalFile,
   DrawNewProperty,
-} from "./DataInput";
-import Datagrid from "./Datagrid";
-import InputLocal from "./InputLocal";
-import InputDB from "./InputDB";
-import InputHttp from "./InputHttp";
-import ControlPanel from "./ContolPanel";
+} from "./module/DataInput";
+import { PlotArea } from "./module/PlotArea";
+
+import FormSelect from "./molecules/FormSelect";
+import FormColor from "./molecules/FormColor";
+import Datagrid from "./molecules/Datagrid";
+
+import InputLocal from "./organism/InputLocal";
+import InputDB from "./organism/InputDB";
+import InputHttp from "./organism/InputHttp";
+import ControlPanel from "./organism/ContolPanel";
+
 import {
   BasicProperty,
   ColorSelectDef,
@@ -185,7 +188,7 @@ function Trial(props) {
   const [drawFlag, setDrawFlag] = useState(true);
   const [timeSelected, setTimeSelected] = useState(BasicProperty.timeSeleced);
   const [widthSelected, setWidthSelected] = useState(
-    BasicProperty.widthSelected
+    BasicProperty.widthSelected,
   );
   const [cordinate, setCordinate] = useState({ x: 0, y: 0 });
   const [colorSelected, setColorSelected] = useState(ColorSelectDef);
@@ -207,7 +210,7 @@ function Trial(props) {
 
   const inputTypeSelector = InputTypeSelectDef;
   const [inputTypeSelected, setInputTypeSelected] = useState(
-    InputTypeSelectDef[0].name
+    InputTypeSelectDef[0].name,
   );
   const [sql, setSql] = useState(SqlDef);
   const [fileList, setFileList] = useState(FileListDef);
@@ -266,7 +269,7 @@ function Trial(props) {
           name: item,
           value: assignColor(index, uniqueStatusList.length),
           label: item,
-        }))
+        })),
       );
     } else if (e.target.name === "colStart") {
       setConvDef({ ...convDef, colStart: e.target.value });
@@ -328,7 +331,7 @@ function Trial(props) {
         originData,
         setInputData,
         setDrawFlag,
-        filterText
+        filterText,
       );
     }
   }, [convDef, filterText]); // convDefが変更されたときだけこのuseEffectが実行される
@@ -425,7 +428,7 @@ function Trial(props) {
   console.log(
     "=== RENDER ImportArea START  :",
     new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
-    "==="
+    "===",
   );
 
   return (
@@ -484,7 +487,16 @@ function Trial(props) {
                     {dispType === "Draw" && <FaFolderOpen size="15pt" />}
                     {dispType === "Import" && <FaChartGantt size="15pt" />}
                   </ListItemIcon>
-                  <ListItemText primary={dispType === "Draw" ? "IMPORT" :  dispType === "Import" ? "DRAW" : "OTHER"} sx={{ opacity: open ? 1 : 0 }} />
+                  <ListItemText
+                    primary={
+                      dispType === "Draw"
+                        ? "IMPORT"
+                        : dispType === "Import"
+                          ? "DRAW"
+                          : "OTHER"
+                    }
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
                 </ListItemButton>
               </ListItem>
             ))}
