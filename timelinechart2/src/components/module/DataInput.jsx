@@ -11,15 +11,15 @@ export const HeaderFromLocalFile = async function HeaderFromLocalFile(
   evt,
   setColSelector,
   setInputData,
-  setOriginData
+  setOriginData,
 ) {
   console.log(
     "=== GET LOCAL FILE START  :",
     new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
-    "==="
+    "===",
   );
 
-  try { 
+  try {
     const inputData = await OpenLocalFile(evt);
     const parseData = await ParseCSV(inputData);
     // 項目名からcolSelectorを作成する。（各種設定ファイル作成に利用する。）
@@ -29,32 +29,30 @@ export const HeaderFromLocalFile = async function HeaderFromLocalFile(
         name: item,
         value: item,
         label: item,
-      }))
+      })),
     );
 
     await setOriginData(parseData);
     await setInputData(parseData);
-
   } catch (error) {
     console.error("CSVファイルの読み込みエラー:", error);
-    alert("ファイル取得エラーが発生しました。\n" + error)
+    alert("ファイル取得エラーが発生しました。\n" + error);
   }
 };
-
 
 export const HeaderFromData = async function HeaderFromData(
   inputData,
   setColSelector,
   setInputData,
-  setOriginData
+  setOriginData,
 ) {
   console.log(
     "=== GET HEADER START  :",
     new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
-    "==="
+    "===",
   );
 
-  try { 
+  try {
     const parseData = await ParseCSV(inputData);
     // 項目名からcolSelectorを作成する。（各種設定ファイル作成に利用する。）
     setColSelector(
@@ -63,31 +61,29 @@ export const HeaderFromData = async function HeaderFromData(
         name: item,
         value: item,
         label: item,
-      }))
+      })),
     );
 
     setOriginData(parseData);
     setInputData(parseData);
-
   } catch (error) {
     console.error("CSVファイルの読み込みエラー:", error);
   }
 };
 
-
 export const HeaderFromDB = async function HeaderFromDB(
   inputData,
   setColSelector,
   setInputData,
-  setOriginData
+  setOriginData,
 ) {
   console.log(
     "=== GET HEADER START  :",
     new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
-    "==="
+    "===",
   );
 
-  try { 
+  try {
     // const parseData = await ParseCSV(inputData);
     // 項目名からcolSelectorを作成する。（各種設定ファイル作成に利用する。）
     setColSelector(
@@ -96,36 +92,34 @@ export const HeaderFromDB = async function HeaderFromDB(
         name: item,
         value: item,
         label: item,
-      }))
+      })),
     );
 
     setOriginData(inputData);
     setInputData(inputData);
-
   } catch (error) {
     console.error("CSVファイルの読み込みエラー:", error);
   }
 };
 
-
 export const DrawGraph = async function drawGraph(
   convDef,
   inputData,
   setInputData,
-  setDrawFlag,
-  setMinStart
+  // setDrawFlag,
+  setMinStart,
 ) {
   console.log(
     "=== DRAW GRAPH START  :",
     new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
-    "==="
+    "===",
   );
-  const [parseData,minStartingTime] = await ParseDateCol(inputData, convDef);
+  const [parseData, minStartingTime] = await ParseDateCol(inputData, convDef);
   const convertData = await ConvertData(parseData, convDef);
   const timelineData = await ConvertTimelineData(convertData, convDef);
   setMinStart(minStartingTime);
   setInputData(timelineData);
-  setDrawFlag(true);
+  // setDrawFlag(true);
 };
 
 export const DrawFromLocalFile = async function drawFromLocalFile(
@@ -134,12 +128,12 @@ export const DrawFromLocalFile = async function drawFromLocalFile(
   setInputData,
   setOriginData,
   setColSelector,
-  setMinStart
+  setMinStart,
 ) {
   console.log(
     "=== DRAW FROM LOCAL FILE START  :",
     new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
-    "==="
+    "===",
   );
 
   try {
@@ -152,10 +146,13 @@ export const DrawFromLocalFile = async function drawFromLocalFile(
         name: item,
         value: item,
         label: item,
-      }))
+      })),
     );
 
-    const [parseDateData,minStartingTime] = await ParseDateCol(parseData, convDef);
+    const [parseDateData, minStartingTime] = await ParseDateCol(
+      parseData,
+      convDef,
+    );
     const convertData = await ConvertData(parseDateData, convDef);
     const timelineData = await ConvertTimelineData(convertData, convDef);
     setMinStart(minStartingTime);
@@ -170,24 +167,24 @@ export const DrawNewProperty = async function drawNewProperty(
   convDef,
   originData,
   setInputData,
-  setDrawFlag,
-  filterText
+  // setDrawFlag,
+  filterText,
 ) {
   console.log(
     "=== CHANGE GROUP COL START  :",
     new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
-    "==="
+    "===",
   );
 
   try {
     const convertData = await ConvertData(originData, convDef);
     // console.log("== convert ==",convertData)
-    
-    const filterData = await FilterData(convertData,filterText)
+
+    const filterData = await FilterData(convertData, filterText);
     // console.log("== filter ==",filterData)
     const timelineData = await ConvertTimelineData(filterData, convDef);
     setInputData(timelineData);
-    setDrawFlag(true);
+    // setDrawFlag(true);
     // return timelineData
   } catch (error) {
     console.error("項目変更エラー：", error);

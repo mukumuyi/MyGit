@@ -4,10 +4,30 @@ import Rect from "../atoms/Rect";
 import Line from "../atoms/Line";
 import ControlPanel from "../organism/ContolPanel";
 import { DrawNewProperty } from "../module/DataInput";
-import { BasicProperty, ItemSelectDef } from "../Config";
+import { BasicStyle, BasicProperty, ItemSelectDef } from "../Config";
 
 export const PlotArea = memo((props) => {
   // props
+  const {
+    convDef,
+    colorSelected,
+    colSelector,
+    inputData,
+    minStart,
+    originData,
+    setColorSelected,
+    setConvDef,
+    // setDrawFlag,
+    setInputData,
+  } = props;
+
+  // ** declare state **
+  // graph parameter timeSelected
+  const [fontSize, setFontSize] = useState(parseInt(BasicStyle.fontSize));
+  const [fontColor, setFontColor] = useState(BasicStyle.fontColor);
+  const [fontBackColor, setFontBackColor] = useState(
+    BasicStyle.fontBackgroundColor,
+  );
 
   // eventHandle
   const [svgSize, setSvgSize] = useState({
@@ -43,6 +63,15 @@ export const PlotArea = memo((props) => {
   // ** declare constance **
   const itemSelector = ItemSelectDef;
 
+  // basic parameters
+  const plotStartX = 150;
+  const plotStartY = 60;
+  const py1 = 25;
+
+  const gMargin = widthSelected / 4;
+  const xAxisTimespan = timeSelected / 6; // x軸の1目盛りの時間（1時間分）
+  const scaleFactor = (1 / timeSelected) * svgSize.width;
+
   const onChangeTime = (e) => {
     const { value } = e.target;
     setTimeSelected(value);
@@ -56,12 +85,51 @@ export const PlotArea = memo((props) => {
   function handleSubmitSerch(e) {
     e.preventDefault();
     setSearchText({ item: e.target[0].value, text: e.target[1].value });
-    console.log("Change!");
   }
 
   function handleSubmitFilter(e) {
     e.preventDefault();
     setFilterText({ item: e.target[0].value, text: e.target[1].value });
+  }
+
+  const onChangeCol = (e) => {
+    const { name, value } = e.target;
+    // setDrawFlag(false);
+    setConvDef({ ...convDef, [name]: value });
+
+    if (name === "colColor") {
+      const uniqueStatusList = [
+        ...new Set(inputData.map((item) => item[value])),
+      ];
+      const assignColor = (index, length) => {
+        const hex = Math.floor(((index + 1) * 0xffffff) / length)
+          .toString(16)
+          .padStart(6, "0"); // インデックスに応じて色を計算
+        return `#${hex.toUpperCase()}`; // #FFFFFF 形式の色コードを返す
+      };
+
+      setColorSelected(
+        uniqueStatusList.map((item, index) => ({
+          id: index + 1,
+          name: item,
+          value: assignColor(index, uniqueStatusList.length),
+          label: item,
+        })),
+      );
+    }
+  };
+
+  function onChangeColor(e) {
+    const updatedColors = colorSelected.map((color) => {
+      if (color.name === e.target.id) {
+        // "Wait"の場合は新しい値に更新
+        return { ...color, value: e.target.value };
+      }
+      return color;
+    });
+
+    // 更新された配列をセット
+    setColorSelected(updatedColors);
   }
 
   // マウス押下時
@@ -101,14 +169,14 @@ export const PlotArea = memo((props) => {
 
   let mouseOverTimer = "";
 
-  // マウス通過時 idを取得して、props.inputDataの値をtooltipのテキストに渡す。
+  // マウス通過時 idを取得して、inputDataの値をtooltipのテキストに渡す。
   function onMouseOver(e) {
     // console.log("Click Rect")
     if (mouseOverTimer) {
       clearTimeout(mouseOverTimer);
     }
     mouseOverTimer = setTimeout(() => {
-      const targetItem = props.inputData.filter(
+      const targetItem = inputData.filter(
         (item) => item.id == e.target.getAttribute("id"),
       )[0];
       setTooltipText({
@@ -147,7 +215,7 @@ export const PlotArea = memo((props) => {
         visible: false,
       });
     } else {
-      const targetItem = props.inputData.filter(
+      const targetItem = inputData.filter(
         (item) => item.id == e.target.getAttribute("id"),
       )[0];
       // console.log(targetItem)
@@ -203,105 +271,34 @@ export const PlotArea = memo((props) => {
     }, 100);
   };
 
-  // basic parameters
-  const plotStartX = 150;
-  const plotStartY = 60;
-  const py1 = 25;
-
-  // graph parameter timeSelected
-  // const [timeSelected, settimeSelected] = useState(53200000); // 1フレームの時間（6時間分）
-  // const [widthSelected, setWidthSelected] = useState(parseInt(20));
-  const [fontSize, setFontSize] = useState(parseInt(widthSelected));
-  const [fontColor, setFontColor] = useState(
-    props.fontColor ? props.fontColor : "Black",
-  );
-  const [fontBackColor, setFontBackColor] = useState(
-    props.fontBackColor ? props.fontBackColor : "White",
-  );
-
-  const gMargin = widthSelected / 4;
-  const xAxisTimespan = timeSelected / 6; // x軸の1目盛りの時間（1時間分）
-  const scaleFactor = (1 / timeSelected) * svgSize.width;
-
-  // Parameter 変更時の動作
-  // useEffect(() => {
-  //   if (timeSelected) {
-  //     setTimeSelected(timeSelected);
-  //   }
-  // }, [timeSelected]);
-
-  // useEffect(() => {
-  //   if (widthSelected) {
-  //     setWidthSelected(parseInt(widthSelected));
-  //   }
-  // }, [widthSelected]);
-
   useEffect(() => {
-    if (props.fontSize) {
-      setFontSize(parseInt(props.fontSize));
+    if (fontColor) {
+      setFontColor(fontColor);
     }
-  }, [props.fontSize]);
+  }, [fontColor]);
 
   useEffect(() => {
-    if (props.fontColor) {
-      setFontColor(props.fontColor);
-    }
-  }, [props.fontColor]);
-
-  useEffect(() => {
-    if (props.width) {
-      setWidth(props.width);
-    }
-  }, [props.width]);
-
-  useEffect(() => {
-    if (props.height) {
-      setHeight(props.height);
-    }
-  }, [props.height]);
-
-  useEffect(() => {
-    DrawNewProperty(
-      props.convDef,
-      props.originData,
-      props.setInputData,
-      props.setDrawFlag,
-      filterText,
-    );
-  }, [props.convDef, filterText.text]); // convDefが変更されたときだけこのuseEffectが実行される
-
-  // useEffect(()=>{
-  //   if(props.searchText.text){
-  //     console.log("SerchChange")
-  //     console.log(props.searchText)
-  //     console.log(props.inputData.filter((item)=>item[props.searchText.item]===props.searchText.text)[0])
-  //     const searchResult = props.inputData.filter((item)=>item[props.searchText.item]===props.searchText.text)[0];
-  //     console.log(plotArray.filter((item)=>item.id===searchResult.id))
-  //   }
-  // },[props.searchText.text])
+    DrawNewProperty(convDef, originData, setInputData, filterText);
+  }, [convDef, filterText.text]); // convDefが変更されたときだけこのuseEffectが実行される
 
   // 先にplotArrayにしてデータを絞りたいけど、データ生成に必要なので、ここは断念。
   // データをParseするときにMinを算出するように変更。
-  const minTimeStamp = props.minStart
-    ? props.minStart
+  const minTimeStamp = minStart
+    ? minStart
     : Math.floor(
         Math.min(
-          ...props.inputData
+          ...inputData
             .map((item) => parseInt(item.starting_time))
             .filter((value) => !isNaN(value)),
         ) / 3600000,
       ) * 3600000;
 
-  // console.log("Render PlotArea");
-  // console.log(props.inputData)
-  // console.log(props.colorSelected)
+  console.log(colorSelected);
+  console.log(inputData);
   // filerを先にかませてデータを絞る。
-  const plotArray = props.inputData
+  const plotArray = inputData
     .filter(
       (item) =>
-        // (props.filterText.text
-        //   ? item[props.filterText.item] === props.filterText.text
-        //   : true) &&
         (item.starting_time - minTimeStamp) * scaleFactor + cordinate.x <
           svgSize.width &&
         (item.ending_time - minTimeStamp) * scaleFactor + cordinate.x > 0 &&
@@ -330,7 +327,7 @@ export const PlotArea = memo((props) => {
       fill:
         item[searchText.item] === searchText.text
           ? "Red"
-          : props.colorSelected.find((color) => color.name == item.color).value,
+          : colorSelected.find((color) => color.name == item.color).value,
       name: item.name,
       grpname: item.grpname,
       color: item.color,
@@ -432,7 +429,7 @@ export const PlotArea = memo((props) => {
     "===",
   );
 
-  // console.log(plotArray)
+  // console.log(plotArray);
   // console.log(new Date(minTimeStamp).toLocaleString("ja-JP"))
   // console.log(new Date(maxTimeStamp).toLocaleString("ja-JP"))
   // console.log(Math.ceil((maxTimeStamp - minTimeStamp) / xAxisTimespan) )
@@ -445,23 +442,23 @@ export const PlotArea = memo((props) => {
   return (
     <div>
       <ControlPanel
-        colSelector={props.colSelector}
-        onChangeCol={props.onChangeCol}
-        convDef={props.convDef}
-        onChangeTime={onChangeTime}
-        timeSelected={timeSelected}
-        onChangeWidth={onChangeWidth}
-        widthSelected={widthSelected}
-        onChangeColor={props.onChangeColor}
-        colorSelected={props.colorSelected}
-        itemSelector={itemSelector}
+        colorSelected={colorSelected}
+        colSelector={colSelector}
+        convDef={convDef}
+        filterText={filterText}
         handleSubmitSerch={handleSubmitSerch}
         handleSubmitFilter={handleSubmitFilter}
-        setCordinate={props.setCordinate}
+        itemSelector={itemSelector}
+        onChangeCol={onChangeCol}
+        onChangeColor={onChangeColor}
+        onChangeTime={onChangeTime}
+        onChangeWidth={onChangeWidth}
         searchText={searchText}
-        filterText={filterText}
-        setSearchText={setSearchText}
+        setCordinate={setCordinate}
         setFilterText={setFilterText}
+        setSearchText={setSearchText}
+        timeSelected={timeSelected}
+        widthSelected={widthSelected}
       />
       <svg
         width={svgSize.width}

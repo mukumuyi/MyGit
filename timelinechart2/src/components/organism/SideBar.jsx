@@ -15,12 +15,24 @@ import { FaDatabase, FaFolderOpen } from "react-icons/fa";
 import { FaChartGantt, FaEarthAsia } from "react-icons/fa6";
 
 import { DrawerHeader } from "../atoms/DrawerHeader";
+import { DrawGraph, HeaderFromLocalFile } from "../module/DataInput";
 
 import { InputTypeSelectDef } from "../Config";
 
 export const SideBar = (props) => {
-  const { open, setOpen, drawerWidth, onStartDraw, setDispType, selectFile } =
-    props;
+  const {
+    convDef,
+    drawerWidth,
+    inputData,
+    open,
+    setColSelector,
+    setDispType,
+    setDrawFlag,
+    setInputData,
+    setMinStart,
+    setOpen,
+    setOriginData,
+  } = props;
 
   const openedMixin = (theme) => ({
     width: drawerWidth,
@@ -65,6 +77,15 @@ export const SideBar = (props) => {
       return !prevValue;
     });
   };
+
+  const onStartDraw = async function () {
+    await DrawGraph(convDef, inputData, setInputData, setMinStart);
+    setDispType("Draw");
+  };
+
+  function selectFile(e) {
+    HeaderFromLocalFile(e, setColSelector, setInputData, setOriginData);
+  }
 
   return (
     <Drawer variant="permanent" open={open}>

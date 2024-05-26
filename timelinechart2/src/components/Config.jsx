@@ -1,3 +1,9 @@
+export const BasicStyle = {
+  fontSize: "18",
+  fontColor: "Black",
+  fontBackgroundColor: "White",
+};
+
 // チャートの1ページの表示期間とバーの幅 初期値
 export const BasicProperty = {
   timeSeleced: "172800000",
@@ -21,10 +27,10 @@ export const InputTypeSelectDef = [
   { id: 3, name: "HTTP", value: "HTTP", label: "HTTP" },
 ];
 // 各種URL設定
-export const url ={
-  db:"http://localhost:3000/api/db",
-  file:"http://localhost:3000/api/file/",
-  filelist:"http://localhost:3000/api/filelist",
+export const url = {
+  db: "http://localhost:3000/api/db",
+  file: "http://localhost:3000/api/file/",
+  filelist: "http://localhost:3000/api/filelist",
 };
 // httpファイル名 初期値
 const httpFileList = ["input00.csv", "input01.csv"];
@@ -54,13 +60,19 @@ export const BarWidthDef = [
   { id: 4, name: "BarThinest", value: "8", label: "超細" },
 ];
 // 日付型選択肢 初期値
-const dateTypeList = [{
-  name: "ISO8601_BASE",value: "YYYYMMDDHHmmSS",
-},{
-  name: "DATETIME_UNIX",value: "UNIX",
-},{
-  name: "DATETIME001",value: "YYYY/MM/DD HH:mm:SS",
-},
+const dateTypeList = [
+  {
+    name: "ISO8601_BASE",
+    value: "YYYYMMDDHHmmSS",
+  },
+  {
+    name: "DATETIME_UNIX",
+    value: "UNIX",
+  },
+  {
+    name: "DATETIME001",
+    value: "YYYY/MM/DD HH:mm:SS",
+  },
 ];
 // 列選択 初期値
 export const ConvDef = {
@@ -71,7 +83,7 @@ export const ConvDef = {
   colColor: "status",
   colDesc: "label",
   dateType: "YYYY/MM/DD HH:mm:SS",
-}
+};
 // 表示データ 初期値
 export const InputDataDef = [
   {
@@ -91,7 +103,6 @@ export const InputDataDef = [
     lane: 1,
   },
 ];
-
 
 export const DateTypeDef = dateTypeList.map((item, index) => {
   return { id: index, name: item.name, value: item.value, label: item.value };

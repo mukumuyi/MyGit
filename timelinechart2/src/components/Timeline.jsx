@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 
-import { styled } from "@mui/material/styles";
+import { styled } from "@mui/material/styles"; //消すと動かなくなる可能性大注意
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 
 import { DrawerHeader } from "./atoms/DrawerHeader";
-import { HeaderFromLocalFile, DrawGraph } from "./module/DataInput";
 import { TopBar } from "./organism/TopBar";
 import { SideBar } from "./organism/SideBar";
 import { PlotArea } from "./module/PlotArea";
@@ -13,6 +12,10 @@ import { ImportArea } from "./organism/ImportArea";
 import InputDB from "./organism/InputDB";
 import InputHttp from "./organism/InputHttp";
 import { ColorSelectDef, ColSelectDef, InputDataDef, ConvDef } from "./Config";
+
+// TimelineChartは基本的には全体の骨組みを定義する。
+// Component間で受け渡しが必要なHookを定義する。
+// 原則的にはProcedureは追加しない。
 
 // 実装したいこと　～Googleマップ風のTimelineチャートを作る。
 // 機能要件
@@ -63,7 +66,8 @@ import { ColorSelectDef, ColSelectDef, InputDataDef, ConvDef } from "./Config";
 // 004.色を選択して、カテゴリが多い場合、上の各種ドロップダウンボックスが横に伸びて戻せない
 // 005.カラム名が一緒で中身が違う場合、カラーカテゴリが足りなくても気づけない。
 // 006.SerchとFilterの対象項目を選んでも反映されない。
-//
+// 007.PlotArea表示中にファイル選択した場合、読み込みがされない。
+// 008.PlotAreaで色選択を変更した場合、PlotAreaの描画でエラーになる。
 //
 //   b.DBの場合はDBMS選択、接続DB情報、クエリ作成、データ取得からの処理
 // いくつか、イベントアクションを作っておく。
@@ -98,12 +102,11 @@ function Timeline() {
   const [drawerOpenFlag, setDrawerOpenFlag] = useState(false);
 
   // inputDate更新前に描画を行うとエラーが発生するため、描画処理を停止するフラグ
-  const [drawFlag, setDrawFlag] = useState(true);
+  // const [drawFlag, setDrawFlag] = useState(true);
 
   // parameter convert input data
   const [colSelector, setColSelector] = useState(ColSelectDef);
   const [convDef, setConvDef] = useState(ConvDef);
-
   const [colorSelected, setColorSelected] = useState(ColorSelectDef);
 
   // about input data
@@ -111,65 +114,8 @@ function Timeline() {
   const [originData, setOriginData] = useState(InputDataDef);
   const [minStart, setMinStart] = useState();
 
-  const onChangeCol = (e) => {
-    const { name, value } = e.target;
-    setDrawFlag(false);
-    setConvDef({ ...convDef, [name]: value });
-
-    if (name === "colColor") {
-      const uniqueStatusList = [
-        ...new Set(inputData.map((item) => item[value])),
-      ];
-      const assignColor = (index, length) => {
-        const hex = Math.floor(((index + 1) * 0xffffff) / length)
-          .toString(16)
-          .padStart(6, "0"); // インデックスに応じて色を計算
-        return `#${hex.toUpperCase()}`; // #FFFFFF 形式の色コードを返す
-      };
-
-      setColorSelected(
-        uniqueStatusList.map((item, index) => ({
-          id: index + 1,
-          name: item,
-          value: assignColor(index, uniqueStatusList.length),
-          label: item,
-        })),
-      );
-    }
-  };
-
+  // Constant
   const drawerWidth = 240;
-
-  function onChangeColor(e) {
-    const updatedColors = colorSelected.map((color) => {
-      if (color.name === e.target.id) {
-        // "Wait"の場合は新しい値に更新
-        return { ...color, value: e.target.value };
-      }
-      return color;
-    });
-
-    // 更新された配列をセット
-    setColorSelected(updatedColors);
-  }
-
-  const onStartDraw = async function () {
-    await DrawGraph(convDef, inputData, setInputData, setDrawFlag, setMinStart);
-    setDispType("Draw");
-  };
-
-  function selectFile(e) {
-    HeaderFromLocalFile(e, setColSelector, setInputData, setOriginData);
-  }
-
-  // useEffect(() => {
-  //   console.log(inputData);
-  // }, [inputData]);
-
-  // useEffect(() => {
-  //   console.log(originData);
-  //   alert("データ取得が完了しました。")
-  // }, [originData]);
 
   console.log(
     "=== RENDER TIMELINE START  :",
@@ -187,30 +133,34 @@ function Timeline() {
           setOpen={setDrawerOpenFlag}
         />
         <SideBar
+          convDef={convDef}
           drawerWidth={drawerWidth}
-          onStartDraw={onStartDraw}
+          inputData={inputData}
           open={drawerOpenFlag}
-          selectFile={selectFile}
+          setColSelector={setColSelector}
           setDispType={setDispType}
+          // setDrawFlag={setDrawFlag}
+          setInputData={setInputData}
+          setMinStart={setMinStart}
+          setOriginData={setOriginData}
           setOpen={setDrawerOpenFlag}
         />
 
         <Box component="main" sx={{ flexGrow: 1, p: 1 }}>
           <DrawerHeader />
-          {dispType === "Draw" && drawFlag && (
+          {dispType === "Draw" && (
+            // && drawFlag
             <PlotArea
-              convDef={convDef}
               colorSelected={colorSelected}
               colSelector={colSelector}
+              convDef={convDef}
               inputData={inputData}
               minStart={minStart}
               originData={originData}
-              onChangeCol={onChangeCol}
-              onChangeColor={onChangeColor}
-              fontSize="18"
-              style={{ position: "absolute", left: "0", top: "0" }}
+              setColorSelected={setColorSelected}
+              setConvDef={setConvDef}
+              // setDrawFlag={setDrawFlag}
               setInputData={setInputData}
-              setDrawFlag={setDrawFlag}
             />
           )}
           {dispType === "Import" && (
@@ -218,9 +168,11 @@ function Timeline() {
               convDef={convDef}
               colorSelected={colorSelected}
               colSelector={colSelector}
+              inputData={inputData}
               originData={originData}
-              onChangeCol={onChangeCol}
-              onChangeColor={onChangeColor}
+              setColorSelected={setColorSelected}
+              setConvDef={setConvDef}
+              // setDrawFlag={setDrawFlag}
             />
           )}
 

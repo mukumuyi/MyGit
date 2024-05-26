@@ -56,12 +56,6 @@ export default function ControlPanel(props) {
           gap: "5pt 5pt",
         }}
       >
-        {/* <div onClick={changeDispState}>
-          <FaFolderOpen
-          size="30pt"
-          color="#50a3a2"
-          />
-        </div> */}
         <div
           onClick={() => {
             setCordinate({ x: 0, y: 0 });

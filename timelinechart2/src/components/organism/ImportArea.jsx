@@ -9,14 +9,62 @@ import { DateTypeDef } from "../Config";
 export const ImportArea = (props) => {
   const {
     convDef,
-    onChangeCol,
     colSelector,
     colorSelected,
-    onChangeColor,
+    inputData,
     originData,
+    setColorSelected,
+    setDrawFlag,
+    setConvDef,
   } = props;
 
   const dateTypeSel = DateTypeDef;
+
+  const onChangeCol = (e) => {
+    const { name, value } = e.target;
+    // setDrawFlag(false);
+    setConvDef({ ...convDef, [name]: value });
+
+    if (name === "colColor") {
+      const uniqueStatusList = [
+        ...new Set(inputData.map((item) => item[value])),
+      ];
+      const assignColor = (index, length) => {
+        const hex = Math.floor(((index + 1) * 0xffffff) / length)
+          .toString(16)
+          .padStart(6, "0"); // インデックスに応じて色を計算
+        return `#${hex.toUpperCase()}`; // #FFFFFF 形式の色コードを返す
+      };
+
+      setColorSelected(
+        uniqueStatusList.map((item, index) => ({
+          id: index + 1,
+          name: item,
+          value: assignColor(index, uniqueStatusList.length),
+          label: item,
+        })),
+      );
+    }
+  };
+
+  function onChangeColor(e) {
+    const updatedColors = colorSelected.map((color) => {
+      if (color.name === e.target.id) {
+        // "Wait"の場合は新しい値に更新
+        return { ...color, value: e.target.value };
+      }
+      return color;
+    });
+
+    // 更新された配列をセット
+    setColorSelected(updatedColors);
+  }
+
+  console.log(
+    "=== RENDER IMPORT AREA START  :",
+    new Date().toLocaleTimeString("it-IT") + "." + new Date().getMilliseconds(),
+    "===",
+  );
 
   return (
     <>
