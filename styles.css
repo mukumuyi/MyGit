@@ -1,0 +1,166 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-weight: 300;
+  font-size: 16px;
+}
+
+body {
+  color: white;
+  /* background: #50a3a2; */
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.control-panel {  
+  width: 1000pt;
+}
+
+button {
+  appearance: none;
+  outline: 0;
+  background-color: white;
+  border: 0;
+  padding: 10px 15px;
+  color: #50a3a2;
+  border-radius: 3px;
+  width: 250px;
+  font-size: 18px;
+}
+
+/* svg {
+  cursor : grab;
+} */
+
+svg:active {
+  cursor: grabbing;
+}
+
+.tooltip {
+  position: absolute;
+  min-width: 200px;
+  top: 50%;
+  left: 50%;
+  padding: 5px;
+  font: 10px;
+  background: black;
+  color: white;
+  -webkit-box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
+  -moz-box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
+  /* visibility: hidden; */
+}
+
+.container4 {  
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  label {
+    position: relative;
+    top: 0; left: 0;
+    color: #50a3a2;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid #b6b6b6;
+  }
+}
+
+.container2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+
+
+.inline-radio {
+  display: flex;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid #b6b6b6;
+
+  div {
+    position: relative;
+    flex: 1;
+  }
+
+  input {
+    width: 100%;
+    height: 15pt;
+    opacity: 0;
+  }
+
+  label {
+    position: absolute;
+    top: 0; left: 0;
+    color: #50a3a2;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    border-right: 1px solid #b6b6b6;
+  }
+
+  div:last-child label {
+    border-right: 0;
+  }
+
+  input:checked + label {
+    background: #50a3a2;
+    font-weight: 500;
+    color: #fff;
+  }
+}
+
+
+
+.inline-text {
+  display: flex;
+  border-radius: 3px;
+  border: 1px solid #b6b6b6;
+
+  select {
+    position: relative;
+    flex: 1;
+    background: #fff;
+    border: 1px solid #b6b6b6;
+  }
+  
+  input {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border: 1px solid #b6b6b6;
+  }
+
+  div:last-child label {
+    border-right: 0;
+  }
+
+}
+
+.inline-select {
+  display: flex;
+  flex-direction: column;
+
+  select {
+    position: relative;
+    flex: 1;
+    background: #fff;
+    border: 1px solid #b6b6b6;
+    border-radius: 3px;
+  }
+
+  div:last-child label {
+    border-right: 0;
+  }
+
+}
