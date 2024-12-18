@@ -1,0 +1,7 @@
+// acc new abcXXX
+
+// oj-t-js テストコマンド
+// acc-s-js 提出コマンド
+// inputに入力データ全体が入る
+
+
