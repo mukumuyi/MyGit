@@ -1,0 +1,274 @@
+{
+    "data": [
+        {
+            "label": "person a",
+            "class": "a",
+            "times": [
+                {
+                    "name": "test1",
+                    "color": "green",
+                    "group": 1,
+                    "lane": 1,
+                    "starting_time": 1355752800000,
+                    "ending_time": 1355759900000
+                },
+                {
+                    "name": "test2",
+                    "color": "blue",
+                    "group": 1,
+                    "lane": 1,
+                    "starting_time": 1355767900000,
+                    "ending_time": 1355774400000
+                },
+                {
+                    "name": "test5",
+                    "color": "red",
+                    "group": 1,
+                    "lane": 2,
+                    "starting_time": 1355759000000,
+                    "ending_time": 1355769900000
+                }
+            ]
+        },
+        {
+            "label": "person b",
+            "class": "b",
+            "times": [
+                {
+                    "name": "test30",
+                    "color": "red",
+                    "group": 2,
+                    "lane": 3,
+                    "starting_time": 1355759910000,
+                    "ending_time": 1355761900000
+                },
+                {
+                    "name": "test31",
+                    "color": "red",
+                    "group": 2,
+                    "lane": 4,
+                    "starting_time": 1355761010000,
+                    "ending_time": 1355761900000
+                },
+                {
+                    "name": "test32",
+                    "color": "green",
+                    "group": 2,
+                    "lane": 4,
+                    "starting_time": 1355761900000,
+                    "ending_time": 1355769900000
+                }
+            ]
+        },
+        {
+            "label": "person c",
+            "class": "b",
+            "times": [
+                {
+                    "name": "test33",
+                    "color": "green",
+                    "group": 3,
+                    "lane": 5,
+                    "starting_time": 1355759910000,
+                    "ending_time": 1355961900000
+                }
+            ]
+        },
+        {
+            "label": "person d",
+            "class": "c",
+            "times": [
+                {
+                    "name": "test4_xx",
+                    "color": "red",
+                    "group": 4,
+                    "lane": 6,
+                    "starting_time": 1355761910000,
+                    "ending_time": 1355763910000
+                },
+                {
+                    "name": "test41",
+                    "color": "red",
+                    "group": 4,
+                    "lane": 7,
+                    "starting_time": 1355761910000,
+                    "ending_time": 1355763910000
+                },
+                {
+                    "name": "test42",
+                    "color": "red",
+                    "group": 4,
+                    "lane": 8,
+                    "starting_time": 1355761910000,
+                    "ending_time": 1355763910000
+                },
+                {
+                    "name": "test43",
+                    "color": "red",
+                    "group": 4,
+                    "lane": 9,
+                    "starting_time": 1355761910000,
+                    "ending_time": 1355763910000
+                },
+                {
+                    "name": "test44",
+                    "color": "red",
+                    "group": 4,
+                    "lane": 10,
+                    "starting_time": 1355761910000,
+                    "ending_time": 1355763910000
+                },
+                {
+                    "name": "test45",
+                    "color": "red",
+                    "group": 4,
+                    "lane": 11,
+                    "starting_time": 1355761910000,
+                    "ending_time": 1355763910000
+                },
+                {
+                    "name": "test46",
+                    "color": "red",
+                    "group": 4,
+                    "lane": 12,
+                    "starting_time": 1355761910000,
+                    "ending_time": 1355763910000
+                },
+                {
+                    "name": "test47",
+                    "color": "red",
+                    "group": 4,
+                    "lane": 13,
+                    "starting_time": 1355761910000,
+                    "ending_time": 1355763910000
+                },
+                {
+                    "name": "test48",
+                    "color": "red",
+                    "group": 4,
+                    "lane": 14,
+                    "starting_time": 1355761910000,
+                    "ending_time": 1355763910000
+                }
+            ]
+        },
+        {
+            "label": "person d",
+            "class": "b",
+            "times": [
+                {
+                    "name": "test99",
+                    "color": "green",
+                    "group": 4,
+                    "lane": 15,
+                    "starting_time": 1355763910000,
+                    "ending_time": 1355773910000
+                },
+                {
+                    "name": "test99",
+                    "color": "green",
+                    "group": 4,
+                    "lane": 16,
+                    "starting_time": 1355763910000,
+                    "ending_time": 1355773910000
+                },
+                {
+                    "name": "test99",
+                    "color": "green",
+                    "group": 4,
+                    "lane": 17,
+                    "starting_time": 1355763910000,
+                    "ending_time": 1355773910000
+                },
+                {
+                    "name": "test99",
+                    "color": "green",
+                    "group": 4,
+                    "lane": 18,
+                    "starting_time": 1355763910000,
+                    "ending_time": 1355773910000
+                },
+                {
+                    "name": "test99",
+                    "color": "green",
+                    "group": 4,
+                    "lane": 19,
+                    "starting_time": 1355763910000,
+                    "ending_time": 1355773910000
+                },
+                {
+                    "name": "test99",
+                    "color": "green",
+                    "group": 4,
+                    "lane": 20,
+                    "starting_time": 1355763910000,
+                    "ending_time": 1355773910000
+                },
+                {
+                    "name": "test99",
+                    "color": "green",
+                    "group": 4,
+                    "lane": 21,
+                    "starting_time": 1355763910000,
+                    "ending_time": 1355773910000
+                },
+                {
+                    "name": "test99",
+                    "color": "green",
+                    "group": 4,
+                    "lane": 22,
+                    "starting_time": 1355763910000,
+                    "ending_time": 1355773910000
+                },
+                {
+                    "name": "test99",
+                    "color": "green",
+                    "group": 4,
+                    "lane": 23,
+                    "starting_time": 1355763910000,
+                    "ending_time": 1355773910000
+                },
+                {
+                    "name": "test99",
+                    "color": "green",
+                    "group": 4,
+                    "lane": 24,
+                    "starting_time": 1355763910000,
+                    "ending_time": 1355773910000
+                },
+                {
+                    "name": "test99",
+                    "color": "green",
+                    "group": 4,
+                    "lane": 25,
+                    "starting_time": 1355763910000,
+                    "ending_time": 1355773910000
+                },
+                {
+                    "name": "test99",
+                    "color": "green",
+                    "group": 4,
+                    "lane": 26,
+                    "starting_time": 1355763910000,
+                    "ending_time": 1355773910000
+                },
+                {
+                    "name": "test99",
+                    "color": "green",
+                    "group": 4,
+                    "lane": 27,
+                    "starting_time": 1355763910000,
+                    "ending_time": 1355773910000
+                },
+                {
+                    "name": "test99",
+                    "color": "green",
+                    "group": 4,
+                    "lane": 28,
+                    "starting_time": 1355763910000,
+                    "ending_time": 1355773910000
+                }
+            ]
+        }
+    ]
+}
